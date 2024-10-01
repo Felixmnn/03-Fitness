@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Image } from 'react-native'
+import { View, Text, ScrollView, Image, Alert } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Link, router } from 'expo-router'
 import FormField from '../../components/FormField'
@@ -6,6 +6,7 @@ import  CustomButton  from "../../components/CustomButton";
 import React, { useState } from 'react'
 import { icons } from '../../constants'
 import {images} from "../../constants"
+import { createUser } from '../../lib/appwrite';
 
 
 
@@ -17,6 +18,32 @@ const SignUp = () => {
     name: ''
 
   })
+
+const [isSubmitting, setIsSubmitting] = useState(false)
+
+const submit = async () => {
+  if (!form.name || !form.email || !form.password || !form.confirmPassword ){
+    Alert.alert("Error" , "Please fill in all the fields")  
+  }
+  else if (form.confirmPassword != form.password){
+    Alert.alert("Error" , `Make sure your passwords match ${form.password} ${form.confirmPassword}  `)
+  }
+  //else {
+      setIsSubmitting(true);
+    try {
+        const result = await createUser(form.email, form.password, form.name )
+        setUser(result);
+        setIsLogged(true);
+        router.replace("/home");
+
+    }catch (error){ 
+      Alert.alert("Error", error.message)
+    } finally {
+      setIsSubmitting(false)
+    }
+  //}
+  
+}
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -65,8 +92,9 @@ const SignUp = () => {
                     <CustomButton 
                           className="flex justify-center items-center h-screen"
                           title="Sign-Up"
-                          handlePress={() => router.push('/home')}
+                          handlePress={submit}
                           containerStyles= "my-[15px] mx-5"
+                          isLoading={isSubmitting}
                     />  
                   </View>
                   

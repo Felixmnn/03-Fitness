@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Image} from 'react-native'
+import { View, Text, ScrollView, Image, Alert} from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import {images} from "../../constants"
@@ -6,6 +6,7 @@ import FormField from '../../components/FormField'
 import  CustomButton  from "../../components/CustomButton";
 import { Redirect, router, Link } from "expo-router";
 import { icons } from '../../constants'
+import {getCurrentUser, signIn} from "../../lib/appwrite"
 
 
 
@@ -14,6 +15,35 @@ const SignIn = () => {
     email:'',
     password:''
   })
+
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+
+  const submit = async () => {
+    if ( !form.email || !form.password ){
+      Alert.alert("Error" , "Please fill in all the fields")  
+    }
+    
+    
+        setIsSubmitting(true);
+        
+      try {
+          await signIn(form.email, form.password)
+          const result = await getCurrentUser();
+          setUser(result);
+          setIsLogged(true);
+          Alert.alert("Success", "User signed in successfully :)");
+          router.replace("/home");
+
+      }catch (error){ 
+        Alert.alert("Error", error.message)
+      } finally {
+        setIsSubmitting(false)
+      }
+    
+    
+  }
+
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
@@ -51,10 +81,11 @@ const SignIn = () => {
             </Text>
 
             <CustomButton 
-            className="flex justify-center items-center h-screen"
-            title="Sign In"
-            handlePress={() => router.push('/home')}
-            containerStyles= "my-[15px] mx-5"
+              className="flex justify-center items-center h-screen"
+              title="Sign In"
+              handlePress={submit}
+              containerStyles= "my-[15px] mx-5"
+              isLoading={isSubmitting}
             />
 
             <Text className="text-white text-center py-[5px]">
