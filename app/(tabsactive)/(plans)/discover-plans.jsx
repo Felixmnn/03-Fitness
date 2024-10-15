@@ -1,28 +1,54 @@
-import { View, Text,TouchableOpacity } from 'react-native'
+import { View, Text,TouchableOpacity, FlatList } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import WorkoutBox from '../../../components/WorkoutBox'
+import { ScrollView } from 'react-native-web'
+
 const DiscoverPlans = () => {
   return (
     <SafeAreaView className ="bg-primary h-full">
-      <Text className="text-3xl text-white text-center mt-10">
-        My Plans
-      </Text>
-        <Text className="text-3xl text-white text-left mt-10">
-          Basic
-        </Text>
-        <TouchableOpacity>
-        <View className="bg-blue2 h-[200px] rounded-[50px] my-5 mx-3 justify-center content-center">
-          <Text className="text-white text-3xl text-center">Ich bin ein Platzhalter</Text>
-        </View>
-      </TouchableOpacity>
-      <Text className="text-3xl text-white text-left ">
-          Basic
-        </Text>
-        <TouchableOpacity>
-        <View className="bg-blue2 h-[200px] rounded-[50px] my-5 mx-3 justify-center content-center">
-          <Text className="text-white text-3xl text-center">Ich bin ein Platzhalter</Text>
-        </View>
-      </TouchableOpacity>
+      <View>
+      <View className="mb-2">
+        <Text className="text-center font-bold text-3xl text-white mt-5">Hello World</Text>
+        <Text className="ml-2 font-bold text-3xl text-white mt-5">Popular</Text>
+        <FlatList
+          data={[{id:1},{id:2}]}
+          keyExtractor={(item)=> item.$id}
+          renderItem={(item) => (
+            <WorkoutBox/>
+          )}
+        horizontal
+        contentContainerStyle={{ paddingHorizontal: 10 }}
+        />
+      </View>
+
+      <View className="mb-2">
+        <Text className="ml-2 font-bold text-3xl text-white mt-5">Strength</Text>
+        <FlatList
+          data={[{id:1},{id:2}]}
+          keyExtractor={(item)=> item.$id}
+          renderItem={(item) => (
+            <WorkoutBox/>
+          )}
+        horizontal
+        contentContainerStyle={{ paddingHorizontal: 10 }}
+        />
+      </View>
+
+      <View className="mb-2">
+        <Text className="ml-2 font-bold text-3xl text-white mt-5">New</Text>
+        <FlatList
+          data={[{id:1},{id:2}]}
+          keyExtractor={(item)=> item.$id}
+          renderItem={(item) => (
+            <WorkoutBox/>
+          )}
+        horizontal
+        contentContainerStyle={{ paddingHorizontal: 10 }}
+        />
+      </View>
+
+         </View>
     </SafeAreaView>
   )
 }

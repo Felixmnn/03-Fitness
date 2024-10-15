@@ -1,18 +1,25 @@
 import { View, Text,TouchableOpacity } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { FlatList } from 'react-native'
+import WorkoutBox from '../../../components/WorkoutBox'
+
 
 const MyPlans = () => {
   return (
     <SafeAreaView className ="bg-primary h-full">
-      <Text className="text-3xl text-white text-center mt-10">
-        My Plans
-      </Text>
-        <TouchableOpacity>
-        <View className="bg-blue2 h-[200px] rounded-[50px] my-5 mx-3 justify-center content-center">
-          <Text className="text-white text-3xl text-center">Ich bin ein Platzhalter</Text>
-        </View>
-      </TouchableOpacity>
+        <FlatList
+        data={[{id:1}]}
+        keyExtractor={(item) => item.$id}
+        renderItem = {({item})=> (
+          <WorkoutBox/>   
+          
+          
+        )}
+        ListHeaderComponent={() => (
+          <Text className="text-white p-10 text-3xl">Deine Trainingspläne</Text>
+        )}  
+      />
     </SafeAreaView>
   )
 }
