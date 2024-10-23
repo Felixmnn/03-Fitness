@@ -4,52 +4,41 @@ import {images} from "../constants"
 import {icons} from "../constants"
 import { TouchableOpacity } from 'react-native'
 import CustomButton from './CustomButton'
+import { router } from 'expo-router'
 
 
 const WorkoutBox = ({title,musclegroups,imageurl,duration,added}) => {
+  const {username} = "JEff"
   return (
-      <View className="justify-start items-center bg-blue2 h-[120px] m-2 rounded-[10px] flex-row">
-      <Image source={images.thumbnail} className="h-[110px] w-[110px] ml-1 rounded-[5px]" />
+    <View className="bg-blue2  p-2 w-[95%] h-[200px]  rounded-[20px]">
       
-      
-      <View className="flex-1 flex-col justify-between h-full ml-1 py-2">
-        <View className =" flex-col flex justify-start">
-          <View className="flex istems-center ">
-            <View className="flex flex-row justify-between items-center">
-             
-              <Text className="text-2xl font-bold text-white">{title ? <Text>{title}</Text> : <Text>Name</Text>}</Text>
-              <View className="mr-[2px]">
-                {added ? (<Image source={icons.plus} className="h-[30px] w-[30px]"/>)
-                :
-                (<Image source={icons.plus} className="h-[30px] w-[30px]"/>)} 
+      <View className="flex-row h-[70%] border border-red-900 border-2 p-1 mb-1">
+        <View>
+          <View className="w-[97%]  flex-row justify-between border border-red-900 border-2 mx-1">
+            <Text className="text-xl font-bold text-white ml-2">Push</Text>
+            <TouchableOpacity onPress={()=> {
+              router.push("/edit-workout")
+            }}>
+              <Image source={icons.rightArrow}/>
+            </TouchableOpacity>
+          </View>
+          <View className="border border-red-900 m-1 w-[97%]">
+            <Text className="text-white text-xxl font-bol">
+              Exercises:
+            </Text>
+            <View className="flex-row">
+              <Image source={images.thumbnail} className="h-[60px] w-[60px] mx-1"/>
+              <Image source={images.thumbnail} className="h-[60px] w-[60px] mx-1"/>
+              <Image source={images.thumbnail} className="h-[60px] w-[60px] mx-1"/>
               </View>
-            </View>
-            
-          </View>
-
-          <View className=" ">
-            <Text className="text-white">{musclegroups ? <Text>{musclegroups}</Text> : <Text>Muscle A, Muscle B</Text>}</Text>
           </View>
         </View>
-        
-        <View className="flex flex-row justify-between items-end">
-          <View className="flex flex-row  items-center  pr-2 pl-[2px] ">
-            <Image source={icons.plus} className=" mr-1 h-[25px] w-[25px]"/>
-            <Text className=" text-white ">{duration ?  <Text>{duration}</Text> : <Text>02:20 h </Text>}</Text>
-          </View>
-          
-
-          <CustomButton title="Details" containerStyles= "py-[5px] mx-[5px]"/>
-        </View>
-
-      </View> 
-      
-
-
-    
+      </View>
+      <CustomButton
+      title="Start Workout"
+      handlePress={()=> {router.push("/active-home")}}
+      />
     </View>
-    
-    
   )
 }
 

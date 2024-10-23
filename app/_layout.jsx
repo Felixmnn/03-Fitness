@@ -37,6 +37,7 @@ const RootLayout = () => {
       <Stack.Screen name="(auth)" options={{headerShown:false}}/>
       <Stack.Screen name="(tabs)" options={{headerShown:false}}/>
       <Stack.Screen name="(profile)" options={{headerShown:false}}/>
+      <Stack.Screen name="(dynamic)" options={{headerShown:false}}/>
       <Stack.Screen name="(tabsactive)/(plans)" options={{ headerShown: false }} />
       <Stack.Screen name="(tabsactive)/(home)" options={{ headerShown: false }} />
       <Stack.Screen name="(tabsactive)/(results)" options={{ headerShown: false }} />

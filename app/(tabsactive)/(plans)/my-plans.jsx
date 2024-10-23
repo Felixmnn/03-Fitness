@@ -3,18 +3,18 @@ import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { FlatList } from 'react-native'
 import WorkoutBox from '../../../components/WorkoutBox'
-
+import { router } from 'expo-router'
+import plan from "@/constants/basicplans.js"
 
 const MyPlans = () => {
+  const username = "Jack";
   return (
     <SafeAreaView className ="bg-primary h-full">
         <FlatList
         data={[{id:1}]}
         keyExtractor={(item) => item.$id}
         renderItem = {({item})=> (
-          <WorkoutBox/>   
-          
-          
+          <WorkoutBox/>         
         )}
         ListHeaderComponent={() => (
           <Text className="text-white p-10 text-3xl">Deine Trainingspläne</Text>
