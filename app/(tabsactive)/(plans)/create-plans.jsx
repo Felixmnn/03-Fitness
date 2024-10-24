@@ -20,6 +20,42 @@ const CreatePlan = () => {
       return updateIDs;
     })
   }
+  const [name, setName] = useState("")
+  const [description, setDescription] = useState("")
+  const [difficulty,setDifficulty] = useState("Easy")
+  const [buttonColor,setButtonColor] = useState ("bg-green-900")
+
+  const changeButtonColor = () => {
+    setButtonColor(prevColor => 
+      prevColor === "bg-green-900" ? "bg-red-400" : 
+      prevColor === "bg-red-400" ? "bg-red-900" : 
+      "bg-green-900"
+    );
+  };
+  
+  const changeDifficulty = ()=> {
+    if (difficulty === "Easy") {
+      setDifficulty("Medium");
+    } else if (difficulty === "Medium"){
+      setDifficulty("Hard")
+    } else {
+      setDifficulty("Easy")
+    }
+  }
+
+
+  const [finalPlan,setFinalPlan] = useState([{PID:"",
+                                    Type:"Plan",
+                                    Name:"",
+                                    Description:"",
+                                    EIDs:[],
+                                    Difficulty:1,
+                                    Duration:1,
+                                    CDate:"",     //Creation Date
+                                    LUData:"",    //Last Use Date
+                                    Keywords:[],
+                                    Public:false
+                                  }])
   return (
     <SafeAreaView className="bg-primary h-full">
       <View className="justify-center m-5 items-center h-full">
@@ -29,20 +65,31 @@ const CreatePlan = () => {
             <TextInput
             className="my-2 w-full bg-white h-[40px] text-xl"
             placeholder="Name"
+            value={name}
+            onChangeText={(text)=> {setName(text)}}
             />
             <TextInput
-            className="my-2 w-full bg-white h-[40px] text-xl"
+            className="my-2 w-full bg-white h-[40px] text-xl "
             placeholder="Name"
+            value={description}
+            onChangeText={(text)=> {setDescription(text)}}
+            
             />
             <View className="flex-row justify-between">
               
               <CustomButton
-                containerStyles= "my-[15px] my-2 w-[50%] h-[40px]"
-                title = "Hard"
+                containerStyles= {`my-[15px] my-2 w-[50%] h-[50px] ${buttonColor}`}
+
+                style = {{backgroundColor: buttonColor}}
+                title = {difficulty}
+                handlePress={()=> {
+                  changeDifficulty()
+                  changeButtonColor()
+                }} 
               />
 
               <TextInput
-              className=" my-2 w-[40%] bg-white h-[40px] text-xl"
+              className=" my-2 w-[40%] bg-white h-[50px] text-xl"
               placeholder="Name"
               /> 
               
@@ -84,7 +131,9 @@ const CreatePlan = () => {
           </View>
           
           <View className="flex-row justify-center mt-2">
-            <TouchableOpacity>
+            <TouchableOpacity onPress={()=> {
+              console.log(description)
+            }}>
               <Image source={icons.plus} className="h-[60px] w-[60px] mx-5"/>
             </TouchableOpacity>
             <TouchableOpacity>

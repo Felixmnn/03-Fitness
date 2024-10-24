@@ -11,7 +11,7 @@ const ProfileLayout = () => {
           options={{
             headerShown:false
           }}/>
-          <Stack.Screen name="plan"
+          <Stack.Screen name="create-workout"
           options={{
             headerShown:false
           }}/>
