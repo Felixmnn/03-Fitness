@@ -31,6 +31,14 @@ const ProfileLayout = () => {
           options={{
             headerShown:false
           }}/>
+          <Stack.Screen name="active-exercise-picker"
+            options={{
+              headerShown:false
+            }}/>
+          <Stack.Screen name="progress-workout"
+            options={{
+              headerShown:false
+            }}/>
 
       
           

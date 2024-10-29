@@ -7,29 +7,54 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useRouter } from 'expo-router';
 import { images } from '../../constants';
 
+import { UserPlan } from "../../context/currentPlan";
+import { useContext } from 'react';
+
+
+
 const ExercisePicker = () => {
-    const { data } = useLocalSearchParams();
-    const parsedData = JSON.parse(data)
+
+
+    const { currentPlan, setCurrentPlan } = useContext(UserPlan);
+  
+
+
+    const addEID = (newEID) => {
+      setCurrentPlan((prevPlan) => {
+        const updatedEIDs = prevPlan?.EIDs ? [...prevPlan.EIDs, newEID] : [newEID];
+    
+        return {
+          ...prevPlan,
+          EIDs: updatedEIDs, 
+        };});};
+
   
   return (
     <SafeAreaView className="bg-primary h-full">
-        <FlatList
+      <Text className="text-white text-3xl font-bold m-5">
+        Choose a Exercise
+      </Text>
+      <View className="items-center justify-center">
+      <FlatList
         data = {exercises}
         keyExtractor={(item) => item.EID}
+        numColumns={2}
+
         renderItem={({item}) => (
           <TouchableOpacity onPress={()=> {
-            const updatedArray = [...parsedData,item.EID];
-            console.log(updatedArray)
-            router.push({
-              pathname: "/create-plans",
-              params: {updatedData: JSON.stringify(updatedArray)}
-            })            
-            }}>
-            <Image source={item.Image}/>
+            addEID(item.EID)
+            console.log(currentPlan.EIDs) 
+            router.push("/create-plans")
+            
+            } }>
+            <Image source={item.Image} className="h-[150px] w-[150px] mx-2 my-2"/>
+            <Text className="text-white w-[150px] mx-2">{item.Name}</Text>
           </TouchableOpacity>
         )}
         
         />       
+      </View>
+        
     </SafeAreaView>
   );
 };

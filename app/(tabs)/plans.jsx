@@ -20,7 +20,6 @@ const plans = () => {
           <View className="justify-between border border-red-900 border-2 flex-1 m-2">
             <View>
               <Text className="text-2xl text-white font-bold mb-2">Deine Pläne</Text>
-              <WorkoutBox/>
             </View>
             
             <View>
