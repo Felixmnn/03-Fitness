@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       colors: {
         primary: "#001d3d",
+        textInputColor: "#161425",
         secondary: {
           DEFAULT: "#f0c840",
           100: "#FF9001",

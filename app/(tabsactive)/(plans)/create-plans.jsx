@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, Text, TextInput, SafeAreaView,Image,FlatList } from 'react-native';
-import { UserPlan } from "../../../context/currentPlan";
+import { UserPlan,resetContext } from "../../../context/currentPlan";
 import { TouchableOpacity } from 'react-native';
 import exercises from "../../../constants/exercises"
 import { icons } from '../../../constants';
@@ -8,189 +8,187 @@ import { router } from 'expo-router';
 import { Alert } from 'react-native';
 import uuid from "react-native-uuid"
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CustomTextInput from '../../../components/CustomTextInput';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const CreatePlan = () => {
-  const { currentPlan, setCurrentPlan } = useContext(UserPlan);
+  const { currentPlan, setCurrentPlan,resetCurrentPlan } = useContext(UserPlan);
 
-  // Funktion, die den Namen im Plan-Objekt aktualisiert
-  const updatePlanName = (input) => {
-    setCurrentPlan((prevPlan) => ({
+  //Diese Funktion wird beim erstellen eines Plans Initialisiert und schaftt eine Basis.
+  useEffect(()=>{
+    setCurrentPlan((prevPlan) =>({
       ...prevPlan,
-      Name: input,  // aktualisiere den Namen direkt
+      PID:uuid.v4(),
+      CDate: new Date(),
+      LUDate: new Date(),
+    }))},[])
+
+
+
+    // Funktion, die den Namen im Plan-Objekt aktualisiert
+    const updatePlanName = (input) => {
+      setCurrentPlan((prevPlan) => ({
+        ...prevPlan,
+        Name: input,  
     }))}
 
-  const updatePlanDescription = (input) => {
-    setCurrentPlan((prevPlan) => ({
-      ...prevPlan,
-      Description: input,  // aktualisiere den Namen direkt
+    //Funktion, die die Beschreibung im Plan-Objekt akualisiert
+    const updatePlanDescription = (input) => {
+      setCurrentPlan((prevPlan) => ({
+        ...prevPlan,
+        Description: input, 
     }))};
 
-  const updatePlanDuration = (input) => {
-    setCurrentPlan((prevPlan) => ({
-      ...prevPlan,
-      Duration: input,  // aktualisiere den Namen direkt
-    }))};
+    //Funktion, die die Dauer aktualisiert
+    const updatePlanDuration = (input) => {
+      setCurrentPlan((prevPlan) => ({
+        ...prevPlan,
+        Duration: input,  // aktualisiere den Namen direkt
+      }))};
 
     
+    //Funktion, die die Schwierigkeit aktualisiert
+    const updatePlanDifficulty = () => {
+      if (currentPlan.Difficulty === "Easy"){
+        p = "Medium"
+        bg = "bg-red-300"
+      } else if (currentPlan.Difficulty === "Medium"){
+        p = "Hard"
+        bg = "bg-red-900"
+      } else {
+        p = "Easy"
+        bg = "bg-green-800"
+      }
+      setCurrentPlan((prevPlan) => ({
+        ...prevPlan,
+        Difficulty: p,
+        Bg:bg
+      }))}
+
+      //Funktion, die die Übungen Aktualisiert
+
+      const removeEID = (indexToRemove)=> {
+        const a = [...currentPlan.EIDs]
+        a.splice(indexToRemove,1)
+
+        setCurrentPlan((prevPlan) => ({
+          ...prevPlan,
+          EIDs: a,
+        }))
+      }
+
+      //Funktion welche Prüft ob alle Eingaben korrekt sind.
+      const finalCheck = () => {
+        let result = false
+        // Prüfen, ob Name nicht definiert ist oder kürzer als 3 Zeichen ist
+        if (currentPlan.Name === undefined || currentPlan.Name.length < 3) {
+          Alert.alert("Eingabefehler","Prüfe deinen Namen")
+        } else if (currentPlan.Description === undefined || currentPlan.Description.length < 3)  {
+          Alert.alert("Eingabefehler","Prüfe deine Beschreibung")
+        } else if ( currentPlan.Duration === undefined || currentPlan.Duration <= 1){
+          Alert.alert("Eingabefehler","Prüfe deine Dauer")
+        } else if (currentPlan.EIDs === undefined || currentPlan.EIDs.length <= 0){
+          Alert.alert("Eingabefehler","Prüfe deine Übungen")
+        } else{
+          result = true
+        }
+        return result
+      };
+
   
-  const updatePlanDifficulty = () => {
-    if (currentPlan.Difficulty === "Easy"){
-      p = "Medium"
-    } else if (currentPlan.Difficulty === "Medium"){
-      p = "Hard"
-    } else {
-      p = "Easy"
-    }
-    setCurrentPlan((prevPlan) => ({
-      ...prevPlan,
-      Difficulty: p,
-    }))
-  }
-
-  const removeEID = (indexToRemove)=> {
-    const a = [...currentPlan.EIDs]
-     a.splice(indexToRemove,1)
-
-    setCurrentPlan((prevPlan) => ({
-      ...prevPlan,
-      EIDs: a,
-    }))
-  }
-
  
-  const finalCheck = () => {
-    let result = false
-    // Prüfen, ob Name nicht definiert ist oder kürzer als 3 Zeichen ist
-    if (currentPlan.Name === undefined || currentPlan.Name.length < 3) {
-      Alert.alert("Eingabefehler","Prüfe deinen Namen")
-    } else if (currentPlan.Description === undefined || currentPlan.Description.length < 3)  {
-      Alert.alert("Eingabefehler","Prüfe deine Beschreibung")
-    } else if ( currentPlan.Duration === undefined || currentPlan.Duration <= 1){
-      Alert.alert("Eingabefehler","Prüfe deine Dauer")
-    } else if (currentPlan.EIDs === undefined || currentPlan.EIDs.length <= 0){
-      Alert.alert("Eingabefehler","Prüfe deine Übungen")
-    } else{
-      result = true
-    }
-    return result
-  };
+      //Funktion, zum speichern des Plans im asynchronen Speicher
+      const saveCurrentPlan = async () => {
+        const jsonValue = JSON.stringify(currentPlan);
+        await AsyncStorage.setItem("Plan-" + currentPlan.PID ,jsonValue);
+        const x = await AsyncStorage.getItem("Plan-" + currentPlan.PID)
+        console.log(x)
+        resetCurrentPlan()
+        console.log("Plan Gespeichert")
+        router.push("/")
 
-  const updatePlanCreationDate = () => {
-    setCurrentPlan((prevPlan) => (
-      {
-      ...prevPlan,
-      CDate: new Date(),
-    }
-  ));
-
-  };
-  
-  const updatePlanLastUseDate = () => {
-    setCurrentPlan((prevPlan) => ({
-      ...prevPlan,
-      LUDate: new Date(),
-    }));
-  };
-  
-  const updatePlanPID = () => {
-    setCurrentPlan((prevPlan) => ({
-      ...prevPlan,
-      PID: uuid.v4(),
-    }));};
-  
-  const saveCurrentPlan = async () => {
-    const jsonValue = JSON.stringify(currentPlan);
-    await AsyncStorage.setItem("Plan-" + currentPlan.PID ,jsonValue);
-    console.log("Plan Gespeichert")
-
-  }
+      }
   
 
   return (
-    <SafeAreaView className="bg-primary h-full p-4">
-      <Text className="text-3xl text-white font-bold mb-4">Plan Name ändern</Text>
+    <SafeAreaView className="bg-black h-full p-4">
+      <Text className="text-3xl text-white text-center font-bold m-5">Create Plan</Text>
       
-      {/* TextInput zum Eingeben des Plan-Namens */}
-      <TextInput
-        className="bg-white p-2 rounded"
-        value={currentPlan.Name}               // Zeigt den aktuellen Namen aus dem State
-        placeholder="Gib den Plan-Namen ein"   // Platzhalter, wenn Name leer ist
-        onChangeText={updatePlanName}          // Aktualisiert den Namen bei jeder Eingabe
+      <Text className="text-2xl text-white font-bold  mb-1">
+        Details:
+      </Text>
+      <CustomTextInput
+      title={currentPlan.Name}
+      placeholder={"Enter a Name"}
+      handlingChange={updatePlanName}
       />
-      <TextInput
-        className="bg-white p-2 rounded"
-        value={currentPlan.Description}               // Zeigt den aktuellen Namen aus dem State
-        placeholder="Gib eine Beschreibung ein"   // Platzhalter, wenn Name leer ist
-        onChangeText={updatePlanDescription}          // Aktualisiert den Namen bei jeder Eingabe
+      <CustomTextInput
+      title={currentPlan.Description}
+      handlingChange={updatePlanDescription}
+      placeholder="Enter a Description"
       />
-      <TextInput
-        className="bg-white p-2 rounded"
-        value={currentPlan.Duration}               // Zeigt den aktuellen Namen aus dem State
-        placeholder="Gib eine schwierigkeit"   // Platzhalter, wenn Name leer ist
-        onChangeText={updatePlanDuration}          // Aktualisiert den Namen bei jeder Eingabe
-        keyboardType='numeric'
-      />
-      <TouchableOpacity
-        onPress={updatePlanDifficulty}
-        >
-          <Text className="text-3xl text-white">{currentPlan.Difficulty}</Text>
-      </TouchableOpacity>
 
+      <View className="flex-row items-center justify-between">
+
+        <CustomTextInput
+        title={currentPlan.Duration}
+        keyType="numeric"
+        placeholder={"Duration"}
+        handlingChange={updatePlanDuration}
+        
+        />
+
+
+        <TouchableOpacity onPress={updatePlanDifficulty} className={   ` justify-center border border-[3px] border-blue2 rounded-[10px] h-[50px] w-[48%] ${currentPlan.Bg}`}>
+            <Text className= "text-white text-xl font-bold text-center" >{currentPlan.Difficulty}</Text>
+        </TouchableOpacity>
+      </View>
+      
+
+      
+      <Text className="text-2xl text-white font-bold mt-5">
+        Exercises:
+      </Text>
       <FlatList
-  data={currentPlan.EIDs}
-  keyExtractor={(item, index) => index.toString()}
-  renderItem={({ item, index }) => {
-    const e = exercises.find(ex => ex.EID === item);
-    if (e) {
-      return (
-        <View className="flex-row">
-              <Text className="text-3xl text-white">{e.Name}</Text>
-              <TouchableOpacity onPress={ ()=> removeEID(index)}>
-                <Image source={icons.eye}/>
-              </TouchableOpacity>
-        </View>
-  )
-      
-    }
-    return null;
-  }}
-  ListFooterComponent={
-    <TouchableOpacity onPress={() => router.push("/exercise-picker")}>
-      <Image className="m-5" source={icons.plus} />
-    </TouchableOpacity>
-  }
-/>
-    <TouchableOpacity onPress={async ()=> {
-      
-      if (finalCheck()){
-        updatePlanPID()
-        updatePlanLastUseDate()
-        updatePlanCreationDate()
-        await saveCurrentPlan();
-        console.log("success")
-        Alert.alert(
-            "Erfolgreich",
-            "Dein Worokout wurde gespeichert",
-            [
-              {
-                text:"OK",
-                onPress:()=> router.push("/")
-              }
-            ]
+        data={currentPlan.EIDs}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item, index }) => {
+          const e = exercises.find(ex => ex.EID === item);
+          if (e) {
+            return (
+              <View className="flex-row justify-between items-center border border-2 border-blue2 my-2">
+                    <View className="flex-row items-center my-2 ml-2">
+                      <Image source={e.Image} className="mr-2 h-[70px] w-[70px]"/>
+                      <Text className="text-xl text-white font-bold w-[50%]">{e.Name}</Text>
 
-        )
+                    </View>
+                    
+                    <TouchableOpacity onPress={ ()=> removeEID(index)}>
+                    <View className="bg-red-900 rounded-full w-[35px] h-[35px] items-center justify-center m-2">
+                      <Icon name="trash-o" size={25} color="black"/>
+                    </View>
+                    </TouchableOpacity>
+              </View>
+          )}
+          return null;
+        }}
+      ListFooterComponent={
+        <TouchableOpacity onPress={() => router.push("/exercise-picker")} className="border border-[3px] border-blue2 p-3 justify-center items-center my-2">
+
+          <Text className="text-xl text-white font-bold">Add Exercise</Text>
+        </TouchableOpacity>
       }
-
-
-    }}
-      >
-      
-      <Text className="text-3xl text-white">Test</Text>
-    </TouchableOpacity>
+    />
+   
+      <TouchableOpacity onPress={saveCurrentPlan} className=" bg-blue2 rounded-[10px] p-2 justify-center items-center mt-5 mb-2 h-[50px]">
+        <Text className="text-xl text-white font-bold">Safe Plan</Text>
+      </TouchableOpacity>
+   
+    
 
       
     </SafeAreaView>
-  );
-};
+  );}
+
 
 export default CreatePlan;

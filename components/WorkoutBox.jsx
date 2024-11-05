@@ -26,8 +26,8 @@ const WorkoutBox = ({planObject}) => {
             <Text className="text-xl font-bold text-white ml-2">{planObject.Name}</Text>
             <TouchableOpacity onPress={()=> {
 
-              router.push({pathname:"/edit-workout", params: { pid:JSON.stringify(planObject.PID)}  })
-              console.log(JSON.stringify(planObject.PID))
+              router.push({pathname:"/edit-workout", params: { data: JSON.stringify(planObject)}  })
+              console.log(JSON.stringify(planObject))
             }}>
               <Image source={icons.rightArrow}/>
             </TouchableOpacity>
@@ -59,7 +59,9 @@ const WorkoutBox = ({planObject}) => {
       </View>
       <CustomButton
       title="Start Workout"
-      handlePress={()=> {router.push({pathname:"/active-home", params: { data: JSON.stringify(planObject)}})}}
+      handlePress={()=> {
+        console.log(planObject)
+        router.push({pathname:"/active-home", params: { data: JSON.stringify(planObject)}})}}
       /> 
     </View>
   )

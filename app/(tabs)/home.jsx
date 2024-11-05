@@ -69,7 +69,7 @@ const Home = () => {
           <CustomButton
           title ="I do storage Stuff"
           handlePress = { async ()=>{
-            console.log(filteredKeys)
+            console.log(planObject)
             }
 
           }

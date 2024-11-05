@@ -6,14 +6,9 @@ import { icons } from '../constants'
 
 const NavBox = ({title, handlePress, icon}) => {
   return (
-    <TouchableOpacity
-    onPress={handlePress}
-
-    >
-        <View className="bg-blue2 rounded-[50px] h-[200px] justify-center items-center m-2">
-                <Image source={icon} className="h-50 w-50 "/>
-            <Text className="text-center text-white text-3xl mt-5">{title}</Text>
-        </View>
+    <TouchableOpacity className=" border border-[3px] border-blue2 rounded-[10px] w-[110px] h-[110px] justify-center items-center" onPress={handlePress}>
+      <Image source={icon} className="h-[40px] w-[40px]" />
+      <Text className="text-white text-xl font-bold">{title}</Text>
     </TouchableOpacity>
   )
 }
