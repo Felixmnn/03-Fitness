@@ -1,28 +1,14 @@
-import { View, Text, FlatList ,Image} from 'react-native'
-import React, { useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { useContext } from 'react'
-import { UserWorkout } from '../../context/currentWorkout'
-import exercises from '../../constants/exercises'
-import { useEffect } from 'react'
+import { View, Text,FlatList, TouchableOpacity,Image } from 'react-native'
+import React from 'react'
+import exercises from '../constants/exercises'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { TouchableOpacity } from 'react-native'
+import { useState } from 'react';
 
 
 
-const ProgressWorkout = () => { 
-
-
-    useEffect (()=> {
-        setCurrentWorkout((prevWorkout) => ({
-            ...prevWorkout,
-            EIDs: [...new Set(currentWorkout.EIDs)]
-        }))
-        
-    },[])
-
-    const {currentWorkout, setCurrentWorkout} = useContext(UserWorkout);
-
+const RenderSavedExercises = ({SID,EIDs, passed}) => {
+// was brauche ich alles exercises EIDs
+// currentworkout.SID
     const [shownExercercise, setShownExercise] = useState(null)
 
     const RenderExercises = (numbers)=> {
@@ -49,19 +35,16 @@ const ProgressWorkout = () => {
                })} 
             </View>
             )}
-
-
-    
-
+        
   return (
-    <SafeAreaView className="bg-black h-full">
-        <FlatList
-        data={currentWorkout.EIDs}
+    <FlatList
+        data={EIDs}
         keyExtractor={(item,index) => index.toString()}
         renderItem={({item})=> {
             const e = exercises[item-1];
-            const fE = currentWorkout.SID.filter(item => item.EID === e.EID)
+            const fE = SID.filter(item => item.EID === e.EID)
             return (
+                (fE.length === 0 || fE === null)?(<></>):(
                 <View className=" m-2 p-2 border border-[3px] border-blue2">
                     <View className="flex-row items-center">
                         <Image source={e.Image} className="h-[70px] w-[70px]"/>
@@ -91,11 +74,10 @@ const ProgressWorkout = () => {
                     </View>
                 </View>
                 
-            )
+            ))
         }}
         />
-    </SafeAreaView>
   )
 }
 
-export default ProgressWorkout
+export default RenderSavedExercises

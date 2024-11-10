@@ -43,7 +43,7 @@ const ActiveExercisePicker = () => {
 
 
     <SafeAreaView className="h-full bg-black">
-        <Text className="text-white text-3xl font-bold text-center my-5">Select Exercise</Text>
+        
         <FlatList
             data = {currentWorkout.EIDs}
             keyExtractor={(item, index)=> index.toString()}

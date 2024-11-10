@@ -1,4 +1,4 @@
-import { View, Text,SafeAreaView,Image, TextInput, FlatList } from 'react-native'
+import { View, Text,SafeAreaView,Image, TextInput, FlatList,ScrollView,Alert } from 'react-native'
 import React, { useContext } from 'react'
 import CustomButton from '../../../components/CustomButton'
 import { TouchableOpacity } from 'react-native'
@@ -13,6 +13,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import CustomTextInput from '../../../components/CustomTextInput'
 import exercises from '../../../constants/exercises'
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
+import RenderLastEntrys from '../../../components/RenderLastEntrys'
+import RenderBreakTimer from '../../../components/RenderBreakTimer'
+
 
 const ActiveHome = () => {
   //Funktion, welche den Context Initialisiert
@@ -22,8 +26,13 @@ const ActiveHome = () => {
   const { data } = useLocalSearchParams();
   const planObject = data? JSON.parse(data) : null;
 
+
+  
+
+
   //Funktion zum Initialieren des Workouts:
   useEffect(() => {
+    
     if (planObject) {
       setCurrentWorkout((prevPlan) => ({
         ...prevPlan,
@@ -36,7 +45,24 @@ const ActiveHome = () => {
       }));
       console.log("Basic setup was successful");
     }
+
   }, [data]);
+
+ 
+
+  useEffect(() => {
+    const saveWorkoutData = async () => {
+      if (currentWorkout && currentWorkout.Active) { // Check auf isActive
+        await AsyncStorage.setItem("ActiveWorkout", JSON.stringify(currentWorkout));
+      }
+    };
+    saveWorkoutData();
+  }, [currentWorkout]); // Ausgeführt, wenn workoutData geändert wird
+  
+  
+  const setWorkoutInactive = async ()=>{
+    await AsyncStorage.removeItem("ActiveWorkout")
+  }
 
   //Funtkionen zum passiven setzen von Werten
   const [duration,setDuration] = useState(0);
@@ -45,6 +71,10 @@ const ActiveHome = () => {
   const [ currentReps, setCurrentReps ] = useState(0);
   const [currentNotes, setCurrentNotes] = useState("")
   const [ warmUp , setWarmUp ] = useState("bg-black")
+  const [ moreActive, setMoreActive ] = useState(false)
+  const [ activeTimer, setActiveTimer] = useState(true)
+  const [viewProgress, setViewProgress] = useState(false)
+  const [viewTimer ,setViewTimer ] = useState(false)
 
   //Functionen zum aktiven setzen von Werten
     const changeDuration = () => {
@@ -72,17 +102,64 @@ const ActiveHome = () => {
       return currentWorkout.SID.filter(item => item.EID === id)
     }
 
+    const getDates = () => {
+      const currentDate = new Date();
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth()+1).padStart(2,"0");
+      const day = String(currentDate.getDate()).padStart(2,"0");
+      const formatedDate = `${day}-${month}-${year}`;
+      return formatedDate;
+    }
+
+
+    
     //Funktion zum Speichern des Workouts
     const safeWorkout = async ()=> {
       const jsonValue = JSON.stringify(currentWorkout)
       await AsyncStorage.setItem(`Workout-${currentWorkout.TPID}`,jsonValue)
       console.log("Locally Stored")
+
     }
 
+
+
+    //Funktionen zum Darstellen der Letzten Workouts
+    const [pastExercises, setPastExercises] = useState([])
+
+    const checkIfAsyncEntry = async ()=>  {
+      const exerciseName = exercises[currentWorkout.Selected-1].Name
+      const exists = await AsyncStorage.getItem(exerciseName);
+      return (exists === null)? false:true;
+    }
+
+    const getAsyncEntry = async () => {
+      const exerciseName = exercises[currentWorkout.Selected-1].Name
+      const newPastExercises = await AsyncStorage.getItem(exerciseName);
+      setPastExercises(JSON.parse(newPastExercises))
+    }
+
+    const setAsyncEntry = async () => {
+      const exerciseName = exercises[currentWorkout.Selected-1].Name
+      await AsyncStorage.setItem(exerciseName,JSON.stringify([]))
+    }
+
+    const addAsyncEntry = async (entry) => {
+      const exerciseName = exercises[currentWorkout.Selected-1].Name
+      let newPastExerciseArray;
+
+      if(pastExercises.length < 100 ){
+        newPastExerciseArray = [entry,...pastExercises];
+      } else {
+        newPastExerciseArray = [entry,...pastExercises.slice(0,99)];
+      }
+      setPastExercises(newPastExerciseArray)
+      await AsyncStorage.setItem(exerciseName,JSON.stringify(newPastExerciseArray))
+    }
     
 
   return (
     <SafeAreaView className ="bg-black h-full">
+      <ScrollView>
       <View className=" border-2 flex-1 m-2 justify-between ">
           
 
@@ -164,25 +241,52 @@ const ActiveHome = () => {
           title="Safe set"
           containerStyles="bg-blue2 my-2"
           textStyles="text-white"
-          handlePress={()=> {
-            const set = {EID:currentWorkout.Selected,Reps:currentReps,Weight:currentWeight,Notes:currentNotes,WarmUp:warmUp}
-            setCurrentWorkout((prevWorkout) => ({
-              ...prevWorkout,
-              SID:[...prevWorkout.SID,set]
-            }))
-            console.log(currentWorkout.SID)
-          }}
+          handlePress={async()=> {
+
+            if (currentWorkout.Selected < 0) {
+              Alert.alert("Missing Exercise","Please Select a Exercises")
+            } else {
+              const set = {EID:currentWorkout.Selected,Reps:currentReps,Weight:currentWeight,Notes:currentNotes,WarmUp:warmUp,Date:getDates()}
+              const exists = await checkIfAsyncEntry();
+              if (exists) {
+                await addAsyncEntry(set)
+              } else {
+                await setAsyncEntry();
+                console.log("Ein Eintrag im Async Storage wurde erstellt")
+                await addAsyncEntry(set);
+              }
+              console.log(pastExercises)
+  
+              setCurrentWorkout((prevWorkout) => ({
+                ...prevWorkout,
+                SID:[...prevWorkout.SID,set]
+              }))
+              console.log(currentWorkout.SID)
+            }}
+            }
           />
 
+          <View className="border border-blue2 border-[3px] p-2 rounded-[10px] ">
+            <View className="flex-row items-center justify-between">
+              <Text className="text-white text-xl font-bold">View Exercise Progress:</Text>
+              <TouchableOpacity onPress={()=> setViewProgress(!viewProgress)}>
+                <Image source={viewProgress? icons.eye:icons.eyeHide} className="h-[40px] w-[40px]"/>
+              </TouchableOpacity>
+          </View>
           <View>
-            <Text className="text-white text-xl font-bold">Todays Sets:</Text>
+            {(viewProgress)?
+            (<View>
+
+            <Text className="text-white text-xl font-bold">Sets Today:</Text>
             <FlatList
               data={getPastSets(currentWorkout.Selected)}
               keyExtractor={(item, index) => String(index)} 
               horizontal={true}
+              
+              ListEmptyComponent={<Text className="text-white font-bold">-</Text>}
               renderItem={({ item }) => (
               
-                <View className={` ${item.WarmUp} border border-blue2 border-[3px] rounded-[5px] py-1 px-2 w-[85px] m-1 flex-row`}>
+                <View className={` ${item.WarmUp} border border-blue2 border-[3px] rounded-[5px] py-1 px-2 w-[95px] m-1 flex-row`}>
                   <View className="mx-[5px]">
                   <Text className="text-white font-bold">{`${item.Weight} Kg`}</Text>
                   <Text className="text-white font-bold">{`${item.Reps} Reps`}</Text>
@@ -199,11 +303,40 @@ const ActiveHome = () => {
               )}
               
             />
-
-          </View>
-          <TouchableOpacity>
-            <Text className="text-white text-center underline">more</Text>
+            <View>
+              {(moreActive)?(<RenderLastEntrys />):(<></>)}
+            </View>
+            <TouchableOpacity className="items-center justify-center" onPress={()=> {setMoreActive(!moreActive)}}>
+            {
+              (moreActive)?
+              (<Text className="text-white text-center underline">less</Text>):
+              (
+              <Text className="text-white text-center underline">more</Text>)
+            }  
           </TouchableOpacity>
+            </View>):
+            (<></>)}
+            
+          </View>
+          
+          
+          </View>
+
+          
+            <View className={`border border-blue2 border-[3px] p-2 rounded-[10px] my-2 ${((viewTimer)?("bg-blue2"):("bg-black"))}`}>
+              <View className="flex-row items-center justify-between">
+                <Text className="text-white text-xl font-bold">View Break Timer:</Text>
+                <TouchableOpacity onPress={()=> setViewTimer(!viewTimer)}>
+                  <Image source={viewTimer? icons.eye:icons.eyeHide} className="h-[40px] w-[40px]"/>
+                </TouchableOpacity>
+              </View>
+              <View>
+                {(viewTimer)?(<RenderBreakTimer/>):(<></>)}
+              </View>
+              
+          </View>
+          
+          
             
         </View>
 
@@ -227,6 +360,7 @@ const ActiveHome = () => {
               Active:false,
 
             }))
+            setWorkoutInactive()
             console.log("Values were reset")
             router.push("/")
             console.log(currentWorkout)
@@ -242,6 +376,7 @@ const ActiveHome = () => {
         
 
       </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }

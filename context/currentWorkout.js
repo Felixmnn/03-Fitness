@@ -5,6 +5,10 @@ export const UserWorkout = createContext();
 
 
 export const WorkoutProvider = ({ children }) => {
+
+    
+    
+
     const [currentWorkout, setCurrentWorkout] = useState({
     WID:"",
     TPID:"",

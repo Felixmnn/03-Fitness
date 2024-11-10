@@ -29,15 +29,27 @@ const ProfileLayout = () => {
           }}/>
           <Stack.Screen name="past-workout"
           options={{
-            headerShown:false
+            headerTitle: "Past Workout",
+            headerStyle: {
+              backgroundColor:"#0f0f0f"
+            },
+            headerTintColor: "white"
           }}/>
           <Stack.Screen name="active-exercise-picker"
             options={{
-              headerShown:false
+              headerTitle: "Select Exercise",
+              headerStyle: {
+                backgroundColor:"#0f0f0f"
+              },
+              headerTintColor: "white"
             }}/>
           <Stack.Screen name="progress-workout"
             options={{
-              headerShown:false
+              headerTitle: "Progress",
+              headerStyle: {
+                backgroundColor:"#0f0f0f"
+              },
+              headerTintColor: "white"
             }}/>
 
       

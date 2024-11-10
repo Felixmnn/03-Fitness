@@ -25,6 +25,7 @@ const plans = () => {
 
             <View>
               <Text className="text-2xl text-white font-bold m-2">Your Workouts:</Text>
+              
               <FlatList
               data = {[{id:1},{id:2}]}
               keyExtractor={(item)=> item.id}

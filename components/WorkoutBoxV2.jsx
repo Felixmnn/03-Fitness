@@ -3,7 +3,11 @@ import React from 'react'
 import { icons, images } from '../constants'
 import { TouchableOpacity } from 'react-native'
 
-const WorkoutBoxV2 = () => {
+const WorkoutBoxV2 = ({planObject}) => {
+
+
+
+
   return (
     <View className="border border-[3px] border-blue2 rounded-[5px] p-2 m-2">
         <View className="flex-row justify-between items-center">

@@ -1,5 +1,5 @@
 import { View, Text, FlatList, ScrollView, Image } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import NavBox from '../../components/NavBox'
 import { icons } from '../../constants'
@@ -7,69 +7,71 @@ import { router } from 'expo-router'
 import ProfilePicture from 'components/ProfilePicture';
 import { TouchableOpacity } from 'react-native'
 import WorkoutBox from '../../components/WorkoutBox'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { format } from 'date-fns';
 
 
 const results = () => {
+
+
+  const [pastWorkouts, setPastWorkouts] = useState([])
+
+  useEffect( () => {
+    getPastWorkouts()
+  },[])
+  
+  const getPastWorkouts = async ()=> {
+    const allKEys = await AsyncStorage.getAllKeys();
+    const filteredKEys = allKEys.filter(key => key.includes("Workout"))
+    const workoutEntries = await AsyncStorage.multiGet(filteredKEys)
+
+    const parsedWorkouts = workoutEntries.map(([key,value])=> JSON.parse(value))
+    const sortWorkouts = parsedWorkouts.sort((a,b)=> new Date(b.CDate) - new Date(a.CDate))
+    setPastWorkouts(sortWorkouts)
+      console.log(sortWorkouts)
+    
+  }
+
+    const formattedDate = (date)=>{
+      return format(date, 'dd.MM.yyyy');
+    }
+
+ 
+
+
   return (
-    <SafeAreaView className="bg-primary h-full">
-        <View className="border border-red-900 border-2 flex-1 m-5">
+    <SafeAreaView className="bg-black h-full">
+        <View className=" flex-1">
           <View className=" flex-row justify-between m-2 items-center">
             <Text className="text-white text-3xl font-bold">Resultate</Text>
             <ProfilePicture/>
           </View>
-          <View className="justify-between border border-red-900 border-2 flex-1 m-2">
+          <View className="justify-between  flex-1 m-2">
             <View>
               <Text className="text-2xl text-white font-bold mb-2">Letzte Workouts:</Text>
+              <View >
+              
 
-              <View>
-                
-              <View className="flex-row justify-center">
-                <TouchableOpacity className="w-[30%]" onPress={()=> {router.push("/past-workout")}}>
-                  <View className="bg-blue2 rounded-[5px] pt-1 mt-1 h-[50px] w-full">
-                    <Text className="text-white">Gestern</Text>
-                  </View>
-                  </TouchableOpacity>
-                <View className="bg-blue2 rounded-[5px]  m-1 p-1  h-[50px] w-[30%]">
-                  <Text className="text-white">Vorgestern</Text>
-                </View>
-                <View className="bg-blue2 rounded-[5px]  m-1 p-1 h-[50px] w-[30%]">
-                  <Text className="text-white">21.10</Text>
-                </View>
+              <FlatList
+                data={pastWorkouts}
+                numColumns={3}
+                keyExtractor={(item,index) => index.toString()}
+                renderItem={({item})=>{
+                  return(
+                    <TouchableOpacity onPress={()=> router.push({pathname:"/past-workout",params:{data:JSON.stringify(item)}})}>
+                    <View className="bg-blue2 p-2 rounded-[5px] m-1">
+                      <Text className="text-white">{item.Name}</Text>
+                      <Text className="text-white">{formattedDate(item.CDate)}</Text>
+                    </View>
+                    </TouchableOpacity>
+
+                  )
+                }}
+                />
               </View>
-              <View className="flex-row justify-center">
-                <View className="bg-blue2 rounded-[5px] m-1 p-1 h-[50px] w-[30%]">
-                  <Text className="text-white">20.10</Text>
-                </View>
-                <View className="bg-blue2 rounded-[5px]  m-1 p-1  h-[50px] w-[30%]">
-                  <Text className="text-white">19.10</Text>
-                </View>
-                <View className="bg-blue2 rounded-[5px]  m-1 p-1 h-[50px] w-[30%]">
-                  <Text className="text-white">17.10</Text>
-                </View>
-              </View>
-              <View className="flex-row justify-center">
-                <View className="bg-blue2 rounded-[5px] m-1 p-1 h-[50px] w-[30%]">
-                  <Text className="text-white">10.10</Text>
-                </View>
-                <View className="bg-blue2 rounded-[5px]  m-1 p-1  h-[50px] w-[30%]">
-                  <Text className="text-white">5.10</Text>
-                </View>
-                <View className="bg-blue2 rounded-[5px]  m-1 p-1 h-[50px] w-[30%]">
-                  <Text className="text-white">2.10</Text>
-                </View>
-              </View>
-              <View className="flex-row justify-center">
-                <View className="bg-blue2 rounded-[5px] m-1 p-1 h-[50px] w-[30%]">
-                  <Text className="text-white">03.09</Text>
-                </View>
-                <View className="bg-blue2 rounded-[5px]  m-1 p-1  h-[50px] w-[30%]">
-                  <Text className="text-white">02.09</Text>
-                </View>
-                <View className="bg-blue2 rounded-[5px]  m-1 p-1 h-[50px] w-[30%]">
-                  <Text className="text-white">01.09</Text>
-                </View>
-              </View>
-              </View>
+
+              
+              
               
             </View>
             
