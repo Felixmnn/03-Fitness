@@ -163,21 +163,21 @@ const ActiveHome = () => {
       <View className=" border-2 flex-1 m-2 justify-between ">
           
 
-          <Text className="text-3xl text-white font-bold my-5 text-center">{currentWorkout.Name}</Text>
+          
 
           <View className="justify-center items-center m-3">
             <TouchableOpacity 
-              className="flex-row justify-center items-center border border-[3px] border-blue2 rounded-2 p-2 w-[60%]" 
+              className="flex-row justify-center items-center border border-[3px] border-blue2 rounded-2 p-2 w-full rounded-[10px]" 
 
               onPress={()=> {router.push("/progress-workout")}}
               >
-                <Text className="text-3xl text-white font-bold my-2">Progress </Text>
+                <Text className="text-3xl text-white font-bold my-2">{currentWorkout.Name} Progress </Text>
                 <Icon name="book" size={30} color="white"/>
               </TouchableOpacity>
           </View>
             
 
-            <Text className="text-2xl text-white font-bold text-center mt-3">Selected Exercise:</Text>
+            <Text className="text-2xl text-white font-bold text-center mt-3">Current Exercise:</Text>
           
         <View className="">
           
@@ -204,67 +204,77 @@ const ActiveHome = () => {
             </View>
           </TouchableOpacity>
 
-          <View className="flex-row justify-between">
+          <View className="flex-row justify-between w-[100%] items-center">
             <CustomTextInput
             placeholder="Weight"
             keyType='numeric'
             handlingChange={handleWeightChange}
-            width="48%"
-
+            width={"mr-2"}
             />
 
             <CustomTextInput
             placeholder='Reps'
             keyType='numeric'
             handlingChange={handleRepChange}
-            width="48%"
+            width={"mr-2"}
 
             />
-          </View>
 
-          <View className="flex-row justify-between">
-            <CustomTextInput
-            placeholder="Notes"
-            handlingChange={handleNoteChange}
-            width="60%"
-            />
-
-            <TouchableOpacity className={`flex-1 border border-[2px] border-blue2 rounded-[10px] m-1 justify-center items-center ${warmUp}`}
+            <TouchableOpacity className={`w-[30%] border border-[2px] border-blue2 rounded-[10px] justify-center items-center ${warmUp} h-[50px]`}
             onPress={()=> (warmUp === "bg-black")?(setWarmUp("bg-blue2")):(setWarmUp("bg-black"))}
             >
               <Text className="text-xl text-white font-bold">Warm Up</Text>
             </TouchableOpacity>
-          </View>
-          
-          
-          <CustomButton
-          title="Safe set"
-          containerStyles="bg-blue2 my-2"
-          textStyles="text-white"
-          handlePress={async()=> {
 
-            if (currentWorkout.Selected < 0) {
-              Alert.alert("Missing Exercise","Please Select a Exercises")
-            } else {
-              const set = {EID:currentWorkout.Selected,Reps:currentReps,Weight:currentWeight,Notes:currentNotes,WarmUp:warmUp,Date:getDates()}
-              const exists = await checkIfAsyncEntry();
-              if (exists) {
-                await addAsyncEntry(set)
-              } else {
-                await setAsyncEntry();
-                console.log("Ein Eintrag im Async Storage wurde erstellt")
-                await addAsyncEntry(set);
-              }
-              console.log(pastExercises)
-  
-              setCurrentWorkout((prevWorkout) => ({
-                ...prevWorkout,
-                SID:[...prevWorkout.SID,set]
-              }))
-              console.log(currentWorkout.SID)
-            }}
-            }
-          />
+          </View>
+
+          <View className="flex-row w-[100%]">
+
+          <View className="flex-row justify-between w-[100%] items-center mb-2">
+            <CustomTextInput
+            placeholder="Notes"
+            handlingChange={handleNoteChange}
+            width={"mr-2"}
+            
+            />
+
+            <CustomButton
+                      title="Safe set"
+                      containerStyles="bg-blue2 h-[50px]"
+                      textStyles="text-white"
+                      handlePress={async()=> {
+
+                        if (currentWorkout.Selected < 0) {
+                          Alert.alert("Missing Exercise","Please Select a Exercises")
+                        } else {
+                          const set = {EID:currentWorkout.Selected,Reps:currentReps,Weight:currentWeight,Notes:currentNotes,WarmUp:warmUp,Date:getDates()}
+                          const exists = await checkIfAsyncEntry();
+                          if (exists) {
+                            await addAsyncEntry(set)
+                          } else {
+                            await setAsyncEntry();
+                            console.log("Ein Eintrag im Async Storage wurde erstellt")
+                            await addAsyncEntry(set);
+                          }
+                          console.log(pastExercises)
+              
+                          setCurrentWorkout((prevWorkout) => ({
+                            ...prevWorkout,
+                            SID:[...prevWorkout.SID,set]
+                          }))
+                          console.log(currentWorkout.SID)
+                        }}
+                        }
+                      />
+          </View>
+
+          </View>
+
+          
+            
+          
+          
+          
 
           <View className="border border-blue2 border-[3px] p-2 rounded-[10px] ">
             <View className="flex-row items-center justify-between">
@@ -322,7 +332,7 @@ const ActiveHome = () => {
           
           </View>
 
-          
+          {/*
             <View className={`border border-blue2 border-[3px] p-2 rounded-[10px] my-2 ${((viewTimer)?("bg-blue2"):("bg-black"))}`}>
               <View className="flex-row items-center justify-between">
                 <Text className="text-white text-xl font-bold">View Break Timer:</Text>
@@ -335,7 +345,7 @@ const ActiveHome = () => {
               </View>
               
           </View>
-          
+          */}
           
             
         </View>

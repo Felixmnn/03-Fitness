@@ -1,6 +1,5 @@
 
 const placeholder = "assets/images/thumbnail.png"
-
 const exercises = [
     {EID:1,Image:require("assets/images/thumbnail.png"), Name:"Bench Press", Type:"Barbell", MainMuscle:"Chest", SecondaryMuscles:"Triceps, Shoulders", RecoveryTime:"48-72 hours", Difficulty:"Intermediate", OptimalRepRange:"6-12", Alternatives:[2, 3, 4], TrainingGoal:"Strength, Hypertrophy"  },
     {EID:2,Image:require("assets/images/thumbnail.png"), Name:"Dumbbell Bench Press", Type:"Dumbbell", MainMuscle:"Chest", SecondaryMuscles:"Triceps, Shoulders", RecoveryTime:"48-72 hours", Difficulty:"Intermediate", OptimalRepRange:"8-15", Alternatives:[1, 3, 5], TrainingGoal:"Strength, Hypertrophy"},

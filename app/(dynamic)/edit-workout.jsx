@@ -109,7 +109,9 @@ const EditWorkout = () => {
   return (
     <SafeAreaView className="bg-black h-full">
         <View className="">
+        <Text className="text-white text-3xl font-bold text-center">Editing Plan</Text>
           <View className="flex-row items-center  mx-2 my-5">
+            
 
             <View className="flex-1">
               {isEditing? 
@@ -123,7 +125,7 @@ const EditWorkout = () => {
               }}
               />
               <TouchableOpacity onPress={()=> {setIsEditing(!isEditing)}}>
-                <Icon name="check-circle" size={30} color ="red"/>
+                <Icon name="check-circle" size={30} color ="#7F1D1D"/>
               </TouchableOpacity>
               </View>
               ):
@@ -131,7 +133,7 @@ const EditWorkout = () => {
                 <View className="flex-row justify-between items-center">
                 <Text className="text-3xl text-white font-bold text-center"> {currentPlan.Name}</Text>
                 <TouchableOpacity onPress={()=> {setIsEditing(!isEditing)}}>
-                <Icon name="edit" size={30} color ="red"/>
+                <Icon name="edit" size={30} color ="#7F1D1D"/>
                 </TouchableOpacity>
                 </View>
 
@@ -148,10 +150,10 @@ const EditWorkout = () => {
           <View className="flex-row justify-between items-center  mx-2">
               <Text className="text-xl text-white font-bold text-center">Description:</Text>
               <TouchableOpacity className="justify-center items-center" onPress={()=> {setIsEditingD(!isEditingD)}}>
-                    <Icon name="check-circle" size={30} color ="red"/>
+                    <Icon name="check-circle" size={30} color ="#7F1D1D"/>
               </TouchableOpacity>
           </View>
-              <View className="bg-red-900 h-[2px] w-full mb-3"></View>
+              <View className="bg-blue2 h-[2px] w-full mb-3"></View>
               <CustomTextInput
               title={currentPlan.Description}
               placeholder="Select a great Descirption"
@@ -166,10 +168,10 @@ const EditWorkout = () => {
               <View className="flex-row justify-between items-center  mx-2">
                   <Text className="text-xl text-white font-bold text-center">Description:</Text>
                   <TouchableOpacity className="justify-center items-center" onPress={()=> {setIsEditingD(!isEditingD)}}>
-                    <Icon name="edit" size={30} color ="red"/>
+                    <Icon name="edit" size={30} color ="#7F1D1D"/>
                   </TouchableOpacity>
               </View>
-                  <View className="bg-red-900 h-[2px] w-full mb-3"></View>
+                  <View className="bg-blue2 h-[2px] w-full mb-3"></View>
                   <Text className="text-white font-bold  mx-2 mb-3">
                   {currentPlan.Description}
                   </Text>
@@ -181,10 +183,10 @@ const EditWorkout = () => {
 
 
           <Text className="text-3xl text-white font-bold mx-2">Exercises:</Text>
-          <View className="bg-red-900 h-[2px] w-full mb-3"></View>
+          <View className="bg-blue2 h-[2px] w-full mb-3"></View>
           
           <FlatList
-          className="h-[50%]"
+          className="h-[40%]"
           data = {currentPlan.EIDs}
           keyExtractor= {(item,index) => index.toString()}
           renderItem={({index,item})=>{
@@ -215,9 +217,9 @@ const EditWorkout = () => {
           
           
           />
-          <View className="bg-red-900 h-[2px] w-full mb-3"></View>
+          <View className="bg-blue2 h-[2px] w-full mb-3"></View>
 
-          <TouchableOpacity className="border border-[3px] border-red-900 p-2 justify-center items-center"
+          <TouchableOpacity className="border border-[3px] border-blue2 p-2 justify-center rounded-[10px] items-center m-2"
           onPress={()=>{router.push("/exercise-picker")}}
           >
             <Text className="text-white text-xl">Add Exercise</Text>

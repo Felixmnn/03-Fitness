@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, Image, Alert} from 'react-native'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import {images} from "../../constants"
 import FormField from '../../components/FormField'
@@ -7,10 +7,16 @@ import  CustomButton  from "../../components/CustomButton";
 import { Redirect, router, Link } from "expo-router";
 import { icons } from '../../constants'
 import {getCurrentUser, signIn} from "../../lib/appwrite"
+import {useGlobalContext} from "../../context/GlobalProvider"
+
 
 
 
 const SignIn = () => {
+
+  const { user, setUser } = useGlobalContext()
+  const { isLoggedIn, setIsLoggedIn } = useGlobalContext()
+
   const [form, setForm] = useState({
     email:'',
     password:''
@@ -31,7 +37,7 @@ const SignIn = () => {
           await signIn(form.email, form.password)
           const result = await getCurrentUser();
           setUser(result);
-          setIsLogged(true);
+          setIsLoggedIn(true);
           Alert.alert("Success", "User signed in successfully :)");
           router.replace("/home");
 

@@ -114,19 +114,23 @@ const CreatePlan = () => {
     <SafeAreaView className="bg-black h-full p-4">
       <Text className="text-3xl text-white text-center font-bold m-5">Create Plan</Text>
       
-      <Text className="text-2xl text-white font-bold  mb-1">
+      <Text className="text-2xl text-white font-bold mb-1">
         Details:
       </Text>
-      <CustomTextInput
-      title={currentPlan.Name}
-      placeholder={"Enter a Name"}
-      handlingChange={updatePlanName}
-      />
-      <CustomTextInput
-      title={currentPlan.Description}
-      handlingChange={updatePlanDescription}
-      placeholder="Enter a Description"
-      />
+
+        <CustomTextInput
+        title={currentPlan.Name}
+        placeholder={"Enter a Name"}
+        handlingChange={updatePlanName}
+        
+        />
+        <CustomTextInput
+        title={currentPlan.Description}
+        handlingChange={updatePlanDescription}
+        placeholder={"Enter a Description"}
+
+        />
+      
 
       <View className="flex-row items-center justify-between">
 
@@ -135,6 +139,7 @@ const CreatePlan = () => {
         keyType="numeric"
         placeholder={"Duration"}
         handlingChange={updatePlanDuration}
+        width={"mr-2 w-[50%]"}
         
         />
 
@@ -156,7 +161,7 @@ const CreatePlan = () => {
           const e = exercises.find(ex => ex.EID === item);
           if (e) {
             return (
-              <View className="flex-row justify-between items-center border border-2 border-blue2 my-2">
+              <View className="flex-row justify-between items-center border border-[3px] border-blue2 my-2 rounded-[10px]">
                     <View className="flex-row items-center my-2 ml-2">
                       <Image source={e.Image} className="mr-2 h-[70px] w-[70px]"/>
                       <Text className="text-xl text-white font-bold w-[50%]">{e.Name}</Text>
@@ -173,7 +178,7 @@ const CreatePlan = () => {
           return null;
         }}
       ListFooterComponent={
-        <TouchableOpacity onPress={() => router.push("/exercise-picker")} className="border border-[3px] border-blue2 p-3 justify-center items-center my-2">
+        <TouchableOpacity onPress={() => router.push("/exercise-picker")} className="border border-[3px] border-blue2 p-3 justify-center items-center my-2 rounded-[10px]">
 
           <Text className="text-xl text-white font-bold">Add Exercise</Text>
         </TouchableOpacity>
@@ -183,7 +188,7 @@ const CreatePlan = () => {
       <TouchableOpacity onPress={saveCurrentPlan} className=" bg-blue2 rounded-[10px] p-2 justify-center items-center mt-5 mb-2 h-[50px]">
         <Text className="text-xl text-white font-bold">Safe Plan</Text>
       </TouchableOpacity>
-   
+      
     
 
       

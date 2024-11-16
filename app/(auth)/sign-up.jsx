@@ -7,10 +7,15 @@ import React, { useState } from 'react'
 import { icons } from '../../constants'
 import {images} from "../../constants"
 import { createUser } from '../../lib/appwrite';
+import { useGlobalContext } from '../../context/GlobalProvider';
 
 
 
 const SignUp = () => {
+
+  const { user, setUser } = useGlobalContext()
+  const { isLoggedIn, setIsLoggedIn } = useGlobalContext()
+
   const [form, setForm] = useState({
     email:'',
     password:'',
@@ -18,7 +23,7 @@ const SignUp = () => {
     name: ''
 
   })
-
+ 
 const [isSubmitting, setIsSubmitting] = useState(false)
 
 const submit = async () => {
@@ -33,7 +38,7 @@ const submit = async () => {
     try {
         const result = await createUser(form.email, form.password, form.name )
         setUser(result);
-        setIsLogged(true);
+        setIsLoggedIn(true);
         router.replace("/home");
 
     }catch (error){ 

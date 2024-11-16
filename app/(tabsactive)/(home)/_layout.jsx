@@ -6,12 +6,17 @@ const ActiveHomeLayout = () => {
   return (
     <>
       <Stack>
+          
+
           <Stack.Screen name="active-home"
-          options={{
-            headerShown:false
-          }}/>
-      
-      </Stack>
+            options={{
+              headerTitle: "Workout Progress",
+              headerStyle: {
+                backgroundColor:"#0f0f0f"
+              },
+              headerTintColor: "white"
+            }}/>
+          </Stack>
     </>
   )
 }

@@ -6,5 +6,7 @@ import logo from "../assets/images/logo.png";
 import logoSmall from "../assets/images/logo-small.png";
 import empty from "../assets/images/empty.png";
 import logBook from "../assets/images/logBook.png"
+import chartsc from "../assets/images/Charts-Coming.png"
+import scedulesc from "../assets/images/Scedules-Coming.png"
 
-export default { profile, thumbnail, cards, path, logo, logoSmall, empty, logBook };
+export default { profile, thumbnail, cards, path, logo, logoSmall, empty, logBook,chartsc,scedulesc };

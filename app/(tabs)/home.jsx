@@ -12,8 +12,13 @@ import { TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useContext } from 'react';
 import { UserWorkout, WorkoutProvider } from "../../context/currentWorkout"
+import Footer from '../../components/Footer';
+import Main from '../../components/Main';
+
 
 const Home = () => {
+
+
 
   const initialWorkout = {
     WID:"",
@@ -106,22 +111,92 @@ const Home = () => {
       return (unfinishedWorkout)
   }
 
+
+
+  const activeWorkoutOutput = async () => {
+    return (<View className="p-2 border border-blue2 border-[3px] items-center rounded-[5px] w-full m-5 h-[50%]">
+      <Text className="text-white text-2xl font-bold">Active Workout</Text>
+        <View className="flex-row items-center">
+      <TouchableOpacity className="mx-5 my-2" onPress={async()=> {
+        if (currentWorkout.Active){
+          router.push("/active-home")
+        } else {
+          const getData = await getActiveWorkout();
+          setCurrentWorkout(getData);
+          router.push("/active-home")
+        }
+      }}>
+        <View className="flex-row items-center">
+        <Icon name="play" size={15} color={"green"} />
+          <Text className="text-green-700 font-bold m-1 text-xl mt-[1px]">Continue</Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity className="mx-5 my-2" onPress={async()=> { setCurrentWorkout(initialWorkout); await setWorkoutInactive()}}>
+        <View className="flex-row items-center">
+        <Icon name="close" size={15} color={"red"} />
+          <Text className="text-red-500 font-bold m-1 text-xl ">Delete</Text>
+        </View>
+      </TouchableOpacity>
+      
+    </View>
+    </View>)
+  }
+
+
+  const mContent = async ()=> {
+    return (
+      (activeWorkouts)?(
+       await activeWorkoutOutput()
+      ):(
+        <View>
+          <Text className="text-white text-3xl ">Select A Workout</Text>
+        </View>
+
+      )
+    )
+  }
+
+
+  const lastWorkout = ()=>{
+    return (
+      <View className=" border border-[3px] border-blue2 rounded-[10px] w-[150px] h-[150px] justify-center items-center">
+        <Text className="text-white">Last One</Text>
+      </View>
+    )
+  }
+  const lastWorkoutsChart = ()=>{
+    return (
+      <View className=" border border-[3px] border-blue2 rounded-[10px] w-[150px] h-[150px] justify-center items-center mx-2">
+        <Text className="text-white">lastWorkoutsChart </Text>
+      </View>
+    )
+  }
+
+
+  const fContent = ()=> {
+    return (
+      <ScrollView horizontal={true} >
+        <View>{lastWorkout()}</View>
+
+        <View>{lastWorkoutsChart()}</View>
+
+      </ScrollView>
+          )
+    }
+
   
 
  
 
   return (
     <SafeAreaView className="bg-black h-full">
-      <View className="flex-1 mx-2">
-        <View className="flex-row justify-between m-2 items-center">
-          <Text className="text-white text-3xl font-bold">Guten Tag </Text>
-          <ProfilePicture />
-        </View>
-        <View className="flex-1 items-center justify-end">
+        <View className="flex-1 m-2 justify-between">  
+          <ProfilePicture message="Home"/>
+          <View className="flex-1 items-center justify-start">
           {
             (activeWorkouts)?(
               
-            <View className="p-2 border border-blue2 border-[3px] items-center rounded-[5px] w-full m-5">
+            <View className="p-2 border border-blue2 border-[3px] items-center rounded-[5px] w-full m-5 h-[50%]">
               <Text className="text-white text-2xl font-bold">Active Workout</Text>
                 <View className="flex-row items-center">
               <TouchableOpacity className="mx-5 my-2" onPress={async()=> {
@@ -156,9 +231,14 @@ const Home = () => {
                 ))}
               </View>
             )}
+            
+            
+
+
         </View>
-      </View>
-    </SafeAreaView>
+          <Footer footerTitle="Last Workout" content={fContent()}/>
+        </View>
+      </SafeAreaView>
   )
 }
 
