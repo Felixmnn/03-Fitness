@@ -116,7 +116,7 @@ const ActiveHome = () => {
     //Funktion zum Speichern des Workouts
     const safeWorkout = async ()=> {
       const jsonValue = JSON.stringify(currentWorkout)
-      await AsyncStorage.setItem(`Workout-${currentWorkout.TPID}`,jsonValue)
+      await AsyncStorage.setItem(`Workout-${currentWorkout.WID}`,jsonValue)
       console.log("Locally Stored")
 
     }
@@ -230,7 +230,7 @@ const ActiveHome = () => {
 
               onPress={()=> {router.push("/progress-workout")}}
               >
-                <Text className="text-3xl text-white font-bold my-2">{currentWorkout.Name} Progress </Text>
+                <Text className="text-3xl text-white font-bold my-2">Progress </Text>
                 <Icon name="book" size={30} color="white"/>
               </TouchableOpacity>
           </View>
@@ -250,7 +250,7 @@ const ActiveHome = () => {
                 <Image source={images.thumbnail} className="h-[70px] w-[70px] m-2"/>
                 <View >
                   <Text className="text-xl text-white text-start"> {
-                    (currentWorkout.Selected < 0) ? ("Choose Exercise") : (exercises[currentWorkout.Selected-1].Name)
+                    (currentWorkout.Selected < 0) ? ("Choose Exercise") : ((exercises[currentWorkout.Selected-1].Name.length > 15)?(`${exercises[currentWorkout.Selected-1].Name.slice(0,13)}...`):(exercises[currentWorkout.Selected-1].Name))
                   } </Text>
                   <Text className=" ml-1 text-white text-start"> {
                   (currentWorkout.Selected < 0) ? ("Sets-") : (`Sets: ${getAmountPastSets(currentWorkout.Selected)}`)

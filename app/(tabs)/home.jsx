@@ -60,22 +60,30 @@ const Home = () => {
         
         const thisMonthEntrys = await getWorkoutsOfThisMonth();
         setWorkoutThisMonth(thisMonthEntrys);
-        console.log(thisMonthEntrys);
         const storedKeys = await AsyncStorage.getAllKeys();
+        
         const planKeys = storedKeys.filter(key => key.startsWith("Plan-"));
         setFilteredKeys(planKeys);
 
         // Lade die Plandaten für jeden Schlüssel
         const plansData = await Promise.all(planKeys.map(async key => await getKeyObject(key)));
         setItems(plansData.filter(item => item !== null)); // Setze den Zustand mit validen Objekten
-        (thisMonthEntrys !== null)?setComponents([component1(),componet2()]):null
       } catch (error) {
 
         console.log(error);
       }
     };
+
     fetchKeysAndData();
   }, []);
+
+
+
+  useEffect(() => {
+    if (workoutsThisMonth.length > 0) {
+        setComponents([component1(), componet2()]);
+    }
+}, [workoutsThisMonth]);
 
   const getKeyObject = async(key)=>{
     const rawData = await AsyncStorage.getItem(key)
@@ -207,7 +215,7 @@ const Home = () => {
     const component1 = () => {
       const setGrouped = () => {
         const blueShades = ['#1E90FF', '#00BFFF', '#5F9EA0', '#4682B4', '#6495ED', '#4169E1', '#87CEEB', '#4682B4']; // Liste von Blautönen
-      
+      console.log(workoutsThisMonth,"Workouts this Month")
         const groupedObj = workoutsThisMonth.reduce((acc, item) => {
           if (!acc[item.Name]) {
             acc[item.Name] = {
@@ -219,9 +227,11 @@ const Home = () => {
             };
           }
           acc[item.Name].number += 1;
+
+
           return acc;
         }, {});
-      
+      console.log(groupedObj,"GroupObject")
         return Object.values(groupedObj);
       };
       
@@ -298,7 +308,7 @@ const Home = () => {
           <View className="flex-row  m-2 flex-wrap ">
           {createExerciseSummary(workout.SID).map((item,index)=>(
                     <View className="bg-blue-500 m-1 p-1 rounded-[5px]">
-                    <Text className="text-white">{exercises[item.Name].Name}  {item.Info}</Text>
+                    <Text className="text-white">{exercises[item.Name-1].Name}  {item.Info}</Text>
                     </View>
                   ))
                   }
@@ -326,7 +336,7 @@ const Home = () => {
           {
             (activeWorkouts)?(
               
-            <View className="p-2 border border-blue2 border-[3px] items-center rounded-[5px] w-full m-5 flex-1">
+            <View className="p-2 bg-blue2 items-center rounded-[5px] w-full m-5">
               <Text className="text-white text-2xl font-bold">Active Workout</Text>
                 <View className="flex-row items-center">
               <TouchableOpacity className="mx-5 my-2" onPress={async()=> {
@@ -353,8 +363,8 @@ const Home = () => {
             </View>
             </View>):
 
-            ( <TouchableOpacity className="flex-row justify-between items-center bg-blue2 m-2 p-4 rounded-[10px]">
-                <Text className="text-white font-bold text-2xl mx-2">Start a Workout</Text>
+            ( <TouchableOpacity className="flex-row justify-between items-center bg-blue2 m-2 p-4 rounded-[10px] w-full h-[100px]" onPress={()=> router.push("/plans")}>
+                <Text className="text-white font-bold text-xl mx-2">Start a Workout</Text>
                 <Icon name="plus" size={30} color={"white"}/>
               </TouchableOpacity>
             )}

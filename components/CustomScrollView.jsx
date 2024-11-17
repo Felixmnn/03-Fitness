@@ -9,11 +9,11 @@ const CustomScrollView = ({components}) => {
       data = {components}
       horizontal={true}
       keyExtractor={(item,index)=> index.toString()}
-      renderItem={({item})=> {
+      renderItem={({item,index})=> {
         
         return (
 
-            <View>{item}</View>
+            <View key={index}>{item}</View>
         )
         }}
       />

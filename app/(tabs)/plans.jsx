@@ -105,7 +105,8 @@ const plans = () => {
                         containerStyles={" bg-black  m-1 h-[50px] "} 
                         textStyles = {"text-white"}
                         handlePress={()=> {
-                          router.push({pathname:"/active-home", params: { data: JSON.stringify(isTemplateLiteralToken)}})}}
+
+                          router.push({pathname:"/active-home", params: { data: JSON.stringify(item)}})}}
                         /> 
                   </View>
                 )

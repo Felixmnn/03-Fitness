@@ -21,6 +21,8 @@ const CreatePlan = () => {
       PID:uuid.v4(),
       CDate: new Date(),
       LUDate: new Date(),
+      Difficulty: "Easy",
+      Bg:"bg-green-800",
     }))},[])
 
 
@@ -161,7 +163,7 @@ const CreatePlan = () => {
           const e = exercises.find(ex => ex.EID === item);
           if (e) {
             return (
-              <View className="flex-row justify-between items-center border border-[3px] border-blue2 my-2 rounded-[10px]">
+              <View className="flex-row justify-between items-center bg-blue2 my-2 rounded-[10px]">
                     <View className="flex-row items-center my-2 ml-2">
                       <Image source={e.Image} className="mr-2 h-[70px] w-[70px]"/>
                       <Text className="text-xl text-white font-bold w-[50%]">{e.Name}</Text>
@@ -178,7 +180,7 @@ const CreatePlan = () => {
           return null;
         }}
       ListFooterComponent={
-        <TouchableOpacity onPress={() => router.push("/exercise-picker")} className="border border-[3px] border-blue2 p-3 justify-center items-center my-2 rounded-[10px]">
+        <TouchableOpacity onPress={() => router.push("/exercise-picker")} className="bg-blue2 p-3 justify-center items-center my-2 rounded-[10px]">
 
           <Text className="text-xl text-white font-bold">Add Exercise</Text>
         </TouchableOpacity>

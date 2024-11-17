@@ -32,13 +32,15 @@ const results = () => {
   
   const getPastWorkouts = async ()=> {
     const allKEys = await AsyncStorage.getAllKeys();
+    console.log(allKEys,"Hier sind alle  Keys")
+
     const filteredKEys = allKEys.filter(key => key.includes("Workout"))
+    console.log(filteredKEys,"Hier sind die Keys")
     const workoutEntries = await AsyncStorage.multiGet(filteredKEys)
 
     const parsedWorkouts = workoutEntries.map(([key,value])=> JSON.parse(value))
     const sortWorkouts = parsedWorkouts.sort((a,b)=> new Date(b.CDate) - new Date(a.CDate))
     setPastWorkouts(sortWorkouts)
-      console.log(sortWorkouts)
     
   }
 
@@ -112,7 +114,7 @@ const results = () => {
             data={pastWorkouts}
             numColumns={amount}
             key={amount}
-            keyExtractor={(item,index) => index.toString()}
+            keyExtractor={(item) => `${item.Name}-${item.CDate}`}
             renderItem={({item})=>{
               return(
                 (amount == 3 )?(
@@ -139,8 +141,8 @@ const results = () => {
                 <Text className="text-white font-bold">Exercises:</Text>
                 <View className="flex-wrap flex-row">
                   {createExerciseSummary(item.SID).map((item,index)=>(
-                    <View className="bg-blue-500 m-1 p-1 rounded-[5px]">
-                    <Text className="text-white">{exercises[item.Name].Name}  {item.Info}</Text>
+                    <View key={`${exercises[item.Name-1].Name}-${index}`} className="bg-blue-500 m-1 p-1 rounded-[5px]">
+                    <Text className="text-white">{exercises[item.Name-1].Name}  {item.Info}</Text>
                     </View>
                   ))
                   }
