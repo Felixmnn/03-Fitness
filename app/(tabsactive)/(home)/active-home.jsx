@@ -157,17 +157,76 @@ const ActiveHome = () => {
     }
     
 
+      const progressInfo = ()=> {
+        return (
+        <View className="bg-blue2 p-2 rounded-[10px] ">
+          <TouchableOpacity onPress={()=> setViewProgress(!viewProgress)}>
+            <View className="flex-row items-center justify-between">
+              <Text className="text-white text-xl font-bold">View Exercise Progress:</Text>
+              <Icon name="eye" size={30} color="white"/>
+          </View>
+         </TouchableOpacity>
+      <View className="my-2">
+        {(viewProgress)?
+        (<View>
+
+          <Text className="text-center text-white font-bold">Today</Text>
+        <View className="flex-row flex-wrap justify-center">
+          { getPastSets(currentWorkout.Selected).map((item,index)=>{
+            return(
+              <View className={` bg-blue-500 rounded-[5px] p-1 px-2 m-1 flex-row items-center justify-center`}>
+              <View className="mx-[5px] flex-row ">
+              <Text className="text-white font-bold">{`${item.Weight} Kg | ${item.Reps} Reps`}</Text>
+             
+              </View>
+              
+              <View >
+                {
+                  (item.WarmUp !== "bg-black")? (<View className="mr-2"><Icon name="fire" size={15} color="white" /></View>) : (<></>)
+                } 
+                </View>
+                <View className="items-center">
+                {
+                  (item.Notes !== "")? (<View className="mr-2"><Icon name="sticky-note" size={15} color="white" /></View>) : (<></>)
+                }
+                </View>
+            </View>)
+          })
+
+          }
+        </View>
+        <View>
+          {(moreActive)?(<RenderLastEntrys />):(<></>)}
+        </View>
+        <TouchableOpacity className="items-center justify-center my-2" onPress={()=> {setMoreActive(!moreActive)}}>
+        {
+          (moreActive)?
+          (<Text className="text-white text-center underline">hide last workouts</Text>):
+          (
+          <Text className="text-white text-center underline">show last workouts</Text>)
+        }  
+      </TouchableOpacity>
+        </View>):
+        (<></>)}
+        
+      </View>
+      </View>
+        )
+      }
+
+
+
   return (
     <SafeAreaView className ="bg-black h-full">
       <ScrollView>
-      <View className=" border-2 flex-1 m-2 justify-between ">
+      <View className=" flex-1 m-3 justify-between ">
           
 
           
 
           <View className="justify-center items-center m-3">
             <TouchableOpacity 
-              className="flex-row justify-center items-center border border-[3px] border-blue2 rounded-2 p-2 w-full rounded-[10px]" 
+              className="flex-row justify-center items-center bg-blue2 rounded-2 p-2 rounded-[10px]" 
 
               onPress={()=> {router.push("/progress-workout")}}
               >
@@ -176,7 +235,7 @@ const ActiveHome = () => {
               </TouchableOpacity>
           </View>
             
-
+            <View className="bg-blue2 rounded-[10px] p-2">
             <Text className="text-2xl text-white font-bold text-center mt-3">Current Exercise:</Text>
           
         <View className="">
@@ -186,7 +245,7 @@ const ActiveHome = () => {
           <TouchableOpacity onPress={()=> {
             router.push("/active-exercise-picker")
           }}>
-            <View className="border border-blue2 border-[3px] justify-between items-center flex-row my-2 rounded-[5px] w-full">
+            <View className="bg-blue2 justify-between items-center flex-row my-2 rounded-[5px] w-full">
               <View className="flex-row justify-center items-center">
                 <Image source={images.thumbnail} className="h-[70px] w-[70px] m-2"/>
                 <View >
@@ -204,132 +263,87 @@ const ActiveHome = () => {
             </View>
           </TouchableOpacity>
 
-          <View className="flex-row justify-between w-[100%] items-center">
-            <CustomTextInput
-            placeholder="Weight"
-            keyType='numeric'
-            handlingChange={handleWeightChange}
-            width={"mr-2"}
-            />
-
-            <CustomTextInput
-            placeholder='Reps'
-            keyType='numeric'
-            handlingChange={handleRepChange}
-            width={"mr-2"}
-
-            />
-
-            <TouchableOpacity className={`w-[30%] border border-[2px] border-blue2 rounded-[10px] justify-center items-center ${warmUp} h-[50px]`}
-            onPress={()=> (warmUp === "bg-black")?(setWarmUp("bg-blue2")):(setWarmUp("bg-black"))}
-            >
-              <Text className="text-xl text-white font-bold">Warm Up</Text>
-            </TouchableOpacity>
-
-          </View>
-
-          <View className="flex-row w-[100%]">
-
-          <View className="flex-row justify-between w-[100%] items-center mb-2">
-            <CustomTextInput
-            placeholder="Notes"
-            handlingChange={handleNoteChange}
-            width={"mr-2"}
-            
-            />
-
-            <CustomButton
-                      title="Safe set"
-                      containerStyles="bg-blue2 h-[50px]"
-                      textStyles="text-white"
-                      handlePress={async()=> {
-
-                        if (currentWorkout.Selected < 0) {
-                          Alert.alert("Missing Exercise","Please Select a Exercises")
-                        } else {
-                          const set = {EID:currentWorkout.Selected,Reps:currentReps,Weight:currentWeight,Notes:currentNotes,WarmUp:warmUp,Date:getDates()}
-                          const exists = await checkIfAsyncEntry();
-                          if (exists) {
-                            await addAsyncEntry(set)
-                          } else {
-                            await setAsyncEntry();
-                            console.log("Ein Eintrag im Async Storage wurde erstellt")
-                            await addAsyncEntry(set);
-                          }
-                          console.log(pastExercises)
-              
-                          setCurrentWorkout((prevWorkout) => ({
-                            ...prevWorkout,
-                            SID:[...prevWorkout.SID,set]
-                          }))
-                          console.log(currentWorkout.SID)
-                        }}
-                        }
-                      />
-          </View>
-
-          </View>
-
-          
-            
-          
-          
-          
-
-          <View className="border border-blue2 border-[3px] p-2 rounded-[10px] ">
-            <View className="flex-row items-center justify-between">
-              <Text className="text-white text-xl font-bold">View Exercise Progress:</Text>
-              <TouchableOpacity onPress={()=> setViewProgress(!viewProgress)}>
-                <Image source={viewProgress? icons.eye:icons.eyeHide} className="h-[40px] w-[40px]"/>
-              </TouchableOpacity>
-          </View>
           <View>
-            {(viewProgress)?
-            (<View>
-
-            <Text className="text-white text-xl font-bold">Sets Today:</Text>
-            <FlatList
-              data={getPastSets(currentWorkout.Selected)}
-              keyExtractor={(item, index) => String(index)} 
-              horizontal={true}
-              
-              ListEmptyComponent={<Text className="text-white font-bold">-</Text>}
-              renderItem={({ item }) => (
-              
-                <View className={` ${item.WarmUp} border border-blue2 border-[3px] rounded-[5px] py-1 px-2 w-[95px] m-1 flex-row`}>
-                  <View className="mx-[5px]">
-                  <Text className="text-white font-bold">{`${item.Weight} Kg`}</Text>
-                  <Text className="text-white font-bold">{`${item.Reps} Reps`}</Text>
-                  </View>
-                  
-                  <View>
-                    {
-                      (item.Notes !== "")? (<View className="mr-2"><Icon name="sticky-note" size={15} color="white" /></View>) : (<></>)
-                    }
-                    
-                  </View>
-                </View>
-                
-              )}
-              
-            />
-            <View>
-              {(moreActive)?(<RenderLastEntrys />):(<></>)}
-            </View>
-            <TouchableOpacity className="items-center justify-center" onPress={()=> {setMoreActive(!moreActive)}}>
-            {
-              (moreActive)?
-              (<Text className="text-white text-center underline">less</Text>):
-              (
-              <Text className="text-white text-center underline">more</Text>)
-            }  
-          </TouchableOpacity>
-            </View>):
-            (<></>)}
-            
+            {progressInfo()}
           </View>
           
+          </View>
+          </View>
+
+          <View className="my-2">
+                  <View className="flex-row justify-between w-[100%] items-center">
+                    <CustomTextInput
+                    placeholder="Weight"
+                    keyType='numeric'
+                    handlingChange={handleWeightChange}
+                    width={"mr-1 w-[31%] h-[41px]"}
+                    />
+
+                    <CustomTextInput
+                    placeholder='Reps'
+                    keyType='numeric'
+                    handlingChange={handleRepChange}
+                    width={"mr-1 w-[31%] h-[41px]"}
+
+                    />
+
+                    <TouchableOpacity className={`w-[32%] border border-[2px] border-blue2 rounded-[10px] justify-center items-center ${warmUp} h-[41px]`}
+                    onPress={()=> (warmUp === "bg-black")?(setWarmUp("bg-blue2")):(setWarmUp("bg-black"))}
+                    >
+                      <Text className="text-xl text-white font-bold">Warm Up</Text>
+                    </TouchableOpacity>
+
+                  </View>
+
+                  <View className="flex-row w-[100%]">
+
+                  <View className="flex-row justify-between w-[100%] items-center mb-2">
+                    <CustomTextInput
+                    placeholder="Notes"
+                    handlingChange={handleNoteChange}
+                    width={"mr-2 w-[65%] h-[41px]"}
+                    
+                    />
+
+                    <CustomButton
+                              title="Safe set"
+                              containerStyles="bg-blue2 pt-2 h-[41px] w-[32%]"
+                              textStyles="text-white"
+                              handlePress={async()=> {
+
+                                if (currentWorkout.Selected < 0) {
+                                  Alert.alert("Missing Exercise","Please Select a Exercises")
+                                } else {
+                                  const set = {EID:currentWorkout.Selected,Reps:currentReps,Weight:currentWeight,Notes:currentNotes,WarmUp:warmUp,Date:getDates()}
+                                  const exists = await checkIfAsyncEntry();
+                                  if (exists) {
+                                    await addAsyncEntry(set)
+                                  } else {
+                                    await setAsyncEntry();
+                                    console.log("Ein Eintrag im Async Storage wurde erstellt")
+                                    await addAsyncEntry(set);
+                                  }
+                                  console.log(pastExercises)
+                      
+                                  setCurrentWorkout((prevWorkout) => ({
+                                    ...prevWorkout,
+                                    SID:[...prevWorkout.SID,set]
+                                  }))
+                                  console.log(currentWorkout.SID)
+                                }}
+                                }
+                              />
+          </View>
+
           
+
+          
+            
+          
+          
+          
+
+         
           </View>
 
           {/*

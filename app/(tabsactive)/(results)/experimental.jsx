@@ -1,12 +1,14 @@
 import { View, Text,SafeAreaView } from 'react-native'
-import React from 'react'
-
+import React, { useEffect, useState } from 'react'
+import { PieChart } from 'react-native-chart-kit';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import CustomButton from '../../../components/CustomButton';
+import { TouchableOpacity } from 'react-native';
 const Experimental = () => {
+  
   return (
-    <SafeAreaView className ="bg-primary h-full">
-      <View className="flex-1 border border-red-900 border-2 m-5 justify-center items-center ">
-        <Text className="text-white text-3xl font-bold">Experimental Stuff</Text>
-      </View>
+    <SafeAreaView className ="bg-black h-full">
+      
     </SafeAreaView>
   )
 }

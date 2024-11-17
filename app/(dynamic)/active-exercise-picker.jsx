@@ -50,7 +50,7 @@ const ActiveExercisePicker = () => {
             renderItem={({item})=> {
                 const e = exercises[item-1];
                 return (
-                   <TouchableOpacity className="border border-[3px] border-blue2 p-2 flex-row justify-between items-center m-2"
+                   <TouchableOpacity className="bg-blue2 p-2 flex-row justify-between items-center m-2 rounded-[10px]"
                    onPress={()=> {
                     setSelectedExercise(e.EID)
                     router.back()
@@ -65,8 +65,8 @@ const ActiveExercisePicker = () => {
                             <Text className="text-white font-bold mx-3">{`Sets Today: ${getAmountPastSets(e.EID)}`}</Text>
                         </View>
                     </View>
-                    <View className="justify-center items-center  w-[40px] h-[40px]">
-                        <Icon name="plus" size={30} color="#40E0D0"/>
+                    <View className="justify-center items-center  mr-2 m1-[1px]">
+                        <Icon name="plus" size={30} color="white"/>
                     </View>
                    </TouchableOpacity>
                     
@@ -82,7 +82,7 @@ const ActiveExercisePicker = () => {
                         pathname:"/exercise-picker",
                         params:{name:"workout"}
                     })}
-                className="border border-[3px] border-blue2 p-2 justify-center items-center m-2">
+                className="bg-blue2 rounded-[10px] p-2 justify-center items-center m-2">
                 <Text className="text-xl text-white font-bold">Add Exercies</Text>
             </TouchableOpacity>
             )

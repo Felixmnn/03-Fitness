@@ -1,5 +1,5 @@
 import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import exercises from '../../constants/exercises';
 
@@ -28,80 +28,14 @@ const ExercisePicker = () => {
     const [filteredData, setFilteredData] = useState(exercises);
     const [currentFilters, setCurrentFilters ] = useState([]);
     const [filtersShown, setFiltersShown ] = useState(false);
-    const [ appliedFilters, setAppliedFilters ] = useState([]);
-    const [ ppliedEFiliters, setAppliedEFilters] = useState([])
+    const { currentPlan, setCurrentPlan } = useContext(UserPlan);
+    const [selectedExercises, setSelectedExercises]  = useState([])
 
     const typeFilters = ["Barbell","Dumbbell","Machine","Free"]
     const muscleFilters = ["Shoulders","Chest","Back","Hamstrings","Biceps","Quads","Glutes","Triceps","Core","Obliques","Calves","Traps","Rear Deltoids","Lower Back"]
 
 
-
-    const toggleExerciseFilter = (filter) => {
-      setAppliedEFilters((prevFilters)=> {
-        if (prevFilters.includes(filter)){
-          return prevFilters.filter((item) => item !== filter)
-        } else {
-          return [...prevFilters,filter]
-        }
-      }
-    )
-    }
-    const toggleFilter = (filter) => {
-      setAppliedFilters((prevFilters)=> {
-        if (prevFilters.includes(filter)){
-          return prevFilters.filter((item) => item !== filter)
-        } else {
-          return [...prevFilters,filter]
-        }
-      })
-    }
-
-    const changeFilterVisibility = ()=>{
-      setFiltersShown(!filtersShown)
-    }
-
-    const handleNewFilters = (newFilters) => {
-      setCurrentFilters([...currentFilters,newFilters]);
-        }
-
-    const handleFilterRemoval = (takeFilters) => {
-      newArray = currentFilters.filter((item)=> item !== valueToRemove);
-      setCurrentFilters(newArray);
-    }
-
-
-    const handleSearch = (query) => {
-      console.log(query);
-      setSearchQuery(query);
-      let filtered = exercises;
-    
-      // Filter by name
-      if (query) {
-        filtered = filtered.filter((item) =>
-          item.Name.toLowerCase().includes(query.toLowerCase())
-        );
-      }
-    
-      // Filter by types (appliedFilters)
-      if (appliedFilters.length > 0) {
-        filtered = filtered.filter((item) =>
-          appliedFilters.includes(item.Type) // Assuming each exercise object has a `Type` property
-        );
-      }
-    
-      // Filter by muscle groups (appliedEFilters)
-      if (appliedEFilters.length > 0) {
-        filtered = filtered.filter((item) =>
-          item.Muscles.some((muscle) => appliedEFilters.includes(muscle)) // Assuming each exercise object has a `Muscles` property that is an array
-        );
-      }
-    
-      setFilteredData(filtered);
-    };
-
-  
-
-
+    //Alles was nichts mit Filtern zu tun hat:
     //Adds the selected exercises to the previous Exercises
 
     const addExercisesWorkout = (newExercises) => {
@@ -113,8 +47,6 @@ const ExercisePicker = () => {
         }
       })
     }
-
-
     const addExercises = (newExercises)=> {
       setCurrentPlan((prevPlan) => {
         const newArray = [...prevPlan.EIDs,...newExercises]
@@ -124,12 +56,6 @@ const ExercisePicker = () => {
         }
       })
     }
-
-    const { currentPlan, setCurrentPlan } = useContext(UserPlan);
-    const [selectedExercises, setSelectedExercises]  = useState([])
-    
-
-
     const addEID = (newEID) => {
       setCurrentPlan((prevPlan) => {
         const updatedEIDs = prevPlan?.EIDs ? [...prevPlan.EIDs, newEID] : [newEID];
@@ -139,6 +65,59 @@ const ExercisePicker = () => {
           EIDs: updatedEIDs, 
         };});};
 
+
+    
+
+    //Alles was mit Filtern zu tun hat
+  
+    const [ appliedFilters, setAppliedFilters ] = useState([]);
+
+
+    const handleSearch = (query) => {
+      setSearchQuery(query);
+      let filtered = exercises;
+    
+      if (query) {
+        filtered = filtered.filter((item) =>
+          item.Name.toLowerCase().includes(query.toLowerCase())
+        );
+      }
+    
+      if (appliedFilters.length > 0) {
+        filtered = filtered.filter(
+          (item) => appliedFilters.includes(item.MainMuscle) || appliedFilters.includes(item.Type)
+        );
+      }
+    
+      setFilteredData(filtered);
+    };
+    
+
+
+
+
+    function toggleFilter (item) {
+      if (appliedFilters.find((object)=> object == item)){
+        setAppliedFilters(appliedFilters.filter((object)=> object !== item ));
+        handleSearch();
+
+      } else
+      setAppliedFilters([...appliedFilters,item]);
+      handleSearch();
+
+    }
+    
+    useEffect(()=> {
+      handleSearch(searchQuery);
+    },[appliedFilters,searchQuery])
+
+    
+
+    
+    
+
+
+    
   
   return (
     <SafeAreaView className="bg-black h-full">
@@ -154,7 +133,7 @@ const ExercisePicker = () => {
         placeholder={"Search..."}
         width={"w-[85%] mr-4"}
         />
-        <TouchableOpacity onPress={()=>{changeFilterVisibility()}}>
+        <TouchableOpacity onPress={()=>{setFiltersShown(!filtersShown)}}>
           <Icon name="sliders" size={35} color="white" />
         </TouchableOpacity>
       </View>
@@ -177,12 +156,17 @@ const ExercisePicker = () => {
             <View className="flex-wrap flex-row">
             
             {muscleFilters.map((item,index)=>(
-              <TouchableOpacity className={`${appliedFilters.includes(item)?("bg-blue-500 border border-[2px] border-blue-500"):("bg-black border border-[2px] border-blue-500 ")} p-1 m-1 rounded-[5px]`} onPress={()=> {toggleExerciseFilter(item)}}>
+              <TouchableOpacity className={`${appliedFilters.includes(item)?("bg-blue-500 border border-[2px] border-blue-500"):("bg-black border border-[2px] border-blue-500 ")} p-1 m-1 rounded-[5px]`} onPress={()=> {toggleFilter(item)}}>
                   <Text className="text-white font-bold text-xl">{item}</Text>
               </TouchableOpacity>
             ))}
             
             
+            </View>
+            <View className="w-full items-center justify-center">
+            <TouchableOpacity className="my-5 bg-blue-500 p-2 rounded-[5px] " onPress={()=> setAppliedFilters([])}>
+              <Text className="text-white font-bold text-xl text-center">Reset Filters</Text>
+            </TouchableOpacity>
             </View>
             </View>
           </View>
