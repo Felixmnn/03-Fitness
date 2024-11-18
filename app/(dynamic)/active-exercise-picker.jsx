@@ -61,7 +61,7 @@ const ActiveExercisePicker = () => {
                     <View className="flex-row">
                         <Image className="h-[70px] w-[70px] " source={e.Image}/>
                         <View className="justify-center">
-                            <Text className="text-white text-xl font-bold w-[150px] h-[25px] mx-3">{e.Name}</Text>
+                            <Text className="text-white font-bold  h-[25px] mx-3">{e.Name}</Text>
                             <Text className="text-white font-bold mx-3">{`Sets Today: ${getAmountPastSets(e.EID)}`}</Text>
                         </View>
                     </View>
