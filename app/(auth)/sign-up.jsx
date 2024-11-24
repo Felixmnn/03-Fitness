@@ -51,7 +51,7 @@ const submit = async () => {
 }
 
   return (
-    <SafeAreaView className="bg-primary h-full">
+    <SafeAreaView className="bg-black h-full">
       <ScrollView>
 
           <View className="w-full justify-center h-full mt-6">
@@ -59,7 +59,7 @@ const submit = async () => {
 
             <View className="rounded-l-[80px] bg-[#003566] mt-5 h-full">
 
-              <Text className="text-white text-center font-pbold text-4xl mt-8 mb-4">
+              <Text className="text-white text-center font-pbold text-3xl mt-8 mb-4">
                 Sign-Up
               </Text>
 
@@ -98,7 +98,7 @@ const submit = async () => {
                           className="flex justify-center items-center h-screen"
                           title="Sign-Up"
                           handlePress={submit}
-                          containerStyles= "my-[15px] mx-5"
+                          containerStyles= "my-[15px] mx-5 bg-blue-500"
                           isLoading={isSubmitting}
                     />  
                   </View>
@@ -115,7 +115,7 @@ const submit = async () => {
 
                   <View className="flex-row justify-center gap-1 mt-1 mb-[60px]">
                     <Text className="text-white  text-lg">Already have a Account?</Text>
-                    <Link href="/sign-in" className='text-secondary font-psemibold text-lg'>Sign In</Link>
+                    <Link href="/sign-in" className='text-red-500 font-psemibold text-lg'>Sign In</Link>
 
                   </View>
 

@@ -319,10 +319,28 @@ const Home = () => {
 
     const [compontes,setComonents] = useState([]);
 
+    
+
     const fContent = ()=> {
       return (
-        <CustomScrollView 
-        components={components}/>
+        <View>{(compontes.length > 0)?(
+          <CustomScrollView 
+          components={components}/>):(
+            <ScrollView horizontal={true} >
+              <View className="flex-row">
+                <View className="bg-blue2 h-[150px] w-[200px] items-center justify-center rounded-[10px] m-1">
+                  <Text className="text-white font-bold text-xl text-center">Quick Insights</Text>
+                  <Icon name="pie-chart" color={"white"} size={30}/>
+                </View>
+                <View className="bg-blue2 h-[150px] w-[200px] items-center justify-center rounded-[10px] m-1">
+                  <Text className="text-white font-bold text-xl text-center">Last Workout</Text>
+                  <Icon name="filter" color={"white"} size={30}/>
+                </View>
+              </View>
+            </ScrollView>
+          )
+          }
+        </View>
             )
       }
  

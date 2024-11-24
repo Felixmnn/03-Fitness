@@ -13,7 +13,7 @@ module.exports = {
         },
         blue2: "#003566",
         black: {
-          DEFAULT: "#000",
+          DEFAULT: "#121212",
           100: "#1E1E2D",
           200: "#232533",
         },

@@ -61,8 +61,8 @@ const plans = () => {
 
   const yourPlans = ()=>  {
     return (
-
-          (items)?(
+      <View className="justify-start flex-1">{
+          (items.length > 0)?(
             <FlatList
               data = {items}
               keyExtractor={(item)=> item.PID.toString()}
@@ -102,8 +102,8 @@ const plans = () => {
 
                       <CustomButton
                         title="Start Workout"
-                        containerStyles={" bg-black  m-1 h-[50px] "} 
-                        textStyles = {"text-white"}
+                        containerStyles={" bg-blue-500  m-1 h-[50px] "} 
+                        textStyles = {"text-black"}
                         handlePress={()=> {
 
                           router.push({pathname:"/active-home", params: { data: JSON.stringify(item)}})}}
@@ -111,17 +111,20 @@ const plans = () => {
                   </View>
                 )
                 
+                
               }
               }
               />
           ):(<View className="bg-blue2 rounded-[10px] p-2 h-[150px] justify-center">
-            
-              <TouchableOpacity className="justify-center items-center">
-                <Text className="text-center text-white font-bold ">Looks like you're just getting Started.</Text>
-                <Text className="text-center text-white font-bold ">Time for your first Workout:</Text>
-                <Icon name="plus" size={30} color={"white"}/>
+              <TouchableOpacity className="justify-center items-center flex-row" onPress={()=> {router.push("/create-plans")}}>
+                <Icon name="arrow-down" color={"white"} size={25}/>
+                <Text className="text-center text-white font-bold m-2 text-xl font-bold">Time for your first Workout </Text>
               </TouchableOpacity>
-          </View>))
+          </View>)
+  }</View>
+
+          )
+
   }
 
   
@@ -135,10 +138,7 @@ const plans = () => {
       handlePress={()=> {router.push("/create-plans")}}
     />
 
-    <Image
-    source={images.scedulesc}
-    className="h-[150px] w-[150px] rounded-[10px] ml-2"
-    />
+    
    
   
     

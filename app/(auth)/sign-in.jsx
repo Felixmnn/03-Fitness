@@ -51,19 +51,19 @@ const SignIn = () => {
   }
 
   return (
-    <SafeAreaView className="bg-primary h-full">
+    <SafeAreaView className="bg-black h-full">
       <ScrollView>
 
         <View className="w-full justify-center h-full my-6">
           <View className="justify-center items-center">
             <Image source={images.logBook} 
-            reciseMode="contain" className="w-[115px] h-[35px]"/>
+            reciseMode="contain" className="w-[115px] h-[70px]"/>
           </View>
           
 
           <View className="rounded-l-[80px] bg-black mt-[50px] py-[50px] bg-[#003566] ">
 
-          <Text className="text-white text-center font-pbold text-4xl">
+          <Text className="text-white text-center font-pbold text-3xl">
             Sign-In
           </Text>
 
@@ -90,7 +90,7 @@ const SignIn = () => {
               className="flex justify-center items-center h-screen"
               title="Sign In"
               handlePress={submit}
-              containerStyles= "my-[15px] mx-5"
+              containerStyles= "my-[15px] mx-5 bg-blue-500"
               isLoading={isSubmitting}
             />
 
@@ -106,7 +106,7 @@ const SignIn = () => {
 
             <View className="flex-row justify-center gap-1 mb-[30] mt-[5]">
               <Text className="text-white  text-lg">Dont have a Account?</Text>
-              <Link href="/sign-up" className='text-secondary font-psemibold text-lg'>Sign Up</Link>
+              <Link href="/sign-up" className='text-red-500  font-psemibold text-lg'>Sign Up</Link>
 
             </View>
           </View>

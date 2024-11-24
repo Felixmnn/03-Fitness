@@ -92,13 +92,14 @@ const results = () => {
         icon = {icons.plus}
         handlePress={()=> {router.push("/experimental")}}
       />
-    <Image source={images.scedulesc} className="ml-2 h-[150px] w-[150px] rounded-[10px]"/>
     </View>
     )
     }
 
     const yourLastWorkouts = ()=> {
       return(
+        <View className="justify-start flex-1">{
+        (pastWorkouts.length > 0)?(
         <View className="justify-start  flex-1">
           <TouchableOpacity className="items-center justify-center my-2"onPress={()=> {(amount == 3 )? (setAmount(2)):((amount == 2)?setAmount(1):(setAmount(3)))}}>
             {(amount == 1)?(<Icon name="th-list" size={30} color="white"/>):
@@ -155,7 +156,11 @@ const results = () => {
 
             )}}/>
         </View>
-      )
+      ):(<View className="bg-blue2 rounded-[10px] p-2 h-[150px] justify-center">
+        <TouchableOpacity className="justify-center items-center" onPress={()=> {router.push("/create-plans")}}>
+          <Text className="text-center text-white font-bold m-2 text-xl font-bold">{"No Data Yet :("}</Text>
+        </TouchableOpacity>
+    </View>)}</View>)
     }
 
  

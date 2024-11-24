@@ -3,6 +3,7 @@ import React from 'react'
 import { Link, router, useNavigation } from 'expo-router'
 import {images} from "../constants"
 
+
 const ProfilePicture =({message}) => {  
 
   return (

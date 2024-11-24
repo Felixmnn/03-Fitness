@@ -7,15 +7,21 @@ const ProfileLayout = () => {
   return (
     <>
       <Stack>
-          <Stack.Screen name="overview"
-          options={{
-            headerShown:false
-          }}/>
+       
       
           <Stack.Screen name="details"
           options={{
             headerShown:false
           }}/>
+
+          <Stack.Screen name="overview"
+            options={{
+              headerTitle: "Profile",
+              headerStyle: {
+                backgroundColor:"#0f0f0f"
+              },
+              headerTintColor: "white"
+            }}/>
       </Stack>
     </>
   )

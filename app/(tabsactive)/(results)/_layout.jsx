@@ -10,11 +10,14 @@ const AnalysisLayout = () => {
                 options={{
                 headerShown:false
               }}/>
-
-                <Stack.Screen name="experimental"
-                options={{
-                headerShown:false
-              }}/>
+            <Stack.Screen name="experimental"
+              options={{
+                headerTitle: "Upcoming",
+                headerStyle: {
+                  backgroundColor:"#0f0f0f"
+                },
+                headerTintColor: "white"
+            }}/>
 
                 <Stack.Screen name="traininglist"
                 options={{

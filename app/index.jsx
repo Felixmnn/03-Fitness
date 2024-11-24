@@ -16,7 +16,7 @@ export default function Index() {
     if (!isLoading,isLoggedIn) return <Redirect href ="/home"/>
 
   return (
-    <SafeAreaView className="bg-primary h-full">
+    <SafeAreaView className="bg-black h-full">
       <ScrollView contentContainerStyle={{height: '100%'}}>
         <View className="w-full justify-center items-center min-h-[100vh] px-4">
           
