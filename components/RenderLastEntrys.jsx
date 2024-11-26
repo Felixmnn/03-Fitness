@@ -68,7 +68,7 @@ const RenderLastEntrys = () => {
           { array.map((item,index)=>{
             return(
             
-              <View className={` bg-blue-500 rounded-[5px] p-1 px-2 m-1 flex-row items-center justify-center`}>
+              <View key={`${item.EID}-${index}`}  className={` bg-blue-500 rounded-[5px] p-1 px-2 m-1 flex-row items-center justify-center`}>
               <View className="mx-[5px] flex-row ">
               <Text className="text-white font-bold">{`${item.Weight} Kg | ${item.Reps} Reps`}</Text>
              

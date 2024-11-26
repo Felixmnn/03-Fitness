@@ -16,6 +16,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import RenderLastEntrys from '../../../components/RenderLastEntrys'
 import RenderBreakTimer from '../../../components/RenderBreakTimer'
+import Toast from 'react-native-toast-message'
 
 
 const ActiveHome = () => {
@@ -78,10 +79,16 @@ const ActiveHome = () => {
 
   //Functionen zum aktiven setzen von Werten
     const changeDuration = () => {
+      const startTime = currentWorkout.CDate;
+      const currentTime = new Date();
+      const differenceInMilliseconds = currentTime.getTime() - new Date(startTime).getTime() ;
+      const differenceInMinutes = Math.floor(differenceInMilliseconds / 60000).toString(); 
       setCurrentWorkout((prevWorkout) => ({
           ...prevWorkout,
-          Duration: duration,
-      }));};
+          Duration: differenceInMinutes,
+      }));
+
+    };
 
     const handleWeightChange = (text) =>  {
       setCurrentWeight(text)
@@ -115,6 +122,8 @@ const ActiveHome = () => {
     
     //Funktion zum Speichern des Workouts
     const safeWorkout = async ()=> {
+      
+      changeDuration();
       const jsonValue = JSON.stringify(currentWorkout)
       await AsyncStorage.setItem(`Workout-${currentWorkout.WID}`,jsonValue)
       console.log("Locally Stored")
@@ -174,7 +183,7 @@ const ActiveHome = () => {
         <View className="flex-row flex-wrap justify-center">
           { getPastSets(currentWorkout.Selected).map((item,index)=>{
             return(
-              <View className={` bg-blue-500 rounded-[5px] p-1 px-2 m-1 flex-row items-center justify-center`}>
+              <View key={`${item.EID}-${index}`} className={` bg-blue-500 rounded-[5px] p-1 px-2 m-1 flex-row items-center justify-center`}>
               <View className="mx-[5px] flex-row ">
               <Text className="text-white font-bold">{`${item.Weight} Kg | ${item.Reps} Reps`}</Text>
              
@@ -247,7 +256,7 @@ const ActiveHome = () => {
           }}>
             <View className="bg-blue2 justify-between items-center flex-row my-2 rounded-[5px] w-full">
               <View className="flex-row justify-center items-center">
-                <Image source={images.thumbnail} className="h-[70px] w-[70px] m-2"/>
+                <Image source={(currentWorkout.Selected < 0)?(images.thumbnail):(exercises[currentWorkout.Selected-1].Image)} className="h-[70px] w-[70px] m-2"/>
                 <View >
                   <Text className="text-xl text-white text-start"> {
                     (currentWorkout.Selected < 0) ? ("Choose Exercise") : ((exercises[currentWorkout.Selected-1].Name.length > 15)?(`${exercises[currentWorkout.Selected-1].Name.slice(0,13)}...`):(exercises[currentWorkout.Selected-1].Name))
@@ -277,6 +286,7 @@ const ActiveHome = () => {
                     keyType='numeric'
                     handlingChange={handleWeightChange}
                     width={"mr-1 w-[31%] h-[41px]"}
+                    value={currentWeight}
                     />
 
                     <CustomTextInput
@@ -284,6 +294,7 @@ const ActiveHome = () => {
                     keyType='numeric'
                     handlingChange={handleRepChange}
                     width={"mr-1 w-[31%] h-[41px]"}
+                    value={currentReps}
 
                     />
 
@@ -300,13 +311,14 @@ const ActiveHome = () => {
                   <View className="flex-row justify-between w-[100%] items-center mb-2">
                     <CustomTextInput
                     placeholder="Notes"
+                    value={currentNotes}
                     handlingChange={handleNoteChange}
                     width={"mr-2 w-[65%] h-[41px]"}
                     
                     />
 
                     <CustomButton
-                              title="Safe set"
+                              title="Safe Set"
                               containerStyles="bg-blue2 pt-2 h-[41px] w-[32%]"
                               textStyles="text-white"
                               handlePress={async()=> {
@@ -329,7 +341,16 @@ const ActiveHome = () => {
                                     ...prevWorkout,
                                     SID:[...prevWorkout.SID,set]
                                   }))
-                                  console.log(currentWorkout.SID)
+                                  
+                                  
+                                  Toast.show({
+                                    type: 'success', // oder 'error' für eine Fehlermeldung
+                                    position: 'top',
+                                    text1: `Added Set to Log`, // Text der Toast-Nachricht
+                                  });
+                                  setCurrentNotes("");
+                                  setCurrentReps(0);
+                                  setCurrentWeight(0);
                                 }}
                                 }
                               />
@@ -386,6 +407,11 @@ const ActiveHome = () => {
             }))
             setWorkoutInactive()
             console.log("Values were reset")
+            Toast.show({
+              type: 'success', // oder 'error' für eine Fehlermeldung
+              position: 'top',
+              text1: `Workout was saved`, // Text der Toast-Nachricht
+            });
             router.push("/")
             console.log(currentWorkout)
           
@@ -396,6 +422,7 @@ const ActiveHome = () => {
           title="Workout Beenden"
           />
         </View> 
+       
         
         
 

@@ -33,7 +33,7 @@ const PastWorkout = () => {
         
         <FlatList
         data = {workout.EIDs}
-        keyExtractor={(item,index)=> index.toString()}
+        keyExtractor={(item)=> item.toString()}
         renderItem={({item})=>{
           const recap = workout.SID.filter((object)=> object.EID == item);
           console.log(recap)
@@ -41,7 +41,7 @@ const PastWorkout = () => {
             <View>
               <Text className="text-white font-bold text-xl">{exercises[item-1].Name}</Text>
               <View className="flex-wrap flex-row">{(!(recap.length == 0))?(recap.map((object,index)=> (
-                <View className="bg-blue-500 p-1 m-1 rounded-[5px]">
+                <View key={`${object.EID}-${index}`} className="bg-blue-500 p-1 m-1 rounded-[5px]">
                   <Text>{object.Weight} Kg | {object.Reps} Reps</Text>
                 </View>
               ))):(

@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import GlobalProvider from "../context/GlobalProvider"
 import {UserProvider} from "../context/currentPlan"
 import { WorkoutProvider } from '../context/currentWorkout';
+import Toast from 'react-native-toast-message';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -46,6 +47,7 @@ const RootLayout = () => {
         <Stack.Screen name="(tabsactive)/(home)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabsactive)/(results)" options={{ headerShown: false }} />
       </Stack>
+      <Toast/>
         </WorkoutProvider>
       </UserProvider> 
     </GlobalProvider>

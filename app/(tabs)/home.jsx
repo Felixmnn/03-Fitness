@@ -17,9 +17,17 @@ import Main from '../../components/Main';
 import CustomScrollView from '../../components/CustomScrollView';
 import { PieChart } from 'react-native-chart-kit';
 import exercises from '../../constants/exercises';
+import { genSync } from '../../lib/appwrite';
+import { useGlobalContext } from '../../context/GlobalProvider';
 
 const Home = () => {
-
+  const { user, isLoggedIn, setUser } = useGlobalContext();
+  const { currentWorkout, setCurrentWorkout } = useContext(UserWorkout);
+  const [activeWorkouts , setActiveWorkouts] = useState(false)
+  const [compontes,setComonents] = useState([]);
+  const [filteredKeys, setFilteredKeys] = useState([]);
+  const [items,setItems] = useState([]);
+  const [workoutsThisMonth, setWorkoutThisMonth] = useState([]);
 
   const initialWorkout = {
     WID:"",
@@ -36,60 +44,62 @@ const Home = () => {
     Saved:false,
     Active:false,
     };
-
-
-  const { currentWorkout, setCurrentWorkout } = useContext(UserWorkout);
-
-
-  const [activeWorkouts , setActiveWorkouts] = useState(false)
-  const [components,setComponents] = useState([]);
-
-
-  const getKeys = async ()=> {
-    const k = await AsyncStorage.getAllKeys()
-    return k
-  }
-
-  const [filteredKeys, setFilteredKeys] = useState([]);
-  const [items,setItems] = useState([]);
-  const [workoutsThisMonth, setWorkoutThisMonth] = useState([]);
-
-  useEffect(() => {
-    const fetchKeysAndData = async () => {
-      try {
-        
-        const thisMonthEntrys = await getWorkoutsOfThisMonth();
-        setWorkoutThisMonth(thisMonthEntrys);
-        const storedKeys = await AsyncStorage.getAllKeys();
-        
-        const planKeys = storedKeys.filter(key => key.startsWith("Plan-"));
-        setFilteredKeys(planKeys);
-
-        // Lade die Plandaten für jeden Schlüssel
-        const plansData = await Promise.all(planKeys.map(async key => await getKeyObject(key)));
-        setItems(plansData.filter(item => item !== null)); // Setze den Zustand mit validen Objekten
-      } catch (error) {
-
-        console.log(error);
-      }
-    };
-
-    fetchKeysAndData();
-  }, []);
-
-
-
-  useEffect(() => {
-    if (workoutsThisMonth.length > 0) {
-        setComponents([component1(), componet2()]);
-    }
-}, [workoutsThisMonth]);
-
+   
+  
   const getKeyObject = async(key)=>{
     const rawData = await AsyncStorage.getItem(key)
     const parsedtData = JSON.parse(rawData) 
     return parsedtData
   }
+
+  
+
+
+  
+
+  
+
+
+  useEffect(() => {
+    if (workoutsThisMonth && workoutsThisMonth.length > 0) {
+      console.log("Component were set sucessfully")
+      setComonents([component1(),componet2()]);
+    } else {
+      setComonents([]);
+    }
+}, [workoutsThisMonth]);
+
+    useEffect(() => {
+      const fetchWorkouts = async () => {
+          await setWorkoutsOfThisMonth();
+          const userID = user.$id;
+          genSync();
+      };
+      fetchWorkouts();
+    }, []);
+
+  const setWorkoutsOfThisMonth = async() => {
+    const allKeys = await AsyncStorage.getAllKeys();
+    const workoutKeys = allKeys.filter((key) => key.includes("Workout-"))
+    console.log("Hier sind die Keys",workoutKeys);
+
+    const getWorkouts = await AsyncStorage.multiGet(workoutKeys)
+
+    const parsedWorkouts = getWorkouts.map(([key,value]) => JSON.parse(value))
+    console.log("Hier sollte alle Workouts sein",parsedWorkouts);
+
+    const today = new Date();
+    const thisMonthEntrys = parsedWorkouts.filter((item) => {
+      const workoutDate = new Date(item.CDate)
+      return !isNaN(workoutDate) && workoutDate.getMonth() === today.getMonth();
+    })
+
+    console.log("Hier sollten alle Einträge dieses Monats sein",thisMonthEntrys);
+
+    setWorkoutThisMonth(thisMonthEntrys)
+  }
+
+ 
 
   useEffect(() => {
     // Prüft jede Sekunde, ob ein aktives Workout existiert
@@ -116,7 +126,7 @@ const Home = () => {
       return false;
     }
   };
-  
+ 
   const setWorkoutInactive = async ()=>{
     await AsyncStorage.removeItem("ActiveWorkout")
   }
@@ -127,90 +137,6 @@ const Home = () => {
       console.log(unfinishedWorkout)
       return (unfinishedWorkout)
   }
-
-
-
-  const activeWorkoutOutput = async () => {
-    return (<View className="p-2 border border-blue2 border-[3px] items-center rounded-[5px] w-full m-5 flex-1">
-      <Text className="text-white text-2xl font-bold">Active Workout</Text>
-        <View className="flex-row items-center">
-      <TouchableOpacity className="mx-5 my-2" onPress={async()=> {
-        if (currentWorkout.Active){
-          router.push("/active-home")
-        } else {
-          const getData = await getActiveWorkout();
-          setCurrentWorkout(getData);
-          router.push("/active-home")
-        }
-      }}>
-        <View className="flex-row items-center">
-        <Icon name="play" size={15} color={"green"} />
-          <Text className="text-green-700 font-bold m-1 text-xl mt-[1px]">Continue</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity className="mx-5 my-2" onPress={async()=> { setCurrentWorkout(initialWorkout); await setWorkoutInactive()}}>
-        <View className="flex-row items-center">
-        <Icon name="close" size={15} color={"red"} />
-          <Text className="text-red-500 font-bold m-1 text-xl ">Delete</Text>
-        </View>
-      </TouchableOpacity>
-      
-    </View>
-    </View>)
-  }
-
-
-  const mContent = async ()=> {
-    return (
-      (activeWorkouts)?(
-       await activeWorkoutOutput()
-      ):(
-        <View>
-          <Text className="text-white text-3xl ">Select A Workout</Text>
-        </View>
-
-      )
-    )
-  }
-
-
-  const lastWorkout = ()=>{
-    return (
-      <View className=" border border-[3px] border-blue2 rounded-[10px] w-[150px] h-[150px] justify-center items-center">
-        <Text className="text-white">Last One</Text>
-      </View>
-    )
-  }
-  const lastWorkoutsChart = ()=>{
-    return (
-      <View className=" border border-[3px] border-blue2 rounded-[10px] w-[150px] h-[150px] justify-center items-center mx-2">
-        <Text className="text-white">lastWorkoutsChart </Text>
-      </View>
-    )
-  }
-
-
-  
-
-
-    
-
-
-    const getWorkoutsOfThisMonth = async() => {
-      const allKeys = await AsyncStorage.getAllKeys();
-      const workoutKeys = allKeys.filter((key) => key.includes("Workout"))
-      const getWorkouts = await AsyncStorage.multiGet(workoutKeys)
-      const parsedWorkouts = getWorkouts.map(([key,value]) => JSON.parse(value))
-
-      const today = new Date();
-      const thisMonthEntrys = parsedWorkouts.filter((item) => {
-        const workoutDate = new Date(item.CDate)
-        return !isNaN(workoutDate) && workoutDate.getMonth() === today.getMonth();
-      })
-
-      return thisMonthEntrys
-    }
-
 
     const component1 = () => {
       const setGrouped = () => {
@@ -266,7 +192,6 @@ const Home = () => {
       )
     }
 
-
     const componet2 = () => {
       
       function createExerciseSummary(data) {
@@ -281,7 +206,7 @@ const Home = () => {
         }, {});
       
         // Erstelle die gewünschte Struktur
-        const summary = Object.entries(grouped).map(([EID, { count, totalSets },index]) => ({
+        const summary = Object.entries(grouped).map(([EID, { count, totalSets }]) => ({
           Name: EID,
           Info: `${count} Sets`,
         }));
@@ -307,7 +232,7 @@ const Home = () => {
           <Text className="text-white font-bold text-xl ml-2">Exercises:</Text>
           <View className="flex-row  m-2 flex-wrap ">
           {createExerciseSummary(workout.SID).map((item,index)=>(
-                    <View className="bg-blue-500 m-1 p-1 rounded-[5px]">
+                    <View key={`${item.EID}-${index}`}  className="bg-blue-500 m-1 p-1 rounded-[5px]">
                     <Text className="text-white">{exercises[item.Name-1].Name}  {item.Info}</Text>
                     </View>
                   ))
@@ -317,16 +242,23 @@ const Home = () => {
       );
     }
 
-    const [compontes,setComonents] = useState([]);
-
-    
-
     const fContent = ()=> {
       return (
-        <View>{(compontes.length > 0)?(
-          <CustomScrollView 
-          components={components}/>):(
-            <ScrollView horizontal={true} >
+        <View>
+          <FlatList
+          data={compontes}
+          horizontal={true}
+          keyExtractor={(item, index) => `component-${index}`}
+          renderItem={({item,index})=> {
+        
+            return (
+
+                <View key={`component-${index}`}>{item}</View>
+            )
+            }}
+
+          ListEmptyComponent={()=>{
+            return (
               <View className="flex-row">
                 <View className="bg-blue2 h-[150px] w-[200px] items-center justify-center rounded-[10px] m-1">
                   <Text className="text-white font-bold text-xl text-center">Quick Insights</Text>
@@ -337,14 +269,16 @@ const Home = () => {
                   <Icon name="filter" color={"white"} size={30}/>
                 </View>
               </View>
-            </ScrollView>
-          )
+            )
           }
+
+          }
+          
+          />
         </View>
             )
       }
  
-
   return (
     <SafeAreaView className="bg-black h-full">
         <View className="h-full m-2 ">
@@ -367,8 +301,8 @@ const Home = () => {
                 }
               }}>
                 <View className="flex-row items-center">
-                <Icon name="play" size={15} color={"green"} />
-                  <Text className="text-green-700 font-bold m-1 text-xl mt-[1px]">Continue</Text>
+                <Icon name="play" size={15} color={"#3B82F6"} />
+                  <Text className="text-blue-500 font-bold m-1 text-xl mt-[1px]">Continue</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity className="mx-5 my-2" onPress={async()=> { setCurrentWorkout(initialWorkout); await setWorkoutInactive()}}>

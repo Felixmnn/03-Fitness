@@ -22,6 +22,7 @@ const plan = () => {
         
         <Text className="text-white text-xl font-bold m-5">Target Muscles:</Text>
         <Text className="text-white text-xl font-bold m-5">Exercises:</Text>
+        
         <FlatList
         data={[{id:1},{id:1},{id:1}]}
         keyExtractor={(item) => item.$id}

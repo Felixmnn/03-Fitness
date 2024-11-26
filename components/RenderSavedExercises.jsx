@@ -18,7 +18,7 @@ const RenderSavedExercises = ({SID,EIDs, passed}) => {
                {numbers.map((element,index)=>{
                 return(
                 
-                <View className={` ${element.WarmUp} border border-blue2 border-[3px] rounded-[5px] py-1 px-2 w-[90px] m-1 flex-row`}>
+                <View key={`${element.EID}-${index}`}  className={` ${element.WarmUp} border border-blue2 border-[3px] rounded-[5px] py-1 px-2 w-[90px] m-1 flex-row`}>
                     <View className="mx-[5px]">
                         <Text className="text-white font-bold">{`${element.Weight} Kg`}</Text>
                         <Text className="text-white font-bold">{`${element.Reps} Reps`}</Text>
@@ -39,7 +39,7 @@ const RenderSavedExercises = ({SID,EIDs, passed}) => {
   return (
     <FlatList
         data={EIDs}
-        keyExtractor={(item,index) => index.toString()}
+        keyExtractor={(item) => item.toString()}
         renderItem={({item})=> {
             const e = exercises[item-1];
             const fE = SID.filter(item => item.EID === e.EID)

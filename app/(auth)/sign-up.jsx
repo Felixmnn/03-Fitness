@@ -33,7 +33,7 @@ const submit = async () => {
   else if (form.confirmPassword != form.password){
     Alert.alert("Error" , `Make sure your passwords match ${form.password} ${form.confirmPassword}  `)
   }
-  //else {
+  else {
       setIsSubmitting(true);
     try {
         const result = await createUser(form.email, form.password, form.name )
@@ -46,7 +46,7 @@ const submit = async () => {
     } finally {
       setIsSubmitting(false)
     }
-  //}
+  }
   
 }
 

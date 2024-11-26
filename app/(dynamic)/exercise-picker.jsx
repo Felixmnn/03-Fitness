@@ -147,7 +147,7 @@ const ExercisePicker = () => {
             <View className="flex-wrap flex-row">
             
             {typeFilters.map((item,index)=>(
-              <TouchableOpacity key={index}  className={`${appliedFilters.includes(item)?("bg-blue-500 border border-[2px] border-blue-500"):("bg-black border border-[2px] border-blue-500 ")} p-1 m-1 rounded-[5px]`} onPress={()=> {toggleFilter(item)}}>
+              <TouchableOpacity key={`${item.id}-${index}`}  className={`${appliedFilters.includes(item)?("bg-blue-500 border border-[2px] border-blue-500"):("bg-black border border-[2px] border-blue-500 ")} p-1 m-1 rounded-[5px]`} onPress={()=> {toggleFilter(item)}}>
                   <Text className="text-white font-bold text-xl">{item}</Text>
               </TouchableOpacity>
             ))}
@@ -156,7 +156,7 @@ const ExercisePicker = () => {
             <View className="flex-wrap flex-row">
             
             {muscleFilters.map((item,index)=>(
-              <TouchableOpacity key={index} className={`${appliedFilters.includes(item)?("bg-blue-500 border border-[2px] border-blue-500"):("bg-black border border-[2px] border-blue-500 ")} p-1 m-1 rounded-[5px]`} onPress={()=> {toggleFilter(item)}}>
+              <TouchableOpacity key={`${item.id}-${index}`} className={`${appliedFilters.includes(item)?("bg-blue-500 border border-[2px] border-blue-500"):("bg-black border border-[2px] border-blue-500 ")} p-1 m-1 rounded-[5px]`} onPress={()=> {toggleFilter(item)}}>
                   <Text className="text-white font-bold text-xl">{item}</Text>
               </TouchableOpacity>
             ))}
@@ -183,7 +183,7 @@ const ExercisePicker = () => {
           <FlatList
             
             data = {filteredData}
-            keyExtractor={(item) => item.EID}
+            keyExtractor={(item) => item.EID.toString()}
             
 
             renderItem={({item}) => (

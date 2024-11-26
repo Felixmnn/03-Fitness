@@ -33,7 +33,7 @@ const ProgressWorkout = () => {
                {numbers.map((element,index)=>{
                 return(
                 
-                <View className={` ${element.WarmUp} bg-blue-500 rounded-[5px] py-1 px-2 m-1 flex-row flex-wrap  items-center justify-center`}>
+                <View key={`${element.EID}-${index}`} className={` ${element.WarmUp} bg-blue-500 rounded-[5px] py-1 px-2 m-1 flex-row flex-wrap  items-center justify-center`}>
                     <View className="mx-[5px]">
                         <Text className="text-white font-bold">{`${element.Weight} Kg | ${element.Reps} Reps`}</Text>
                     </View>
@@ -64,7 +64,7 @@ const ProgressWorkout = () => {
         <View className="h-[100%]">
         <FlatList
         data= {currentWorkout.EIDs}
-        keyExtractor={(item,index) => index.toString()}
+        keyExtractor={(item) => item.toString()}
         renderItem = {({item})=>{
             const e = exercises[item-1];
             const fE = currentWorkout.SID.filter(item => item.EID === e.EID)

@@ -8,12 +8,12 @@ const CustomScrollView = ({components}) => {
       <FlatList
       data = {components}
       horizontal={true}
-      keyExtractor={(item,index)=> index.toString()}
-      renderItem={({item,index})=> {
+      keyExtractor={(item, index) => `${item.toString()}-${index.toString()}`}
+      renderItem={({item})=> {
         
         return (
 
-            <View key={index}>{item}</View>
+            <View key={`${item.toString()}-${index.toString()}`}>{item}</View>
         )
         }}
       />

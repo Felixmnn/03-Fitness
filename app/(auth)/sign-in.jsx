@@ -28,11 +28,10 @@ const SignIn = () => {
   const submit = async () => {
     if ( !form.email || !form.password ){
       Alert.alert("Error" , "Please fill in all the fields")  
-    }
-    
-    
-        setIsSubmitting(true);
-        
+      
+    } else {
+      setIsSubmitting(true);
+
       try {
           await signIn(form.email, form.password)
           const result = await getCurrentUser();
@@ -45,7 +44,7 @@ const SignIn = () => {
         Alert.alert("Error", error.message)
       } finally {
         setIsSubmitting(false)
-      }
+      }}
     
     
   }

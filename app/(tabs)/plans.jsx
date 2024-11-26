@@ -70,7 +70,10 @@ const plans = () => {
                 return (
                   <View className="bg-blue2 rounded-[10px] p-2 m-2">
                     <View className="flex-row justify-between">
-                      <Text className="text-white font-bold text-2xl ">{item.Name}</Text>
+                      <View className="flex-row items-center">
+                      <Text className="text-white font-bold text-2xl mr-2 ">{item.Name}</Text>
+                      {(item.Saved)?(<Icon name="cloud" size={20} color={"white"} />):null}
+                      </View>
                       <TouchableOpacity onPress={()=> {
                         router.push({pathname:"/edit-workout", params: { data: JSON.stringify(item)}  })
                         
@@ -81,9 +84,9 @@ const plans = () => {
                     <Text className="text-white font-bold text-xl ">Exercises:</Text>
                     <View className="flex-wrap flex-row p-[1px]">
                     {
-                      item.EIDs.map((eid)=>(
-                        <View key={eid} className="bg-blue-500 m-1 p-1 rounded-[5px] jus">
-                          <Text>{exercises[eid-1].Name}</Text>
+                      item.EIDs.map((EID)=>(
+                        <View key={EID} className="bg-blue-500 m-1 p-1 rounded-[5px] jus">
+                          <Text>{exercises[EID-1].Name}</Text>
                         </View>
                       ))
                     }
@@ -92,9 +95,9 @@ const plans = () => {
                     <Text className="text-white font-bold text-xl">Muscle Groups:</Text>
                       <View className="flex-wrap flex-row p-[1px]">
                           {
-                          item.EIDs.map((eid)=>(
-                            <View key={eid} className="bg-blue-500 m-1 p-1 rounded-[5px] jus">
-                              <Text>{exercises[eid-1].MainMuscle}</Text>
+                          item.EIDs.map((EID)=>(
+                            <View key={EID} className="bg-blue-500 m-1 p-1 rounded-[5px] jus">
+                              <Text>{exercises[EID-1].MainMuscle}</Text>
                             </View>
                           ))
                         }

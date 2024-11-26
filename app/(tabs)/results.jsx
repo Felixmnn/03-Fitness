@@ -34,7 +34,7 @@ const results = () => {
     const allKEys = await AsyncStorage.getAllKeys();
     console.log(allKEys,"Hier sind alle  Keys")
 
-    const filteredKEys = allKEys.filter(key => key.includes("Workout"))
+    const filteredKEys = allKEys.filter(key => key.includes("Workout") && !key.includes("ActiveWorkout") )
     console.log(filteredKEys,"Hier sind die Keys")
     const workoutEntries = await AsyncStorage.multiGet(filteredKEys)
 
@@ -125,16 +125,22 @@ const results = () => {
                   <Text className="text-white">{formattedDate(item.CDate)}</Text>
               
                 </TouchableOpacity>):((amount == 2)?(
-                  <TouchableOpacity className="bg-blue2 p-2 rounded-[5px] m-1 w-[50%]" onPress={()=> router.push({pathname:"/past-workout",params:{data:JSON.stringify(item)}})}>
+                  <TouchableOpacity className="bg-blue2 p-2 rounded-[5px] m-1 w-[48%]" onPress={()=> router.push({pathname:"/past-workout",params:{data:JSON.stringify(item)}})}>
                 
-                  <Text className="text-white text-xl">{item.Name}</Text>
+                  <View className="flex-row items-center justify-between" >
+                    <Text className="text-white font-bold text-xl">{item.Name}</Text>
+                    {(item.Saved)?(<Icon name="cloud" size={20} color={"white"} />):null}
+                  </View>
                   <Text className="text-white">{formattedDate(item.CDate)}</Text>
                   <Text className="text-white">{formatMinutes(item.Duration)}</Text>
               
                 </TouchableOpacity>
-                ):( <TouchableOpacity className="bg-blue2 p-2 rounded-[5px] m-1 w-[100%]" onPress={()=> router.push({pathname:"/past-workout",params:{data:JSON.stringify(item)}})}>
+                ):( <TouchableOpacity className="bg-blue2 p-2 rounded-[5px] m-1 w-[98%] justify-center" onPress={()=> router.push({pathname:"/past-workout",params:{data:JSON.stringify(item)}})}>
+                <View className="flex-row items-center justify-between" >
+                  <Text className="text-white font-bold text-xl">{item.Name}</Text>
+                  {(item.Saved)?(<Icon name="cloud" size={20} color={"white"} />):null}
+                </View>
                 
-                <Text className="text-white font-bold text-xl">{item.Name}</Text>
                 <View className="flex-row justify-between">
                 <Text className="text-white">{formattedDate(item.CDate)}</Text>
                 <Text className="text-white">{formatMinutes(item.Duration)}</Text>

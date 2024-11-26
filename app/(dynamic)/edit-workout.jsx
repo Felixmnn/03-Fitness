@@ -25,6 +25,7 @@ const EditWorkout = () => {
 
   //Initialisierung der Globalen Plan Variable
   useEffect(()=>{
+
     setCurrentPlan ((prevPlan)=>({
       ...prevPlan,
       PID:planObject.PID,
@@ -41,7 +42,7 @@ const EditWorkout = () => {
     }))
   },[])
 
-
+  
   
 
   //Funktionen zu ändern der Globalen Werte
@@ -188,7 +189,7 @@ const EditWorkout = () => {
           <FlatList
           className="h-[40%]"
           data = {currentPlan.EIDs}
-          keyExtractor= {(item,index) => index.toString()}
+          keyExtractor= {(item) => item.toString()}
           renderItem={({index,item})=>{
             return (
               <View className="flex-row items-center justify-between">
@@ -204,7 +205,7 @@ const EditWorkout = () => {
                   changeExercises(newExerciseList)
                 }}
 
-                className="bg-red-900 rounded-full w-[35px] h-[35px] items-center justify-center">
+                className="bg-red-900 rounded-full w-[35px] h-[35px] items-center justify-center mr-2">
                      <Icon name="trash-o" size={25} color="black"/>
                 </TouchableOpacity>
 
@@ -219,7 +220,7 @@ const EditWorkout = () => {
           />
           <View className="bg-blue2 h-[2px] w-full mb-3"></View>
 
-          <TouchableOpacity className="border border-[3px] border-blue2 p-2 justify-center rounded-[10px] items-center m-2"
+          <TouchableOpacity className="bg-blue2 p-2 justify-center rounded-[10px] items-center m-2"
           onPress={()=>{router.push("/exercise-picker")}}
           >
             <Text className="text-white text-xl">Add Exercise</Text>

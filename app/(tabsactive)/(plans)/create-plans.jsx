@@ -10,6 +10,7 @@ import uuid from "react-native-uuid"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomTextInput from '../../../components/CustomTextInput';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { backUpPlan } from '../../../lib/appwrite';
 
 const CreatePlan = () => {
   const { currentPlan, setCurrentPlan,resetCurrentPlan } = useContext(UserPlan);
@@ -107,6 +108,7 @@ const CreatePlan = () => {
         console.log(x)
         resetCurrentPlan()
         console.log("Plan Gespeichert")
+      
         router.push("/")
 
       }
@@ -158,7 +160,7 @@ const CreatePlan = () => {
       </Text>
       <FlatList
         data={currentPlan.EIDs}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item,index) => `${item.toString()}-${index.toString()}`}
         renderItem={({ item, index }) => {
           const e = exercises.find(ex => ex.EID === item);
           if (e) {
