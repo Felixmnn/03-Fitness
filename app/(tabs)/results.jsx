@@ -177,6 +177,7 @@ const results = () => {
     <View className="flex-1 m-2 justify-between">  
       <ProfilePicture message="Results"/>
       <Main content={yourLastWorkouts()}/>
+      
       <Footer footerTitle="Discover" content={fContent()}/>
     </View>
   </SafeAreaView>

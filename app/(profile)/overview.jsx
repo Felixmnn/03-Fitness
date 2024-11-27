@@ -1,4 +1,4 @@
-import { View, SafeAreaView } from 'react-native';
+import { View, SafeAreaView, Alert } from 'react-native';
 import React, { useContext } from 'react';
 import { router } from 'expo-router';
 import CustomButton from '../../components/CustomButton';
@@ -10,6 +10,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getCurrentUser } from '../../lib/appwrite';
 import XLSX from 'xlsx';
 import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
+
 
 
 const ProfileOverview = () => {
@@ -21,44 +23,37 @@ const ProfileOverview = () => {
   };
 
   const keys = async () => {
-    // Erstelle ein Arbeitsblatt (Sheet) mit "Hello World"
-    const ws = XLSX.utils.aoa_to_sheet([["Hello", "World"]]);
-
-    // Erstelle eine Arbeitsmappe (Workbook)
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-
-    // Konvertiere das Arbeitsbuch in binären Excel-Dateiformat (Array)
-    const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-
-    // Konvertiere den ArrayBuffer in eine Base64-codierte Zeichenkette
-    const base64Data = Buffer.from(wbout).toString('base64');
-
-    // Speicherort auf dem Gerät (Verzeichnis)
-    const fileUri = FileSystem.documentDirectory + "hello_world.xlsx";
-
-    try {
-      // Schreibe die Datei im Base64-Format
-      await FileSystem.writeAsStringAsync(fileUri, base64Data, { encoding: FileSystem.EncodingType.Base64 });
-
-      // Benachrichtige den Benutzer
-      Alert.alert('Erfolg', 'Die Excel-Datei wurde erfolgreich gespeichert!', [
-        { text: 'OK' }
-      ]);
-    } catch (error) {
-      console.error("Fehler beim Speichern der Datei:", error);
-      Alert.alert('Fehler', 'Etwas ist schief gelaufen. Bitte versuche es erneut.', [
-        { text: 'OK' }
-      ]);
-    }
-  };
-  
-  
-  const handleBackup = async () => {
-    const planKey = 'Plan-510c5488-42f8-4fe2-b9a2-dc0b0b32287c'; // Beispiel-Schlüssel
-    console.log(user.$id)
-    const userID = user.$id;
-    await genSync();
+      const data = [
+        { Name: 'Max', Alter: 28, Stadt: 'Berlin' },
+        { Name: 'Anna', Alter: 25, Stadt: 'Hamburg' },
+        { Name: 'Tom', Alter: 30, Stadt: 'München' },
+      ];
+    
+      // Konvertiere Daten in Excel
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    
+      // Schreibe die Excel-Daten in eine Base64-codierte Datei
+      const excelOutput = XLSX.write(workbook, { type: 'base64', bookType: 'xlsx' });
+    
+      // Speichere die Datei auf dem Gerät
+      const fileUri = `${FileSystem.documentDirectory}example.xlsx`;
+      await FileSystem.writeAsStringAsync(fileUri, excelOutput, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+    
+      console.log(`Excel-Datei gespeichert unter: ${fileUri}`);
+    
+      // Überprüfe, ob das Teilen möglich ist
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(fileUri, {
+          mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          dialogTitle: 'Teile deine Excel-Datei',
+        });
+      } else {
+        Alert.alert('Teilen nicht möglich', 'Sharing wird auf diesem Gerät nicht unterstützt.');
+      }
     };
 
 
