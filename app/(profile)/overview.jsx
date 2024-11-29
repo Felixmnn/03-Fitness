@@ -1,4 +1,4 @@
-import { View, SafeAreaView, Alert } from 'react-native';
+import { View, SafeAreaView, Alert, Text, Image } from 'react-native';
 import React, { useContext } from 'react';
 import { router } from 'expo-router';
 import CustomButton from '../../components/CustomButton';
@@ -11,18 +11,22 @@ import { getCurrentUser } from '../../lib/appwrite';
 import XLSX from 'xlsx';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
+import { TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Toast from 'react-native-toast-message';
 
 
 
 const ProfileOverview = () => {
   const { user, isLoggedIn, setUser } = useGlobalContext();
 
+
   const logout = async () => {
     await signOut();
     router.push("/sign-in");
   };
 
-  const keys = async () => {
+  const excel = async () => {
       const data = [
         { Name: 'Max', Alter: 28, Stadt: 'Berlin' },
         { Name: 'Anna', Alter: 25, Stadt: 'Hamburg' },
@@ -56,6 +60,15 @@ const ProfileOverview = () => {
       }
     };
 
+    const random = () =>{
+      
+      Toast.show({
+        type: 'success', // oder 'error' für eine Fehlermeldung
+        position: 'top',
+        text1: `I did a thing`, // Text der Toast-Nachricht
+      });
+    }
+
 
  
     
@@ -63,12 +76,31 @@ const ProfileOverview = () => {
 
   return (
     <SafeAreaView className="bg-black h-full items-center justify-center">
-      <View className="justify-between flex-1">
-        <View>
-        <CustomButton title={"Fetch Plan"} containerStyles={"m-2"} handlePress={keys} />
+      <View className="flex-1 w-[100%]">
+        <View className="m-5 items-center justify-center ">
+          <View className="w-[155px] h-[155px] rounded-full bg-blue2 items-center justify-center ">
+            <Image source={(user.avatar)?({uri:`${user.avatar}`}):(images.profile)}  className="w-[150px] h-[150px] rounded-full "/> 
+          </View>
+            <Text className="text-white font-bold text-3xl">{user.username}</Text> 
         </View>
-
-        <CustomButton title={"Logout"} containerStyles={"bg-red-900"} handlePress={logout} />
+        <View className="flex-1 bg-blue2 rounded-t-[25px] p-2 justify-between items-center" >
+          <View>
+            <CustomButton title="Random Stuff" handlePress={()=> random()} containerStyles={"bg-white mx-2"} textStyles={"text-whiter"}/>
+            <View className="flex-row justify-between w-full">
+            <TouchableOpacity className="flex-row items-center p-2 rounded-[5px] bg-[#217346] justify-center m-2 flex-1" onPress={()=> excel()}>
+                <Icon name="file-excel-o" size={30} color="white"/>
+                <Text className="text-white font-bold m-2">Export Data</Text>
+            </TouchableOpacity>
+            <TouchableOpacity className="flex-row items-center p-2 rounded-[5px] bg-blue-500 justify-center m-2 flex-1">
+                <Icon name="cloud" size={30} color="white"/>
+                <Text className="text-white font-bold m-2">Import Data</Text>
+            </TouchableOpacity>
+            </View>
+          </View>
+          <View> 
+            <CustomButton title={"Logout"} containerStyles={"bg-red-900"} handlePress={logout} />
+          </View>
+        </View>
       </View>
     </SafeAreaView>
   );
