@@ -18,14 +18,14 @@ const RenderSavedExercises = ({SID,EIDs, passed}) => {
                {numbers.map((element,index)=>{
                 return(
                 
-                <View key={`${element.EID}-${index}`}  className={` ${element.WarmUp} border border-blue2 border-[3px] rounded-[5px] py-1 px-2 w-[90px] m-1 flex-row`}>
+                <View key={`${element.EID}-${index}`}  className={` ${element.W} border border-blue2 border-[3px] rounded-[5px] py-1 px-2 w-[90px] m-1 flex-row`}>
                     <View className="mx-[5px]">
-                        <Text className="text-white font-bold">{`${element.Weight} Kg`}</Text>
+                        <Text className="text-white font-bold">{`${element.W} Kg`}</Text>
                         <Text className="text-white font-bold">{`${element.Reps} Reps`}</Text>
                     </View>
                     <View>
                     {
-                      (element.Notes !== "")? (<View className="mr-2"><Icon name="sticky-note" size={15} color="white" /></View>) : (<></>)
+                      (element.N !== "")? (<View className="mr-2"><Icon name="sticky-note" size={15} color="white" /></View>) : (<></>)
                     }
                     </View>
                 </View>

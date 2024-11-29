@@ -20,75 +20,170 @@ import Toast from 'react-native-toast-message'
 
 
 const ActiveHome = () => {
-  //Funktion, welche den Context Initialisiert
-  const { currentWorkout, setCurrentWorkout } = useContext(UserWorkout);
 
-  //Funktion, Übergabe von der Workout ID beim öffnen der Seite
-  const { data } = useLocalSearchParams();
-  const planObject = data? JSON.parse(data) : null;
+
+
+
+/*
+Initialisierungsvariablen
+
+*/
+
+const { data } = useLocalSearchParams();
+const planObject = data? JSON.parse(data) : null;
+const { currentWorkout, setCurrentWorkout } = useContext(UserWorkout);
+
+useEffect(() => {
+    
+  if (planObject) {
+    setCurrentWorkout((prevPlan) => ({
+      ...prevPlan,
+      WID: `Workout-${uuid.v4()}`,
+      TPID: planObject.PID,
+      Name: planObject.Name,
+      EIDs: planObject.EIDs,
+      SID:[],
+      CDate: new Date(),
+      Active: true,
+    }));
+    console.log("Basic setup was successful");
+  }
+
+}, [data]);
+
+
+
+
+
+useEffect(() => {
+  const saveWorkoutData = async () => {
+    if (currentWorkout && currentWorkout.Active) { // Check auf isActive
+      await AsyncStorage.setItem("ActiveWorkout", JSON.stringify(currentWorkout));
+    }
+  };
+  saveWorkoutData();
+}, [currentWorkout]); // Ausgeführt, wenn workoutData geändert wird
+
+const changeDuration = () => {
+  const startTime = currentWorkout.CDate;
+  const currentTime = new Date();
+  const differenceInMilliseconds = currentTime.getTime() - new Date(startTime).getTime() ;
+  setDuration(Math.floor(differenceInMilliseconds/1000));
+  const differenceInMinutes = Math.floor(differenceInMilliseconds / 60000).toString(); 
+  setCurrentWorkout((prevWorkout) => ({
+      ...prevWorkout,
+      Duration: differenceInMinutes,
+  }));
+
+};
+
+useEffect(()=>{
+  const interval = setInterval(()=> {
+    changeDuration();
+  },1000)
+  return () => clearInterval(interval)
+},[])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Speichern des Workouts:
+const setWorkoutInactive = async ()=>{
+  await AsyncStorage.removeItem("ActiveWorkout")
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+const [duration,setDuration] = useState(0);
+const [ currentWeight, setCurrentWeight ] = useState(0);
+const [ currentReps, setCurrentReps ] = useState(0);
+const [currentNotes, setCurrentNotes] = useState("")
+const [ warmUp , setWarmUp ] = useState("bg-black")
 
 
   
 
 
-  //Funktion zum Initialieren des Workouts:
-  useEffect(() => {
-    
-    if (planObject) {
-      setCurrentWorkout((prevPlan) => ({
-        ...prevPlan,
-        WID: `Workout-${uuid.v4()}`,
-        TPID: planObject.PID,
-        Name: planObject.Name,
-        EIDs: planObject.EIDs,
-        CDate: new Date(),
-        Active: true,
-      }));
-      console.log("Basic setup was successful");
-    }
+/*Potentiell Unnötig
+    const [ activeTimer, setActiveTimer] = useState(true)
+    const [viewTimer ,setViewTimer ] = useState(false)
+    const [ selectedExercise, setSelectedExercise] =  useState(1);
+    const [ moreActive, setMoreActive ] = useState(false)
+    const [viewProgress, setViewProgress] = useState(false)
+    const safeSetButton = (item) =>{
+      return (
+        <CustomButton
+                              title="Safe Set"
+                              containerStyles="bg-blue2 pt-2 h-[41px] w-[32%]"
+                              textStyles="text-white"
+                              handlePress={async()=> {
+                                  const set = {EID:item,R:currentReps,W:currentWeight,N:currentNotes,WarmUp:warmUp,D:getDates()}
+                                  const exists = await checkIfAsyncEntry();
+                                  if (exists) {
+                                    await addAsyncEntry(set)
+                                  } else {
+                                    await setAsyncEntry();
+                                    console.log("Ein Eintrag im Async Storage wurde erstellt")
+                                    await addAsyncEntry(set);
+                                  }
+                                  console.log(pastExercises)
+                      
+                                  setCurrentWorkout((prevWorkout) => ({
+                                    ...prevWorkout,
+                                    SID:[...prevWorkout.SID,set]
+                                  }))
+                                  
+                                  
+                                  Toast.show({
+                                    type: 'success', // oder 'error' für eine Fehlermeldung
+                                    position: 'top',
+                                    text1: `Added Set to Log`, // Text der Toast-Nachricht
+                                  });
+                                  setCurrentNotes("");
+                                  setCurrentReps(0);
+                                  setCurrentWeight(0);
+                                }
+                                }
+                              />
+      )
+     }
 
-  }, [data]);
+*/
 
  
 
-  useEffect(() => {
-    const saveWorkoutData = async () => {
-      if (currentWorkout && currentWorkout.Active) { // Check auf isActive
-        await AsyncStorage.setItem("ActiveWorkout", JSON.stringify(currentWorkout));
-      }
-    };
-    saveWorkoutData();
-  }, [currentWorkout]); // Ausgeführt, wenn workoutData geändert wird
   
   
-  const setWorkoutInactive = async ()=>{
-    await AsyncStorage.removeItem("ActiveWorkout")
-  }
+  
+  
 
   //Funtkionen zum passiven setzen von Werten
-  const [duration,setDuration] = useState(0);
-  const [ selectedExercise, setSelectedExercise] =  useState(1);
-  const [ currentWeight, setCurrentWeight ] = useState(0);
-  const [ currentReps, setCurrentReps ] = useState(0);
-  const [currentNotes, setCurrentNotes] = useState("")
-  const [ warmUp , setWarmUp ] = useState("bg-black")
-  const [ moreActive, setMoreActive ] = useState(false)
-  const [ activeTimer, setActiveTimer] = useState(true)
-  const [viewProgress, setViewProgress] = useState(false)
-  const [viewTimer ,setViewTimer ] = useState(false)
+  
+  const [pastExercises, setPastExercises] = useState([])
+
 
   //Functionen zum aktiven setzen von Werten
-    const changeDuration = () => {
-      const startTime = currentWorkout.CDate;
-      const currentTime = new Date();
-      const differenceInMilliseconds = currentTime.getTime() - new Date(startTime).getTime() ;
-      const differenceInMinutes = Math.floor(differenceInMilliseconds / 60000).toString(); 
-      setCurrentWorkout((prevWorkout) => ({
-          ...prevWorkout,
-          Duration: differenceInMinutes,
-      }));
-
-    };
+    
 
     const handleWeightChange = (text) =>  {
       setCurrentWeight(text)
@@ -100,10 +195,7 @@ const ActiveHome = () => {
       setCurrentNotes(text)
     }
 
-    const getAmountPastSets = (id) => {
-      return currentWorkout.SID.filter(item => item.EID === id).length
-    }
-
+    
 
     const getPastSets = (id) => {
       return currentWorkout.SID.filter(item => item.EID === id)
@@ -118,10 +210,7 @@ const ActiveHome = () => {
       return formatedDate;
     }
 
-
-    
-    //Funktion zum Speichern des Workouts
-    const safeWorkout = async ()=> {
+const safeWorkout = async ()=> {
       
       changeDuration();
       const jsonValue = JSON.stringify(currentWorkout)
@@ -129,11 +218,6 @@ const ActiveHome = () => {
       console.log("Locally Stored")
 
     }
-
-
-
-    //Funktionen zum Darstellen der Letzten Workouts
-    const [pastExercises, setPastExercises] = useState([])
 
     const checkIfAsyncEntry = async ()=>  {
       const exerciseName = exercises[currentWorkout.Selected-1].Name
@@ -159,13 +243,12 @@ const ActiveHome = () => {
       if(pastExercises.length < 100 ){
         newPastExerciseArray = [entry,...pastExercises];
       } else {
-        newPastExerciseArray = [entry,...pastExercises.slice(0,99)];
+        newPastExerciseArray = [entry,...pastExercises.slice(0,1000)];
       }
       setPastExercises(newPastExerciseArray)
       await AsyncStorage.setItem(exerciseName,JSON.stringify(newPastExerciseArray))
     }
     
-
       const progressInfo = ()=> {
         return (
         <View className="bg-blue2 p-2 rounded-[10px] ">
@@ -185,18 +268,18 @@ const ActiveHome = () => {
             return(
               <View key={`${item.EID}-${index}`} className={` bg-blue-500 rounded-[5px] p-1 px-2 m-1 flex-row items-center justify-center`}>
               <View className="mx-[5px] flex-row ">
-              <Text className="text-white font-bold">{`${item.Weight} Kg | ${item.Reps} Reps`}</Text>
+              <Text className="text-white font-bold">{`${item.W} Kg | ${item.R} Reps`}</Text>
              
               </View>
               
               <View >
                 {
-                  (item.WarmUp !== "bg-black")? (<View className="mr-2"><Icon name="fire" size={15} color="white" /></View>) : (<></>)
+                  (item.W !== "bg-black")? (<View className="mr-2"><Icon name="fire" size={15} color="white" /></View>) : (<></>)
                 } 
                 </View>
                 <View className="items-center">
                 {
-                  (item.Notes !== "")? (<View className="mr-2"><Icon name="sticky-note" size={15} color="white" /></View>) : (<></>)
+                  (item.N !== "")? (<View className="mr-2"><Icon name="sticky-note" size={15} color="white" /></View>) : (<></>)
                 }
                 </View>
             </View>)
@@ -225,167 +308,39 @@ const ActiveHome = () => {
 
 
 
-  return (
-    <SafeAreaView className ="bg-black h-full">
-      <ScrollView>
-      <View className=" flex-1 m-3 justify-between ">
-          
 
-          
+      /*
+      Ab hier kommen alle header spezifischen Aspektete
+      */
 
-          <View className="justify-center items-center m-3">
-            <TouchableOpacity 
-              className="flex-row justify-center items-center bg-blue2 rounded-2 p-2 rounded-[10px]" 
+      function formatDuration () {
+        if (!duration || duration <= 0) {
+          return "00:00:00"; // Standardwert für nicht vorhandene oder leere Dauer
+        }
+        const hours = Math.floor(duration/3600)
+        const minutes = Math.floor((duration%3600)/60);
+        const seconds = duration%60;
 
-              onPress={()=> {router.push("/progress-workout")}}
-              >
-                <Text className="text-3xl text-white font-bold my-2">Progress </Text>
-                <Icon name="book" size={30} color="white"/>
-              </TouchableOpacity>
-          </View>
-            
-            <View className="bg-blue2 rounded-[10px] p-2">
-            <Text className="text-2xl text-white font-bold text-center mt-3">Current Exercise:</Text>
-          
-        <View className="">
-          
+        return (`${(hours < 10 )? (`0${hours}`):`${hours}`}-${(minutes < 10 )? (`0${minutes}`):`${minutes}`}-${(seconds < 10 )? (`0${seconds}`):`${seconds}`}`)
 
+      }
 
-          <TouchableOpacity onPress={()=> {
-            router.push("/active-exercise-picker")
-          }}>
-            <View className="bg-blue2 justify-between items-center flex-row my-2 rounded-[5px] w-full">
-              <View className="flex-row justify-center items-center">
-                <Image source={(currentWorkout.Selected < 0)?(images.thumbnail):(exercises[currentWorkout.Selected-1].Image)} className="h-[70px] w-[70px] m-2"/>
-                <View >
-                  <Text className="text-xl text-white text-start"> {
-                    (currentWorkout.Selected < 0) ? ("Choose Exercise") : ((exercises[currentWorkout.Selected-1].Name.length > 15)?(`${exercises[currentWorkout.Selected-1].Name.slice(0,13)}...`):(exercises[currentWorkout.Selected-1].Name))
-                  } </Text>
-                  <Text className=" ml-1 text-white text-start"> {
-                  (currentWorkout.Selected < 0) ? ("Sets-") : (`Sets: ${getAmountPastSets(currentWorkout.Selected)}`)
-                  }</Text>
-                </View>
+      const header = () => {
+        return (
+            <View className=" flex-row mx-3 my-1 items-center justify-between">
+              <Text className="text-white font-bold text-3xl">{currentWorkout.Name}</Text>
+              <View className="flex-row items-center">
+                <Text className="text-white font-bold text-xl"> {formatDuration()}  </Text>
+                <Icon name="clock-o" size={30} color="#fff" />
+
               </View>
-              <View className="mr-3">
-                <Icon name="retweet" size={30} color="white" />
               </View>
-            </View>
-          </TouchableOpacity>
+             )
+            }
 
-          <View>
-            {progressInfo()}
-          </View>
-          
-          </View>
-          </View>
-
-          <View className="my-2">
-                  <View className="flex-row justify-between w-[100%] items-center">
-                    <CustomTextInput
-                    placeholder="Weight"
-                    keyType='numeric'
-                    handlingChange={handleWeightChange}
-                    width={"mr-1 w-[31%] h-[41px]"}
-                    value={currentWeight}
-                    />
-
-                    <CustomTextInput
-                    placeholder='Reps'
-                    keyType='numeric'
-                    handlingChange={handleRepChange}
-                    width={"mr-1 w-[31%] h-[41px]"}
-                    value={currentReps}
-
-                    />
-
-                    <TouchableOpacity className={`w-[32%] border border-[2px] border-blue2 rounded-[10px] justify-center items-center ${warmUp} h-[41px]`}
-                    onPress={()=> (warmUp === "bg-black")?(setWarmUp("bg-blue2")):(setWarmUp("bg-black"))}
-                    >
-                      <Text className="text-xl text-white font-bold">Warm Up</Text>
-                    </TouchableOpacity>
-
-                  </View>
-
-                  <View className="flex-row w-[100%]">
-
-                  <View className="flex-row justify-between w-[100%] items-center mb-2">
-                    <CustomTextInput
-                    placeholder="Notes"
-                    value={currentNotes}
-                    handlingChange={handleNoteChange}
-                    width={"mr-2 w-[65%] h-[41px]"}
-                    
-                    />
-
-                    <CustomButton
-                              title="Safe Set"
-                              containerStyles="bg-blue2 pt-2 h-[41px] w-[32%]"
-                              textStyles="text-white"
-                              handlePress={async()=> {
-
-                                if (currentWorkout.Selected < 0) {
-                                  Alert.alert("Missing Exercise","Please Select a Exercises")
-                                } else {
-                                  const set = {EID:currentWorkout.Selected,Reps:currentReps,Weight:currentWeight,Notes:currentNotes,WarmUp:warmUp,Date:getDates()}
-                                  const exists = await checkIfAsyncEntry();
-                                  if (exists) {
-                                    await addAsyncEntry(set)
-                                  } else {
-                                    await setAsyncEntry();
-                                    console.log("Ein Eintrag im Async Storage wurde erstellt")
-                                    await addAsyncEntry(set);
-                                  }
-                                  console.log(pastExercises)
-                      
-                                  setCurrentWorkout((prevWorkout) => ({
-                                    ...prevWorkout,
-                                    SID:[...prevWorkout.SID,set]
-                                  }))
-                                  
-                                  
-                                  Toast.show({
-                                    type: 'success', // oder 'error' für eine Fehlermeldung
-                                    position: 'top',
-                                    text1: `Added Set to Log`, // Text der Toast-Nachricht
-                                  });
-                                  setCurrentNotes("");
-                                  setCurrentReps(0);
-                                  setCurrentWeight(0);
-                                }}
-                                }
-                              />
-          </View>
-
-          
-
-          
-            
-          
-          
-          
-
-         
-          </View>
-
-          {/*
-            <View className={`border border-blue2 border-[3px] p-2 rounded-[10px] my-2 ${((viewTimer)?("bg-blue2"):("bg-black"))}`}>
-              <View className="flex-row items-center justify-between">
-                <Text className="text-white text-xl font-bold">View Break Timer:</Text>
-                <TouchableOpacity onPress={()=> setViewTimer(!viewTimer)}>
-                  <Image source={viewTimer? icons.eye:icons.eyeHide} className="h-[40px] w-[40px]"/>
-                </TouchableOpacity>
-              </View>
-              <View>
-                {(viewTimer)?(<RenderBreakTimer/>):(<></>)}
-              </View>
-              
-          </View>
-          */}
-          
-            
-        </View>
-
-        <View className="  m-2 p-2 h-[100px] justify-center">
+      const footer = () =>{
+        return(
+          <View className="  mx-2 p-2 h-[100px] justify-center">
           <CustomButton
           handlePress={()=> {
             
@@ -412,22 +367,272 @@ const ActiveHome = () => {
               position: 'top',
               text1: `Workout was saved`, // Text der Toast-Nachricht
             });
+            console.log("Finished Processing",currentWorkout)
+
             router.push("/")
-            console.log(currentWorkout)
           
           }}
 
           textStyles="text-white"
-          containerStyles="bg-red-900"
+          containerStyles="bg-red-900 mx-1"
           title="Workout Beenden"
           />
         </View> 
-       
-        
-        
+        )
+      }
 
-      </View>
-      </ScrollView>
+
+
+
+
+
+
+
+
+      /*
+      Alles Ab hier ist für den Main Scroll view
+      */
+     const [showDetails, setShowDetails] = useState([]);
+     const [ showMoreDetails ,setshowMoreDetials ] = useState([]);
+     const [ showEvenMoreDetails, setshowEvenMoreDetails ] = useState([]);
+
+     function changeDetailVisibility (ID){
+        if(showDetails.includes(ID)){
+          setShowDetails(showDetails.filter((i)=> i !== ID))
+        } else{
+          setShowDetails(showDetails.concat(ID))
+        }
+     }
+     function changeMoreDetailVisibility (ID){
+      console.log("Test")
+      if(showMoreDetails.includes(ID)){
+        setshowMoreDetials(showMoreDetails.filter((i)=> i !== ID))
+      } else{
+        setshowMoreDetials(showMoreDetails.concat(ID))
+      }
+   }
+   function changeEvenMoreDetailVisibility (ID){
+    if(showEvenMoreDetails.includes(ID)){
+      setshowEvenMoreDetails(showEvenMoreDetails.filter((i)=> i !== ID))
+    } else{
+      setshowEvenMoreDetails(showEvenMoreDetails.concat(ID))
+    }
+ }
+     
+     const matchingExercises = (ID)=> {
+      return currentWorkout.SID.filter((item)=> item.EID == ID );
+     }
+
+     
+
+
+/*
+     const [array, setArray] = useState([
+      { EID: 1, R: '11', W: "12", N: 'Top', Wa: "red", D: '11' },
+      { EID: 2, R: '22', W: "13", N: 'Middle', Wa: "white", D: '12' },
+      { EID: 3, R: '33', W: "14", N: 'Bottom', Wa: "red", D: '13' },
+      { EID: 4, R: '44', W: "15", N: 'Other', Wa: "white", D: '14' },
+    ]);
+    */
+      
+
+      const main = () =>{
+        const getAmountPastSets = (id) => {
+          return currentWorkout.SID.filter(SID => SID.EID === id).length
+        }
+        
+        const handleRepChange = (text, date) => {
+          const updatedArray = [...currentWorkout.SID];
+          const index = updatedArray.findIndex(item => item.D === date);
+          updatedArray[index].R = text; 
+          setCurrentWorkout({
+            ...currentWorkout, 
+            SID: updatedArray, 
+          }); 
+        };
+        
+        const handleWeightChange = (text, date) => {
+          const updatedArray = [...currentWorkout.SID];
+          const index = updatedArray.findIndex(item => item.D === date );
+          updatedArray[index].W = text;
+          setCurrentWorkout({
+            ...currentWorkout, 
+            SID: updatedArray, 
+          }); 
+        };
+
+        const handleWarmChange = (date) => {
+          const updatedWorkout  = { ...currentWorkout };
+          const updatedSID = [...currentWorkout.SID];
+          const index = updatedSID.findIndex(item => item.D === date ); 
+          if (updatedSID[index].Wa == "red"){
+            updatedSID[index].Wa = "white";
+          } else {
+            updatedSID[index].Wa = "red";
+
+          }
+          updatedWorkout.SID = updatedSID;
+          setCurrentWorkout(updatedWorkout); 
+        };
+
+        const addTuple = (ID) => {
+          console.log("Adding new Touple")
+          const newTuple = { EID: ID, R: null, W: null, N: null, Wa: "white", D: new Date() };
+          setCurrentWorkout((prevState) => ({
+            ...prevState,
+            SID: [...prevState.SID, newTuple],
+        }));
+        };
+
+        return(
+          <View>
+            {
+              currentWorkout.EIDs.map((item,index)=> {
+                return(
+                  
+                    <View key={`${item}-${index}`} className="bg-blue2 rounded-[5px] w-[full]  mx-2 mt-2 justify-start">
+                      <View className="flex-row p-2">
+                        <Image source={exercises[item-1].Image} className="h-[60px] w-[60px]"/>
+                        <View>
+                          <Text className="text-white font-bold text-xl ml-2">{(exercises[item-1].Name.length > 15)?(`${exercises[item-1].Name.slice(0,15)}...`):(exercises[item-1].Name)}</Text>
+                          <Text className=" ml-2 text-white text-start"> 
+                          {(!currentWorkout.SID.some((SID) => SID.EID === item)) ? ("No Sets Today") : (`Sets: ${getAmountPastSets(item)}`)} 
+                          </Text>
+                        </View>
+                      </View>
+                      
+                      <View>
+                        {(showDetails.includes(item))?(
+                          <View>
+                            
+                            <View className="flex-row justify-between mx-2">
+                                  <Text className="text-white font-bold">Set    </Text>
+                                  <Text className="text-white font-bold">Reps</Text>
+                                  <Text className="text-white font-bold">Kg</Text>
+                                  <Text className="text-white font-bold">Warmup</Text>
+
+                              </View>
+                            {
+                            
+                            currentWorkout.SID.filter((object)=> object.EID == item ).map((item,index)=>{
+                            
+
+
+                              return (
+
+                                <View className={`flex-row ${index%2 == 0?("bg-blue2"):("bg-[#023f77]")} mx-2 p-2 justify-between`}>
+                                  <Text className="text-white font-bold text-xl">{index}</Text>
+                                  <TextInput 
+                                  key={`${item.D}-${index}-Reps`}
+                                  className={`w-[30%] bg-white rounded-[5px] ${
+                                    index % 2 === 0 ? 'bg-[#023f77]' : 'bg-blue2'
+                                  } text-white text-center`}
+                                  keyboardType="numeric"
+                                  value={item.R}
+                                  placeholder="-"
+                                  onChangeText={(text) => handleRepChange(text, item.D)}
+                                  />
+
+                                  <TextInput 
+                                  key={`${item.D}-${index}-Weight`}
+                                  className={`w-[30%] bg-white rounded-[5px] ${
+                                    index % 2 === 0 ? 'bg-[#023f77]' : 'bg-blue2'
+                                  } text-white text-center`}
+                                  keyboardType="numeric"
+                                  value={item.W}
+                                  placeholder="-"
+                                  onChangeText={(text) => handleWeightChange(text, item.D)}
+                                  />
+                                  <View className="flex-row">
+                                    <TouchableOpacity className={` p-[2px] rounded-[5px] mr-1`} onPress={() => handleWarmChange(item.D)}>
+                                        <Icon key={`${item.D}-${index}-WarmUp`} name="check-circle" size={25} color={item.Wa === "red"?"white":"red"} />
+                                    </TouchableOpacity>
+
+                                    
+                                  </View>
+                                </View>
+                              )
+                            })
+                            
+                            }
+                            <TouchableOpacity className=" m-3 " onPress={()=> addTuple(item)}>
+                            <Icon name='plus' size={30} color={"white"}/>
+                            </TouchableOpacity>
+                            </View>
+                        ):(
+                          <View></View>
+                          )}
+                          
+                      </View>
+                      
+                      <TouchableOpacity className="mb-2 " onPress={()=>changeDetailVisibility(item)}>
+                        {(!showDetails.includes(item))?(
+                          <View className="justify-center items-center">
+                            <Icon name="chevron-down" size={20} color="#fff" />
+                          </View>
+                        ):
+                        (
+
+                          <View>
+                            { (showMoreDetails.includes(item))?(
+
+                              <View>
+                                {(showEvenMoreDetails.includes(item))?(
+                                
+                              <View className="flex-row justify-between items-center">
+                                <TouchableOpacity className="bg-white p-1 rounded-[5px] ml-3" onPress={()=> changeEvenMoreDetailVisibility(item)}>
+                                  <Text className=" font-bold">Show Less</Text>
+                                </TouchableOpacity>
+                                <Icon name="chevron-up" size={20} color="#fff" />
+                                <View className="w-[70px] ml-3"></View>
+
+                              </View>):(
+                                
+                                <View className="flex-row justify-between items-center">
+                                  <TouchableOpacity className="bg-white p-1 rounded-[5px] ml-3" onPress={()=> changeMoreDetailVisibility(item)}>
+                                    <Text className=" font-bold">Show Less</Text>
+                                  </TouchableOpacity>
+                                  <Icon name="chevron-up" size={20} color="#fff" />
+                                  <TouchableOpacity className="bg-white p-1 rounded-[5px] mr-3" onPress={()=> changeEvenMoreDetailVisibility(item)}>
+                                    <Text className=" font-bold">Show More</Text>
+                                  </TouchableOpacity>
+                                </View>)
+                                } 
+                              </View>
+                              
+                            ):
+
+                              <View className="flex-row justify-between items-center">
+                                <View className="w-[60px] ml-3"></View>
+                                <Icon name="chevron-up" size={20} color="#fff" />
+                                <TouchableOpacity className="bg-white p-1 rounded-[5px] mr-3" onPress={()=> changeMoreDetailVisibility(item)}>
+                                  <Text className=" font-bold">Compare</Text>
+                                </TouchableOpacity>
+                              </View>
+                            }
+                            
+
+                          </View>
+                          
+
+                        )}
+                      </TouchableOpacity>
+                    </View> 
+                )
+              })
+            }
+          </View>
+        )
+      }
+
+
+  return (
+    <SafeAreaView className ="bg-black h-full">
+      <View>{header()}</View>
+        <ScrollView className="flex-1">
+          {main()}
+        </ScrollView>
+      <View>{footer()}</View>
     </SafeAreaView>
   )
 }

@@ -42,7 +42,7 @@ const PastWorkout = () => {
               <Text className="text-white font-bold text-xl">{exercises[item-1].Name}</Text>
               <View className="flex-wrap flex-row">{(!(recap.length == 0))?(recap.map((object,index)=> (
                 <View key={`${object.EID}-${index}`} className="bg-blue-500 p-1 m-1 rounded-[5px]">
-                  <Text>{object.Weight} Kg | {object.Reps} Reps</Text>
+                  <Text>{object.W} Kg | {object.R} Reps</Text>
                 </View>
               ))):(
                 <View className="bg-blue-500 p-1 m-1 rounded-[5px]">

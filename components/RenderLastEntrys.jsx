@@ -4,14 +4,14 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { TouchableOpacity } from 'react-native';
 
 const exerciseEntrys = [
-    { "Date": "06-11-2024", "EID": 4, "Notes": "", "Reps": "20", "WarmUp": "bg-black", "Weight": "20" },
-    { "Date": "06-11-2024", "EID": 4, "Notes": "Focus on form", "Reps": "15", "WarmUp": "bg-blue", "Weight": "25" },
-    { "Date": "04-11-2024", "EID": 4, "Notes": "", "Reps": "12", "WarmUp": "bg-red", "Weight": "30" },
-    { "Date": "04-11-2024", "EID": 4, "Notes": "Felt good", "Reps": "5", "WarmUp": "bg-black", "Weight": "5" },
-    { "Date": "04-11-2024", "EID": 4, "Notes": "Felt good", "Reps": "10", "WarmUp": "bg-yellow", "Weight": "35" },
-    { "Date": "03-11-2024", "EID": 4, "Notes": "Increase weight next time", "Reps": "8", "WarmUp": "bg-green", "Weight": "40" },
-    { "Date": "03-11-2024", "EID": 4, "Notes": "Good session", "Reps": "10", "WarmUp": "bg-black", "Weight": "45" },
-    { "Date": "03-11-2024", "EID": 4, "Notes": "", "Reps": "10", "WarmUp": "bg-blue2", "Weight": "45" }
+    { "D": "06-11-2024", "EID": 4, "N": "", "R": "20", "W": "bg-black", "W": "20" },
+    { "D": "06-11-2024", "EID": 4, "N": "Focus on form", "R": "15", "W": "bg-blue", "W": "25" },
+    { "D": "04-11-2024", "EID": 4, "N": "", "R": "12", "W": "bg-red", "W": "30" },
+    { "D": "04-11-2024", "EID": 4, "N": "Felt good", "R": "5", "W": "bg-black", "W": "5" },
+    { "D": "04-11-2024", "EID": 4, "N": "Felt good", "R": "10", "W": "bg-yellow", "W": "35" },
+    { "D": "03-11-2024", "EID": 4, "N": "Increase weight next time", "R": "8", "W": "bg-green", "W": "40" },
+    { "D": "03-11-2024", "EID": 4, "N": "Good session", "R": "10", "W": "bg-black", "W": "45" },
+    { "D": "03-11-2024", "EID": 4, "N": "", "R": "10", "W": "bg-blue2", "W": "45" }
 
   ];
 
@@ -33,10 +33,10 @@ const RenderLastEntrys = () => {
         let date2 = "";
 
         for (let i= 0; i < exerciseEntrys.length; i++){
-            if (exerciseEntrys[i].Date !== datetoday && date1 === ""){
-                date1 = exerciseEntrys[i].Date;
-            }else if (exerciseEntrys[i].Date !== datetoday && exerciseEntrys[i].Date !== date1 ){
-                date2 = exerciseEntrys[i].Date
+            if (exerciseEntrys[i].D !== datetoday && date1 === ""){
+                date1 = exerciseEntrys[i].D;
+            }else if (exerciseEntrys[i].D !== datetoday && exerciseEntrys[i].D !== date1 ){
+                date2 = exerciseEntrys[i].D
                 break;
             }
             }
@@ -70,18 +70,18 @@ const RenderLastEntrys = () => {
             
               <View key={`${item.EID}-${index}`}  className={` bg-blue-500 rounded-[5px] p-1 px-2 m-1 flex-row items-center justify-center`}>
               <View className="mx-[5px] flex-row ">
-              <Text className="text-white font-bold">{`${item.Weight} Kg | ${item.Reps} Reps`}</Text>
+              <Text className="text-white font-bold">{`${item.W} Kg | ${item.Reps} Reps`}</Text>
              
               </View>
               
               <View >
                 {
-                  (item.WarmUp !== "bg-black")? (<View className="mr-2"><Icon name="fire" size={15} color="white" /></View>) : (<></>)
+                  (item.W !== "bg-black")? (<View className="mr-2"><Icon name="fire" size={15} color="white" /></View>) : (<></>)
                 } 
                 </View>
                 <View className="items-center">
                 {
-                  (item.Notes !== "")? (<View className="mr-2"><Icon name="sticky-note" size={15} color="white" /></View>) : (<></>)
+                  (item.N !== "")? (<View className="mr-2"><Icon name="sticky-note" size={15} color="white" /></View>) : (<></>)
                 }
                 </View>
             </View>)

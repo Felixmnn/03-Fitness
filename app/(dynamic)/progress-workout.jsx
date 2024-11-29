@@ -33,18 +33,18 @@ const ProgressWorkout = () => {
                {numbers.map((element,index)=>{
                 return(
                 
-                <View key={`${element.EID}-${index}`} className={` ${element.WarmUp} bg-blue-500 rounded-[5px] py-1 px-2 m-1 flex-row flex-wrap  items-center justify-center`}>
+                <View key={`${element.EID}-${index}`} className={` ${element.W} bg-blue-500 rounded-[5px] py-1 px-2 m-1 flex-row flex-wrap  items-center justify-center`}>
                     <View className="mx-[5px]">
-                        <Text className="text-white font-bold">{`${element.Weight} Kg | ${element.Reps} Reps`}</Text>
+                        <Text className="text-white font-bold">{`${element.W} Kg | ${element.R} Reps`}</Text>
                     </View>
                     <View>
                     {
-                      (element.WarmUp !== "bg-black")? (<View className="mr-2"><Icon name="fire" size={15} color="white" /></View>) : (<></>)
+                      (element.W !== "bg-black")? (<View className="mr-2"><Icon name="fire" size={15} color="white" /></View>) : (<></>)
                     } 
                     </View>
                     <View>
                     {
-                      (element.Notes !== "")? (<View className="mr-2"><Icon name="sticky-note" size={15} color="white" /></View>) : (<></>)
+                      (element.N !== "")? (<View className="mr-2"><Icon name="sticky-note" size={15} color="white" /></View>) : (<></>)
                     }
                     </View>
                     
