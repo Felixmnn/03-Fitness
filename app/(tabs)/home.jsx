@@ -19,6 +19,7 @@ import { PieChart } from 'react-native-chart-kit';
 import exercises from '../../constants/exercises';
 import { genSync } from '../../lib/appwrite';
 import { useGlobalContext } from '../../context/GlobalProvider';
+import SummaryChart from '../../components/SummaryChart';
 
 const Home = () => {
   const { user, isLoggedIn, setUser } = useGlobalContext();
@@ -57,12 +58,12 @@ const Home = () => {
 
   
 
-  
+  const [barChartData, setBarChartData ] = useState([]);
 
 
   useEffect(() => {
     if (workoutsThisMonth && workoutsThisMonth.length > 0) {
-      console.log("Component were set sucessfully")
+      //console.log("Component were set sucessfully")
       setComonents([component1(),componet2()]);
     } else {
       setComonents([]);
@@ -78,23 +79,62 @@ const Home = () => {
       fetchWorkouts();
     }, []);
 
+  const last7Exercises = (workouts) =>{
+    const days = ["Sun","Mon","Tue","Wen","Thu","Fri","Sat"];
+    const t = new Date();
+    const t2 = new Date();
+    const last7e = [];
+    const formatToday = (date) => date.toISOString().split('T')[0];
+    const sumDuration = (date) => {
+      let result = 1;
+
+      workouts.map((workout)=> {
+        const compareDate = new Date(workout.CDate).toISOString().split('T')[0];
+        if ( compareDate == date  &&  workout.Duration !== "NaN"){
+          result += Number(workout.Duration);
+        }
+        else if (compareDate == date){
+          result += 1;
+        }
+
+      })
+      return result;
+    }
+    t.setDate(t.getDate() + 1);
+    console.log(workouts);
+    for (let i = +1; i< 8; i++){
+      t.setDate(t.getDate() - 1);
+      console.log(sumDuration(formatToday(t)));
+      //console.log(formatToday(t));
+      if(t2.getDate() - i < 0){
+        last7e.push({label:days[t2.getDate() - i +7],value:sumDuration(formatToday(t))});
+      } else{
+        last7e.push({label:days[t2.getDate() - i],value:sumDuration(formatToday(t))});
+      }
+      console.log("Today",t2.getDate() - i)
+    }
+    return last7e
+  }
   const setWorkoutsOfThisMonth = async() => {
     const allKeys = await AsyncStorage.getAllKeys();
     const workoutKeys = allKeys.filter((key) => key.includes("Workout-"))
-    console.log("Hier sind die Keys",workoutKeys);
+    //console.log("Hier sind die Keys",workoutKeys);
 
     const getWorkouts = await AsyncStorage.multiGet(workoutKeys)
 
-    const parsedWorkouts = getWorkouts.map(([key,value]) => JSON.parse(value))
-    console.log("Hier sollte alle Workouts sein",parsedWorkouts);
+    const parsedWorkouts = getWorkouts.map(([key,value]) => JSON.parse(value));
+    const last7 = last7Exercises(parsedWorkouts);
 
+    setBarChartData(last7.reverse());
+    console.log("The Last 7",last7);
     const today = new Date();
     const thisMonthEntrys = parsedWorkouts.filter((item) => {
+
       const workoutDate = new Date(item.CDate)
       return !isNaN(workoutDate) && workoutDate.getMonth() === today.getMonth();
     })
 
-    console.log("Hier sollten alle Einträge dieses Monats sein",thisMonthEntrys);
+    //console.log("Hier sollten alle Einträge dieses Monats sein",thisMonthEntrys);
 
     setWorkoutThisMonth(thisMonthEntrys)
   }
@@ -104,6 +144,7 @@ const Home = () => {
   useEffect(() => {
     // Prüft jede Sekunde, ob ein aktives Workout existiert
     const interval = setInterval(() => {
+      //console.log(workoutsThisMonth)
       checkIfEntryExists("ActiveWorkout");
     }, 1000); // Zeit in Millisekunden, hier 1000 ms = 1 Sekunde
 
@@ -134,14 +175,14 @@ const Home = () => {
   const getActiveWorkout = async ()=> {
      const data = await AsyncStorage.getItem("ActiveWorkout")
       const unfinishedWorkout = JSON.parse(data)
-      console.log(unfinishedWorkout)
+      //console.log(unfinishedWorkout)
       return (unfinishedWorkout)
   }
 
     const component1 = () => {
       const setGrouped = () => {
         const blueShades = ['#1E90FF', '#00BFFF', '#5F9EA0', '#4682B4', '#6495ED', '#4169E1', '#87CEEB', '#4682B4']; // Liste von Blautönen
-      console.log(workoutsThisMonth,"Workouts this Month")
+      //console.log(workoutsThisMonth,"Workouts this Month")
         const groupedObj = workoutsThisMonth.reduce((acc, item) => {
           if (!acc[item.Name]) {
             acc[item.Name] = {
@@ -157,8 +198,9 @@ const Home = () => {
 
           return acc;
         }, {});
-      console.log(groupedObj,"GroupObject")
+      //console.log("Grouped Object",groupedObj)
         return Object.values(groupedObj);
+        
       };
       
 
@@ -213,26 +255,50 @@ const Home = () => {
        
         return summary;
       }
+      //console.log("Workouts of this Month:",workoutsThisMonth);
+      const sortedWorkouts = workoutsThisMonth.sort((a,b)=> new Date (a.CDate) - new Date(b.CDate));
 
-      const workout = workoutsThisMonth[0];
+      const workout = sortedWorkouts[0];
+      //console.log("Workout this Month",workout.CDate)
       const date = new Date(workout.CDate);
+      //console.log(date)
       const year = date.getFullYear();
-      const month = date.getMonth();
-      const day = date.getDay();
+      const month = date.getMonth()+1;
+      const day = date.getDay()+1;
       const formatedDate = `${(day > 9 )?day:`0${day}`}-${(month > 9)?month:`0${month}`}-${year}`
+      //console.log("Current Date", formatedDate);
       const duration = (workout.Duration == "")?"00:00":workout.Duration;
       
       return (
-        <View className="bg-blue2 rounded-[10px] h-[180px] w-[300px] justiy-center pb-2 m-2">
-          <Text className="text-white font-bold text-xl text-center">Last Workout</Text>
-          <View className="flex-row justify-between w-[90%] mt-2 ml-2">
-            <Text className="text-white ">{formatedDate}</Text>
-            <Text className="text-white ">{duration} Minutes</Text>
+        <View className="bg-blue2 rounded-[10px] h-[180px] w-[300px] justiy-center pb-2 px-2 m-2">
+          <Text className="text-white font-bold text-xl text-center">Last Workout: {workout.Name}</Text>
+          <View className="flex-row justify-between w-[100%] items-center">
+            <View className="flex-row items-center">
+              <Text className="text-white font-semibold mr-1 ">{formatedDate}</Text>
+              <Icon name='calendar' size={15} color={"white"}/>
+            </View>
+            <View className="flex-row items-center">
+            <Text className="text-white ">{(duration== NaN)?(duration):null}</Text>
+            <View className="relative justify-center items-center">
+              <Icon name="clock-o" size={25} color="white" />
+              {
+
+              (!(duration == NaN))?(
+              <View className="absolute left-[10px] right-0 h-[2px] bg-white w-[30px]"
+                style={{
+                  height: 28, // Höhe der Linie
+                  width: 2,  // Breite in Pixeln
+                  backgroundColor: 'red', // Farbe der Linie
+                  transform: [{ rotate: '45deg' }], // Die Linie um 45 Grad rotieren
+                  }}
+              />):null
+                }
+            </View>
+            </View>
           </View>
-          <Text className="text-white font-bold text-xl ml-2">Exercises:</Text>
-          <View className="flex-row  m-2 flex-wrap ">
+          <View className="flex-row mt-2 flex-wrap justify-start items-start">
           {createExerciseSummary(workout.SID).map((item,index)=>(
-                    <View key={`${item.EID}-${index}`}  className="bg-blue-500 m-1 p-1 rounded-[5px]">
+                    <View key={`${item.EID}-${index}`}  className="bg-blue-500 mr-1.5 p-1 rounded-[5px]">
                     <Text className="text-white">{exercises[item.Name-1].Name}  {item.Info}</Text>
                     </View>
                   ))
@@ -315,10 +381,19 @@ const Home = () => {
             </View>
             </View>):
 
-            ( <TouchableOpacity className="flex-row justify-between items-center bg-blue2 m-2 p-4 rounded-[10px] w-full h-[100px]" onPress={()=> router.push("/plans")}>
+            ( <View className="mt-2">
+              <View className="bg-blue2 rounded-[10px] py-3 mx-2 justify-center ">
+                  <View className="ml-[5%]">
+                    <SummaryChart data={barChartData}/>
+                  </View>
+                </View>
+            <TouchableOpacity className="flex-row justify-between items-center bg-blue2 m-2 p-4 rounded-[10px] w-full h-[60px]" onPress={()=> router.push("/plans")}>
+                
                 <Text className="text-white font-bold text-xl mx-2">Start a Workout</Text>
+              
                 <Icon name="plus" size={30} color={"white"}/>
               </TouchableOpacity>
+              </View>
             )}
             
             

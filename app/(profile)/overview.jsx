@@ -1,8 +1,8 @@
-import { View, SafeAreaView, Alert, Text, Image } from 'react-native';
-import React, { useContext } from 'react';
+import { View, SafeAreaView, Alert, Text, Image,ScrollView, ActivityIndicator } from 'react-native';
+import React, { useContext, useState } from 'react';
 import { router } from 'expo-router';
 import CustomButton from '../../components/CustomButton';
-import { backUpPlan, genSync, signOut } from '../../lib/appwrite';
+import { backUpPlan, genSync, getAllEntries, getAllPlans, getAllWorkouts, signOut } from '../../lib/appwrite';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import { client,databases,backUpWorkout } from '../../lib/appwrite';
 import { Query } from 'react-native-appwrite';
@@ -14,6 +14,8 @@ import * as Sharing from 'expo-sharing';
 import { TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-toast-message';
+import {  ContributionGraph } from 'react-native-chart-kit';
+import SummaryChart from '../../components/SummaryChart';
 
 
 
@@ -70,7 +72,54 @@ const ProfileOverview = () => {
     }
 
 
- 
+    const commitsData = [
+      { date: "2024-11-02", count: 1 },
+      { date: "2024-11-03", count: 2 },
+      { date: "2024-11-04", count: 3 },
+      { date: "2024-11-05", count: 4 },
+      { date: "2024-11-06", count: 5 },
+      { date: "2024-11-30", count: 2 },
+      { date: "2024-11-31", count: 3 },
+      { date: "2024-11-01", count: 2 },
+      { date: "2024-11-02", count: 4 },
+      { date: "2024-11-05", count: 2 },
+      { date: "2024-11-30", count: 4 }
+    ];
+    
+    const chartConfig = {
+      backgroundGradientFrom: "#000",
+      backgroundGradientFromOpacity: 0.4,
+      backgroundGradientTo: "#000",
+      backgroundGradientToOpacity: 1,
+      color: (opacity = 1) => `rgba(0, 150, 255, ${opacity})`,
+      strokeWidth: 2, // optional, default 3
+      barPercentage: 0.5,
+      useShadowColorFromDataset: false // optional
+    };
+    
+    const [isFetching, setIsFetching] = useState(false);
+
+    const importData = async () => {
+      console.log("I am doing something :)");
+      setIsFetching(true);
+      try {
+        const plans = await getAllPlans();
+        const workouts = await getAllWorkouts();
+        console.log("Success",typeof plans[0]);
+        console.log(plans[0].PID)
+        const currentKeys = await AsyncStorage.getAllKeys();
+        const parsedKeys = JSON.parse(currentKeys);
+        /*
+        */
+        //await AsyncStorage.setItem(`Plan-${plans[0].PID}`,plans[0]);
+      } catch(error){
+        console.log(error);
+      }
+      
+      setIsFetching(false);
+
+
+    }
     
     
 
@@ -91,11 +140,33 @@ const ProfileOverview = () => {
                 <Icon name="file-excel-o" size={30} color="white"/>
                 <Text className="text-white font-bold m-2">Export Data</Text>
             </TouchableOpacity>
-            <TouchableOpacity className="flex-row items-center p-2 rounded-[5px] bg-blue-500 justify-center m-2 flex-1">
-                <Icon name="cloud" size={30} color="white"/>
+            <TouchableOpacity 
+            className={`flex-row items-center p-2 rounded-[5px] ${isFetching? 'opacity-50' : ""}  bg-blue-500 justify-center m-2 flex-1`}
+            onPress={()=> importData()}
+            disabled = {isFetching}
+            >
+              {
+                (isFetching)?
+                  (<ActivityIndicator size={"small"} color={"white"}/>):
+                  <Icon name="cloud" size={30} color="white"/>
+            }
                 <Text className="text-white font-bold m-2">Import Data</Text>
             </TouchableOpacity>
             </View>
+            <ScrollView   horizontal={true} 
+                          contentContainerStyle={{ alignItems: 'center' }} 
+            >
+              <ContributionGraph
+                values={commitsData}
+                endDate={new Date("2025-01-01")}
+                numDays={70}
+                width={300}
+                height={220}
+                chartConfig={chartConfig}
+              />
+              
+              
+            </ScrollView>
           </View>
           <View> 
             <CustomButton title={"Logout"} containerStyles={"bg-red-900"} handlePress={logout} />

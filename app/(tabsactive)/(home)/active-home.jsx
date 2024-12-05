@@ -17,6 +17,8 @@ import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import RenderLastEntrys from '../../../components/RenderLastEntrys'
 import RenderBreakTimer from '../../../components/RenderBreakTimer'
 import Toast from 'react-native-toast-message'
+import { getAllEntries } from '../../../lib/appwrite'
+import ShowPastWorkouts from '../../../components/ShowPastWorkouts'
 
 
 const ActiveHome = () => {
@@ -47,7 +49,6 @@ useEffect(() => {
       Active: true,
       Saved:false,
     }));
-    console.log("Basic setup was successful");
   }
 
 }, [data]);
@@ -87,7 +88,6 @@ useEffect(()=>{
 
 
 useEffect(()=>{
-  console.log("Shown Details wurden verändert");
   const showDetailsNames = showDetails.flatMap(index => {
     return exercises[index-1].Name;
   });
@@ -279,63 +279,7 @@ const safeWorkout = async ()=> {
 
     
     
-      const progressInfo = ()=> {
-        return (
-        <View className="bg-blue2 p-2 rounded-[10px] ">
-          <TouchableOpacity onPress={()=> setViewProgress(!viewProgress)}>
-            <View className="flex-row items-center justify-between">
-              <Text className="text-white text-xl font-bold">View Exercise Progress:</Text>
-              <Icon name="eye" size={30} color="white"/>
-          </View>
-         </TouchableOpacity>
-      <View className="my-2">
-        {(viewProgress)?
-        (<View>
-
-          <Text className="text-center text-white font-bold">Today</Text>
-        <View className="flex-row flex-wrap justify-center">
-          { getPastSets(currentWorkout.Selected).map((item,index)=>{
-            return(
-              <View key={`${item.EID}-${index}`} className={` bg-blue-500 rounded-[5px] p-1 px-2 m-1 flex-row items-center justify-center`}>
-              <View className="mx-[5px] flex-row ">
-              <Text className="text-white font-bold">{`${item.W} Kg | ${item.R} Reps`}</Text>
-             
-              </View>
-              
-              <View >
-                {
-                  (item.W !== "bg-black")? (<View className="mr-2"><Icon name="fire" size={15} color="white" /></View>) : (<></>)
-                } 
-                </View>
-                <View className="items-center">
-                {
-                  (item.N !== "")? (<View className="mr-2"><Icon name="sticky-note" size={15} color="white" /></View>) : (<></>)
-                }
-                </View>
-            </View>)
-          })
-
-          }
-        </View>
-        <View>
-          {(moreActive)?(<RenderLastEntrys />):(<></>)}
-        </View>
-        <TouchableOpacity className="items-center justify-center my-2" onPress={()=> {setMoreActive(!moreActive)}}>
-        {
-          (moreActive)?
-          (<Text className="text-white text-center underline">hide last workouts</Text>):
-          (
-          <Text className="text-white text-center underline">show last workouts</Text>)
-        }  
-      </TouchableOpacity>
-        </View>):
-        (<></>)}
-        
-      </View>
-      </View>
-        )
-      }
-
+      
 
 
 
@@ -360,7 +304,7 @@ const safeWorkout = async ()=> {
             <View className=" flex-row mx-3 my-1 items-center justify-between">
               <Text className="text-white font-bold text-3xl">{currentWorkout.Name}</Text>
               <View className="flex-row items-center">
-                <Text className="text-white font-bold text-xl"> {formatDuration()}  </Text>
+                <Text key={`${duration}`} className="text-white font-bold text-xl"> {formatDuration()}  </Text>
                 <Icon name="clock-o" size={30} color="#fff" />
 
               </View>
@@ -434,6 +378,7 @@ const safeWorkout = async ()=> {
 
       /*
       Alles Ab hier ist für den Main Scroll view
+      ----------------------------------------------------------------------------------------------------------------
       */
      const [showDetails, setShowDetails] = useState([]);
      const [ showMoreDetails ,setshowMoreDetials ] = useState([]);
@@ -469,7 +414,10 @@ const safeWorkout = async ()=> {
       return currentWorkout.SID.filter((item)=> item.EID == ID );
      }
 
-     
+    /*
+    Alles Ab hier ist für den Main Scroll view
+    ----------------------------------------------------------------------------------------------------------------
+    */ 
      
 
      
@@ -482,6 +430,35 @@ const safeWorkout = async ()=> {
     ]);
     */
       
+
+      const [ secondLastWorkout, setSecondLastWorkout ] = useState([]);
+
+
+      const getSecondLastWorkout = async (EID) => {
+        const allItemsJSON = await AsyncStorage.getItem(exercises[EID-1].Name);
+        if (!allItemsJSON) return[];
+        const allItems = JSON.parse(allItemsJSON);
+        if (allItems.length === 0) return[];
+        const matchingDate = new Date(allItems[0].D).toISOString().split("T")[0];
+        const matchingExercises = allItems.filter((item) => new Date(item.D).toISOString("T")[0] !== matchingDate );
+        const matchingSecondDate = new Date(matchingExercises[0].D).toISOString().split("T")[0]; 
+        const matchingsecondExercises = allItems.filter((item) => new Date(item.D).toISOString("T")[0] === matchingSecondDate );
+        if (matchingsecondExercises.length === 0) return[];
+        console.log("Das wird gepseichert",matchingsecondExercises)
+        setSecondLastWorkout((prevSecondLastWorkout) => [...prevSecondLastWorkout, { EID: matchingsecondExercises }]);
+    }
+
+    const removeLastWorkout = () => {
+
+    }
+
+    const removeSecondLastWorkout = () => {
+
+    }
+
+
+     
+
 
       const main = () =>{
         const getAmountPastSets = (id) => {
@@ -577,7 +554,7 @@ const safeWorkout = async ()=> {
                                     keyboardType="numeric"
                                     value={item.W}
                                     placeholder="-"
-                                    placeholderTextColor={index % 2 === 0 ? '#cccccc' : '#999999'} // Setzt die Farbe des Platzhalters
+                                    placeholderTextColor={index % 2 === 0 ? '#cccccc' : '#999999'} // Setzt die Farbe des Platzhalter 
                                     onChangeText={(text) => handleWeightChange(text, item.D)}
                                   />
                                   <TextInput 
@@ -614,71 +591,22 @@ const safeWorkout = async ()=> {
                           )}
                           
                       </View>
-                      
+                      <View>
+                        {
+                          showDetails.includes(item)?
+                          (<ShowPastWorkouts EID={item} />)
+                          :(<></>)
+                        }
+                      </View>
                       <TouchableOpacity className="mb-2 " onPress={()=>changeDetailVisibility(item)}>
                         {(!showDetails.includes(item))?(
                           <View className="justify-center items-center">
                             <Icon name="chevron-down" size={20} color="#fff" />
                           </View>
                         ):
-                        (
-
-                          <View>
-                            { (showMoreDetails.includes(item))?(
-
-                              <View>
-                                {(showEvenMoreDetails.includes(item))?(
-                              
-                              <View>
-                                  <View>
-                                    {
-                                      <Text> Vorlestztes Workout</Text>
-                                    }
-                                  </View>
-                              <View className="flex-row justify-between items-center">
-                                <TouchableOpacity className="bg-white p-1 rounded-[5px] ml-3" onPress={()=> changeEvenMoreDetailVisibility(item)}>
-                                  <Text className=" font-bold">Show Less</Text>
-                                </TouchableOpacity>
-                                <Icon name="chevron-up" size={20} color="#fff" />
-                                <View className="w-[70px] ml-3"></View>
-
-                              </View>
-                              </View>):(
-                                <View>
-                                  <View>
-                                    {
-                                      <Text> Letztes Workout</Text>
-                                    }
-                                  </View>
-                                <View className="flex-row justify-between items-center">
-                                  <TouchableOpacity className="bg-white p-1 rounded-[5px] ml-3" onPress={()=> changeMoreDetailVisibility(item)}>
-                                    <Text className=" font-bold">Show Less</Text>
-                                  </TouchableOpacity>
-                                  <Icon name="chevron-up" size={20} color="#fff" />
-                                  <TouchableOpacity className="bg-white p-1 rounded-[5px] mr-3" onPress={()=> changeEvenMoreDetailVisibility(item)}>
-                                    <Text className=" font-bold">Show More</Text>
-                                  </TouchableOpacity>
-                                </View>
-                                </View>)
-                                }  
-                              </View>
-                              
-                            ):
-
-                              <View className="flex-row justify-between items-center">
-                                <View className="w-[60px] ml-3"></View>
-                                <Icon name="chevron-up" size={20} color="#fff" />
-                                <TouchableOpacity className="bg-white p-1 rounded-[5px] mr-3" onPress={()=> changeMoreDetailVisibility(item)}>
-                                  <Text className=" font-bold">Compare</Text>
-                                </TouchableOpacity>
-                              </View>
-                            }
-                            
-
-                          </View>
-                          
-
-                        )}
+                        (<View className="justify-center items-center">
+                          <Icon name="chevron-up" size={20} color="#fff" />
+                        </View>)}
                       </TouchableOpacity>
                     </View> 
                 )
@@ -698,6 +626,64 @@ const safeWorkout = async ()=> {
       }
 
 
+
+/*
+Display your Last Workout
+
+
+
+
+*/
+
+const [ lastWorkouts,setLastWorkouts ] = useState([]);
+
+const getLastWorkout = async () => {
+  const EID = 18;
+  console.log("Startet er Überhaupt")
+
+  const allItemsJSON = await AsyncStorage.getItem(exercises[EID].Name);
+  console.log("Wo hört er auf",allItemsJSON)
+
+  if (!allItemsJSON) return[];
+
+  const allItems = JSON.parse(allItemsJSON);
+  console.log("Wo hört er auf",allItems)
+
+  if (allItems.length === 0) return[];
+
+  const matchingDate = new Date(allItems[0].D).toISOString().split("T")[0];
+  console.log("Wo hört er auf",matchingDate)
+
+  const matchingExercises = allItems.filter((item) => new Date(item.D).toISOString("T")[0] !== matchingDate ); 
+  console.log("Wo hört er auf",matchingExercises)
+  
+  if (matchingExercises.length === 0) return [];
+  console.log("Das wird gepseichert",matchingExercises)
+  setLastWorkouts((prevLastWorkouts) => [...prevLastWorkouts, { EID: matchingExercises }]);
+  console.log("Das ist der UseState",lastWorkouts);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
     <SafeAreaView className ="bg-black h-full">
       <View>{header()}</View>
@@ -709,6 +695,8 @@ const safeWorkout = async ()=> {
             {main()}
           </ScrollView>
         </KeyboardAvoidingView>
+
+
       <View>{footer()}</View>
     </SafeAreaView>
   )
