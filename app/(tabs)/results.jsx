@@ -38,7 +38,7 @@ const results = () => {
     console.log(allKEys,"Hier sind alle  Keys")
 
     const filteredKEys = allKEys.filter(key => key.includes("Workout") && !key.includes("ActiveWorkout") )
-    console.log(filteredKEys,"Hier sind die Keys")
+    console.log("Hier sind die Keys",filteredKEys);
     const workoutEntries = await AsyncStorage.multiGet(filteredKEys)
 
     const parsedWorkouts = workoutEntries.map(([key,value])=> JSON.parse(value))

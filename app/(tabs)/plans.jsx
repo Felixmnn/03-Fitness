@@ -53,9 +53,12 @@ const plans = () => {
 
         const planKeys = storedKeys.filter(key => key.startsWith("Plan-"));
         setFilteredKeys(planKeys);
+        console.log("Hier sollten die Keys sein",planKeys);
 
         // Lade die Plandaten für jeden Schlüssel
         const plansData = await Promise.all(planKeys.map(async key => await getKeyObject(key)));
+        console.log("Das Problem entsteht hier",plansData);
+
         console.log(plansData)
         setItems(plansData.filter(item => item !== null)); // Setze den Zustand mit validen Objekten
       } catch (error) {

@@ -30,6 +30,7 @@ const CreatePlan = () => {
 
     // Funktion, die den Namen im Plan-Objekt aktualisiert
     const updatePlanName = (input) => {
+      
       setCurrentPlan((prevPlan) => ({
         ...prevPlan,
         Name: input,  

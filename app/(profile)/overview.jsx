@@ -97,7 +97,55 @@ const ProfileOverview = () => {
       useShadowColorFromDataset: false // optional
     };
     
+
+
+    //@Exporting the Data
     const [isFetching, setIsFetching] = useState(false);
+
+   
+
+    const reduxProtection = async ({parsedKeys,plans,workouts}) => {
+      await Promise.all(plans.map( async(plan) => {
+        if (!(parsedKeys.some((object)=> object.includes(plan.PID)))){
+          const newPlan = {
+              PID: plan.PID,
+              Name: plan.Name,
+              Description: plan.Description,
+              EIDs: plan.EIDs,
+              Difficulty: plan.Difficulty,
+              Duration: plan.Duration,
+              CDate: plan.CDate,     // Creation Date
+              Public: plan.Public,
+              Saved: plan.Saved,
+              Bg:plan.Bg
+          
+          }
+          await AsyncStorage.setItem(`Plan-${plan.PID}`,JSON.stringify(newPlan));
+          }
+      }))
+        
+        
+        await Promise.all(workouts.map( async(workout) => {
+        if (!(parsedKeys.some((object)=> object.includes(workout.WID)))){
+          const newWorkout = {
+            WID: workout.WID,
+            TPID:workout.TPID,
+            Name:workout.Name,
+            Selected:workout.Selected,
+            EIDs:workout.EIDs,     
+            SID:JSON.parse(workout.SID),     
+            CDate:workout.CDate,     
+            Duration:workout.Duration,
+            Public:workout.Public,
+            Saved:workout.Saved,
+            Active:false,
+          }
+          await AsyncStorage.setItem(`Workout-${newWorkout.WID}`,JSON.stringify(newWorkout));
+          console.log("Success?");
+        }
+        }))
+      }
+  
 
     const importData = async () => {
       console.log("I am doing something :)");
@@ -106,12 +154,18 @@ const ProfileOverview = () => {
         const plans = await getAllPlans();
         const workouts = await getAllWorkouts();
         console.log("Success",typeof plans[0]);
-        console.log(plans[0].PID)
-        const currentKeys = await AsyncStorage.getAllKeys();
-        const parsedKeys = JSON.parse(currentKeys);
+        console.log(typeof plans[0].PID);
+        const parsedKeys = await AsyncStorage.getAllKeys();
+
+        
+        await reduxProtection({parsedKeys,plans,workouts});
         /*
         */
-        //await AsyncStorage.setItem(`Plan-${plans[0].PID}`,plans[0]);
+        //await AsyncStorage.setItem(`Plan-${plans[0].PID}`,plans[0].PID);
+        //console.log("Added the first entry:",plans[0].PID)
+        //const currentKeys = await AsyncStorage.getAllKeys();
+        //console.log("Hier sind die Keys",currentKeys);
+
       } catch(error){
         console.log(error);
       }
@@ -120,6 +174,8 @@ const ProfileOverview = () => {
 
 
     }
+
+    //@Exporting the Data
     
     
 
