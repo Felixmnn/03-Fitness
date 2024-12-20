@@ -16,6 +16,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-toast-message';
 import {  ContributionGraph } from 'react-native-chart-kit';
 import SummaryChart from '../../components/SummaryChart';
+import { excel } from '../../lib/excel';
 
 
 
@@ -28,47 +29,55 @@ const ProfileOverview = () => {
     router.push("/sign-in");
   };
 
+
+  const [isFetching2,setIsFetching2] = useState(false);
+  
   const excel = async () => {
-      const data = [
-        { Name: 'Max', Alter: 28, Stadt: 'Berlin' },
-        { Name: 'Anna', Alter: 25, Stadt: 'Hamburg' },
-        { Name: 'Tom', Alter: 30, Stadt: 'München' },
-      ];
-    
-      // Konvertiere Daten in Excel
-      const worksheet = XLSX.utils.json_to_sheet(data);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-    
-      // Schreibe die Excel-Daten in eine Base64-codierte Datei
-      const excelOutput = XLSX.write(workbook, { type: 'base64', bookType: 'xlsx' });
-    
-      // Speichere die Datei auf dem Gerät
-      const fileUri = `${FileSystem.documentDirectory}example.xlsx`;
-      await FileSystem.writeAsStringAsync(fileUri, excelOutput, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-    
-      console.log(`Excel-Datei gespeichert unter: ${fileUri}`);
-    
-      // Überprüfe, ob das Teilen möglich ist
-      if (await Sharing.isAvailableAsync()) {
-        await Sharing.shareAsync(fileUri, {
-          mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          dialogTitle: 'Teile deine Excel-Datei',
+    console.log("I am doing something :)");
+      setIsFetching2(true);
+      try {
+        const plans = await getAllPlans();
+
+        const workouts = await getAllWorkouts();
+        plans.map((plan)=> plan.EIDs = JSON.stringify(plan.EIDs));
+        console.log("Hallo");
+        workouts.map((workout)=> workout.EIDs = JSON.stringify(workout.EIDs));
+
+        const plansSheet = XLSX.utils.json_to_sheet(plans);
+        const workoutsSheet = XLSX.utils.json_to_sheet(workouts);
+
+
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, plansSheet, 'Plans');
+        XLSX.utils.book_append_sheet(workbook, workoutsSheet, 'Workouts');
+
+
+        const excelOutput = XLSX.write(workbook, { type: 'base64', bookType: 'xlsx' });
+        const fileUri = `${FileSystem.documentDirectory}example.xlsx`;
+        await FileSystem.writeAsStringAsync(fileUri, excelOutput, {
+          encoding: FileSystem.EncodingType.Base64,
         });
-      } else {
-        Alert.alert('Teilen nicht möglich', 'Sharing wird auf diesem Gerät nicht unterstützt.');
+        if (await Sharing.isAvailableAsync()) {
+          await Sharing.shareAsync(fileUri, {
+            mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            dialogTitle: 'Teile deine Excel-Datei',
+          });
+        } else {
+          Alert.alert('Teilen nicht möglich', 'Sharing wird auf diesem Gerät nicht unterstützt.');
+        }
+      } catch(error){
+        console.log(error);
       }
+      setIsFetching2(false);
     };
+
+
+
+
 
     const random = () =>{
       
-      Toast.show({
-        type: 'success', // oder 'error' für eine Fehlermeldung
-        position: 'top',
-        text1: `I did a thing`, // Text der Toast-Nachricht
-      });
+      router.push("/exercise");
     }
 
 
@@ -152,6 +161,7 @@ const ProfileOverview = () => {
       setIsFetching(true);
       try {
         const plans = await getAllPlans();
+        console.log("All Plans:",plans)
         const workouts = await getAllWorkouts();
         console.log("Success",typeof plans[0]);
         console.log(typeof plans[0].PID);
@@ -188,12 +198,19 @@ const ProfileOverview = () => {
           </View>
             <Text className="text-white font-bold text-3xl">{user.username}</Text> 
         </View>
-        <View className="flex-1 bg-blue2 rounded-t-[25px] p-2 justify-between items-center" >
+        <View className="flex-1 bg-blue2 rounded-t-[25px] p-2 justify-start items-center" >
           <View>
-            <CustomButton title="Random Stuff" handlePress={()=> random()} containerStyles={"bg-white mx-2"} textStyles={"text-whiter"}/>
+            <CustomButton title="Random Stuff" handlePress={()=> random()} containerStyles={"bg-red-900 mx-2"} textStyles={"text-white"}/>
             <View className="flex-row justify-between w-full">
-            <TouchableOpacity className="flex-row items-center p-2 rounded-[5px] bg-[#217346] justify-center m-2 flex-1" onPress={()=> excel()}>
-                <Icon name="file-excel-o" size={30} color="white"/>
+            <TouchableOpacity className={`flex-row items-center p-2 rounded-[5px] bg-blue-500 justify-center m-2 flex-1 ${isFetching2? 'opacity-50' : ""}`}
+                              onPress={()=> excel()}
+                              disabled = {isFetching2}
+                              >
+                                {
+                (isFetching2)?
+                  (<ActivityIndicator size={"small"} color={"white"}/>):
+                  <Icon name="file-excel-o" size={30} color="white"/>
+            }
                 <Text className="text-white font-bold m-2">Export Data</Text>
             </TouchableOpacity>
             <TouchableOpacity 
@@ -208,24 +225,14 @@ const ProfileOverview = () => {
             }
                 <Text className="text-white font-bold m-2">Import Data</Text>
             </TouchableOpacity>
+            
+
             </View>
-            <ScrollView   horizontal={true} 
-                          contentContainerStyle={{ alignItems: 'center' }} 
-            >
-              <ContributionGraph
-                values={commitsData}
-                endDate={new Date("2025-01-01")}
-                numDays={70}
-                width={300}
-                height={220}
-                chartConfig={chartConfig}
-              />
-              
-              
-            </ScrollView>
           </View>
+          <CustomButton onPress={async()=> AsyncStorage.clear()  } title={" Clear Async Storage"} />
+          
           <View> 
-            <CustomButton title={"Logout"} containerStyles={"bg-red-900"} handlePress={logout} />
+            <CustomButton title={"Logout"} containerStyles={"bg-red-900 m-5"} textStyles={"text-white"}  handlePress={logout} />
           </View>
         </View>
       </View>

@@ -1,10 +1,13 @@
-import { View, Text,FlatList } from 'react-native'
+import { View, Text,FlatList,ScrollView } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useLocalSearchParams } from 'expo-router'
 import exercises from '../../constants/exercises'
 import RenderSets from '../../components/RenderSets'
 import RenderSavedExercises from '../../components/RenderSavedExercises'
+import { format } from 'date-fns';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 
 const PastWorkout = () => {
   const {data} = useLocalSearchParams();
@@ -19,21 +22,53 @@ const PastWorkout = () => {
     return durationCOncatinated
   }
 
+  const formattedDate = (date)=>{
+    return format(date, 'dd.MM.yyyy');
+  }
+
+  function renderMuscles () {
+    const muscles = [];
+    workout.SID.map((w) => {
+      if (!(muscles.includes(w.EID))){
+        muscles.push(w.EID);
+      }
+    })
+    console.log(muscles);
+    return muscles;
+  }
+  const muscles = renderMuscles();
+
   return (
   
 
-    <SafeAreaView className="bg-black h-full">
-      <Text className="text-white text-3xl font-bold text-center">{workout.Name}</Text>
-      <View className="justify-between flex-row ">
-        <Text className="text-white text-xl font-bold mx-2">Duration:</Text>
-        <Text className="text-white text-xl font-bold mx-2">{renderDuration(workout.Duration)}</Text>
-      </View>
-      <Text className="text-white font-bold text-2xl mx-2 mt-2">Exercises</Text>
-      <View className="mx-2 h-[80%]">
-        
+    <View className="bg-black h-full justify-start">
+        <Text className="text-white text-2xl font-bold text-center m-2">{workout.Name} - {formattedDate(workout.CDate)}</Text>
         <FlatList
         data = {workout.EIDs}
         keyExtractor={(item)=> item.toString()}
+        ListHeaderComponent={()=>{
+          return (
+            <View className="bg-blue2 rounded-[10px] m-2 p-2 ">
+              <ScrollView className="bg-blue-500 h-[150px] w-full">
+                { muscles.map((muscle)=>
+                
+                <Text key={`${muscle}`} className="text-white font-bold">
+                  {
+                    muscle
+                  }
+                </Text>
+
+                )}
+              </ScrollView>
+              <View className="items-center justify-center">
+                <View className="flex-row items-center">
+                  <Icon name="bank" size={20} color="white" /> 
+                  <Text className="text-white m-1">Dauer</Text>
+                </View>
+              </View>
+            </View>
+          )
+        }}
         renderItem={({item})=>{
           const recap = workout.SID.filter((object)=> object.EID == item);
           console.log(recap)
@@ -57,7 +92,6 @@ const PastWorkout = () => {
         /> 
         </View>
 
-    </SafeAreaView>
 
   )
 }

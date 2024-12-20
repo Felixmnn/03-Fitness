@@ -80,7 +80,7 @@ const Home = () => {
     }, []);
 
   const last7Exercises = (workouts) =>{
-    const days = ["Sun","Mon","Tue","Wen","Thu","Fri","Sat"];
+    const days = ["Sun","Mon","Tue","Wen","Thu","Fri","Sat","Sun","Mon","Tue","Wen","Thu","Fri","Sat","Sun","Mon","Tue","Wen","Thu","Fri","Sat","Sun","Mon","Tue","Wen","Thu","Fri","Sat","Sun","Mon","Tue","Wen","Thu","Fri","Sat"];
     const t = new Date();
     const t2 = new Date();
     const last7e = [];

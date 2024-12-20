@@ -43,8 +43,20 @@ const results = () => {
 
     const parsedWorkouts = workoutEntries.map(([key,value])=> JSON.parse(value))
     const sortWorkouts = parsedWorkouts.sort((a,b)=> new Date(b.CDate) - new Date(a.CDate))
-    setPastWorkouts(sortWorkouts)
     
+    
+    const PIDs = [];
+    const filteredWorkouts = sortWorkouts.filter((workout) => {
+      if (PIDs.includes(workout.WID)) {
+        return false; // Workout wird nicht in das Ergebnis aufgenommen
+      } else {
+        PIDs.push(workout.WID);
+        return true; // Workout wird in das Ergebnis aufgenommen
+      }
+    });
+
+    setPastWorkouts(filteredWorkouts);
+
   }
 
     const formattedDate = (date)=>{
@@ -129,7 +141,7 @@ const results = () => {
                 data={pastWorkouts}
                 numColumns={amount}
                 key={amount}
-                keyExtractor={(item) => `${item.Name}-${item.CDate}`}
+                keyExtractor={(item,index) => `${item.Name}-${item.WID}-${index}`}
                 renderItem={({ item }) => {
                   return amount === 3 ? (
                     <TouchableOpacity

@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Image, Alert } from 'react-native'
+import { View, Text, ScrollView, Image, Alert,TouchableOpacity } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Link, router } from 'expo-router'
 import FormField from '../../components/FormField'
@@ -49,6 +49,16 @@ const submit = async () => {
   }
   
 }
+const imageWrapper = ({imageSource,key,action}) => {
+    const noActionYet = ()=> {
+      Alert.alert("OAuth not Working yet");
+    }
+    return (
+      <TouchableOpacity key={key} onPress={() => {(action)?(action):(noActionYet())}}>
+        <Image source={imageSource} reciseMode="contain" className="w-[50px] h-[50px]" />
+      </TouchableOpacity>
+    )
+  }
 
   return (
     <SafeAreaView className="bg-black h-full">
@@ -107,10 +117,8 @@ const submit = async () => {
                     Or Sign-Up with:
                   </Text>
 
-                  <View className="flex-row justify-center mb-4">
-                    <Image reciseMode="contain" className="w-[50px] h-[50px]" source={icons.google}/>
-                    <Image reciseMode="contain" className="w-[50px] h-[50px]" source={icons.apple}/>
-                    <Image reciseMode="contain" className="w-[50px] h-[50px]" source={icons.meta}/>
+                  <View className="flex-row justify-center mb-[30px]">
+                    {[icons.google,icons.apple,icons.meta].map((item)=> imageWrapper({imageSource:item,key:item}))}
                   </View>
 
                   <View className="flex-row justify-center gap-1 mt-1 mb-[60px]">
