@@ -15,6 +15,8 @@ import { Redirect, router, Link } from "expo-router";
 import { icons } from "../../constants";
 import { getCurrentUser, signIn } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
+import Icon from 'react-native-vector-icons/FontAwesome';
+import CustomTextInput from "../../components/CustomTextInput";
 
 const SignIn = () => {
   const { user, setUser } = useGlobalContext();
@@ -48,7 +50,7 @@ const SignIn = () => {
     }
   };
 
-  const imageWrapper = ({ imageSource, key, action }) => {
+  const imageWrapper = ({ name, key, action }) => {
     const noActionYet = () => {
       Alert.alert("OAuth not Working yet");
     };
@@ -58,12 +60,14 @@ const SignIn = () => {
         onPress={() => {
           action ? action : noActionYet();
         }}
+        className="m-2 w-[40px]"
       >
-        <Image
-          source={imageSource}
-          reciseMode="contain"
-          className="w-[50px] h-[50px]"
+        <Icon 
+        name={name} 
+        size={45} 
+        color="white" 
         />
+
       </TouchableOpacity>
     );
   };
@@ -71,20 +75,17 @@ const SignIn = () => {
   return (
     <SafeAreaView className="bg-black h-full">
       <ScrollView>
+        
         <View className="w-full justify-center h-full my-6">
           <View className="justify-center items-center">
-            <Image
-              source={images.logBook}
-              reciseMode="contain"
-              className="w-[115px] h-[70px]"
-            />
+            <Text className="text-4xl font-bold text-white my-5">MyLogBook</Text>
           </View>
 
           <View className="rounded-l-[80px] bg-black mt-[50px] py-[50px] bg-[#003566] ">
             <Text className="text-white text-center font-pbold text-3xl">
               Sign-In
             </Text>
-
+           
             <FormField
               title="Email"
               placeholder="Email"
@@ -100,16 +101,21 @@ const SignIn = () => {
               handleChangeText={(e) => setForm({ ...form, password: e })}
               otherStyles="mx-5"
             />
-            <Text className="text-white text-center py-[5px] ">
-              Forgot Password
-            </Text>
-
+            <TouchableOpacity onPress={() => {
+              Alert.alert("Email Server noch net ready");
+            }}>
+              <Text className="text-white text-center py-[5px] ">
+                Forgot Password
+              </Text>
+            </TouchableOpacity>
+            
             <CustomButton
               className="flex justify-center items-center h-screen"
               title="Sign In"
               handlePress={submit}
-              containerStyles="my-[15px] mx-5 bg-blue-500"
+              containerStyles="my-[15px] mx-5 bg-blue-500 rounded-2xl"
               isLoading={isSubmitting}
+              textStyles={"text-white"}
             />
 
             <Text className="text-white text-center py-[5px]">
@@ -117,13 +123,13 @@ const SignIn = () => {
             </Text>
 
             <View className="flex-row justify-center mb-[30px]">
-              {[icons.google, icons.apple, icons.meta].map((item) =>
-                imageWrapper({ imageSource: item, key: item }),
+              {["google","apple","facebook"].map((item) =>
+                imageWrapper({ name: item, key: item }),
               )}
             </View>
 
-            <View className="flex-row justify-center gap-1 mb-[30] mt-[5]">
-              <Text className="text-white  text-lg">Dont have a Account?</Text>
+            <View className="flex-row justify-center gap-1 mb-[30] mt-[5] items-center">
+              <Text className="text-white  text-lg mb-1">Dont have a Account?</Text>
               <Link
                 href="/sign-up"
                 className="text-red-500  font-psemibold text-lg"

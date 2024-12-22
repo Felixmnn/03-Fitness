@@ -8,8 +8,8 @@ const FormField = ({title,value,placeholder, handleChangeText, otherStyles, ...p
     const [showPassword, setshowPassword] = useState(false)
   return (
     <View className={`space-y-2 ${otherStyles}`}>
-        <View className="border-2 border-black-200 w-full h-16 px-4 bg-white rounded-2xl focus:border-red-500 items-center flex-row my-2">
-            <TextInput className="flex-1 text-black font-psemibold text-base"
+        <View className="border-2 bg-textInputColor border-black-200 w-full h-16 px-4 border-blue2 rounded-2xl focus:border-red-500 items-center flex-row my-2">
+            <TextInput className="flex-1 text-white font-psemibold text-base"
                         value={value}
                         placeholder={placeholder}
                         placeholderTextColor="gray"

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { View, Text, TextInput, SafeAreaView,Image,FlatList } from 'react-native';
+import { View, Text, TextInput, SafeAreaView,Image,FlatList, KeyboardAvoidingView, Platform } from 'react-native';
 import { UserPlan,resetContext } from "../../../context/currentPlan";
 import { TouchableOpacity } from 'react-native';
 import exercises from "../../../constants/exercises"
@@ -11,6 +11,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomTextInput from '../../../components/CustomTextInput';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { backUpPlan } from '../../../lib/appwrite';
+import CustomButton from '../../../components/CustomButton';
+import { Svg, Rect,LinearGradient, Stop } from 'react-native-svg';
 
 const CreatePlan = () => {
   const { currentPlan, setCurrentPlan,resetCurrentPlan } = useContext(UserPlan);
@@ -116,12 +118,11 @@ const CreatePlan = () => {
   
 
   return (
-    <SafeAreaView className="bg-black h-full p-4">
-      <Text className="text-3xl text-white text-center font-bold m-5">Create Plan</Text>
-      
-      <Text className="text-2xl text-white font-bold mb-1">
-        Details:
-      </Text>
+    <KeyboardAvoidingView
+              className="bg-black p-2"
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+              style={{ flex: 1 }}
+    >
 
         <CustomTextInput
         title={currentPlan.Name}
@@ -155,7 +156,7 @@ const CreatePlan = () => {
       </View>
       
 
-      
+      <View className="flex-1">
       <Text className="text-2xl text-white font-bold mt-5">
         Exercises:
       </Text>
@@ -166,16 +167,16 @@ const CreatePlan = () => {
           const e = exercises.find(ex => ex.EID === item);
           if (e) {
             return (
-              <View className="flex-row justify-between items-center bg-blue2 my-2 rounded-[10px]">
-                    <View className="flex-row items-center my-2 ml-2">
-                      <Image source={e.Image} className="mr-2 h-[70px] w-[70px]"/>
-                      <Text className="text-xl text-white font-bold w-[50%]">{e.Name}</Text>
+              <View className="flex-row justify-between items-center bg-blue2 my-1 rounded-[5px]">
+                    <View className="flex-row items-center my-2 ml-2 p-1">
+                      {/*<Image source={e.Image} className="mr-2 h-[70px] w-[70px]"/>*/}
+                      <Text className="text-xl text-white font-bold ">{e.Name}</Text>
 
                     </View>
                     
                     <TouchableOpacity onPress={ ()=> removeEID(index)}>
-                    <View className="bg-red-900 rounded-full w-[35px] h-[35px] items-center justify-center m-2">
-                      <Icon name="trash-o" size={25} color="black"/>
+                    <View className="bg-red-900 rounded-full w-[30px] h-[30px] items-center justify-center m-2">
+                      <Icon name="trash-o" size={20} color="black"/>
                     </View>
                     </TouchableOpacity>
               </View>
@@ -183,21 +184,34 @@ const CreatePlan = () => {
           return null;
         }}
       ListFooterComponent={
-        <TouchableOpacity onPress={() => router.push("/exercise-picker")} className="bg-blue2 p-3 justify-center items-center my-2 rounded-[10px]">
+        
 
-          <Text className="text-xl text-white font-bold">Add Exercise</Text>
-        </TouchableOpacity>
+        <CustomButton
+        title={"Add Exercise"}
+        handlePress={() => router.push("/exercise-picker")}
+        textStyles={"text-white "}
+        containerStyles={"bg-blue2 my-2 mb-5"}
+
+        />
       }
     />
-   
+    <Svg height="40" width="100%" className="absolute bottom-[70px] left-0 right-0 z-10">
+      <LinearGradient id="fadeBottom" x1="0%" y1="0%" x2="0%" y2="100%">
+        <Stop offset="100%" stopColor="rgba(18, 18, 18, 1)" stopOpacity="1" />
+        <Stop offset="0%" stopColor="rgba(18, 18, 18, 1)" stopOpacity="0" />
+      </LinearGradient>
+      <Rect x="0" y="0" width="100%" height="40" fill="url(#fadeBottom)" />
+    </Svg>
+
+      
       <TouchableOpacity onPress={saveCurrentPlan} className=" bg-blue2 rounded-[10px] p-2 justify-center items-center mt-5 mb-2 h-[50px]">
         <Text className="text-xl text-white font-bold">Safe Plan</Text>
       </TouchableOpacity>
       
     
 
-      
-    </SafeAreaView>
+      </View>
+    </KeyboardAvoidingView>
   );}
 
 

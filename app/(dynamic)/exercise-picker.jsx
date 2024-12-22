@@ -13,7 +13,8 @@ import { UserWorkout } from '../../context/currentWorkout';
 import { TextInput } from 'react-native-web';
 import CustomTextInput from '../../components/CustomTextInput';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import CustomButton from '../../components/CustomButton';
+import { Svg, Rect,LinearGradient, Stop } from 'react-native-svg';
 
 
 const ExercisePicker = () => {
@@ -120,10 +121,8 @@ const ExercisePicker = () => {
     
   
   return (
-    <SafeAreaView className="bg-black h-full">
-      <Text className="text-white text-3xl font-bold text-center my-5">
-        Choose a Exercise
-      </Text>
+    <View className="bg-black h-full">
+      
       <View className="flex-row justify-center items-center m-2 mr-3">
 
       
@@ -143,17 +142,18 @@ const ExercisePicker = () => {
           <View>
             
 
-            <Text className="text-white font-bold text-xl m-2">Types:</Text>
-            <View className="flex-wrap flex-row">
+            <Text className="text-white font-bold text-xl mx-4">Types:</Text>
+            <View className="flex-wrap flex-row mx-2">
             
-            {typeFilters.map((item,index)=>(
-              <TouchableOpacity key={`${item.id}-${index}`}  className={`${appliedFilters.includes(item)?("bg-blue-500 border border-[2px] border-blue-500"):("bg-black border border-[2px] border-blue-500 ")} p-1 m-1 rounded-[5px]`} onPress={()=> {toggleFilter(item)}}>
-                  <Text className="text-white font-bold text-xl">{item}</Text>
-              </TouchableOpacity>
-            ))}
-            
-            <Text className="text-white font-bold text-xl m-2">Muscles:</Text>
-            <View className="flex-wrap flex-row">
+              {typeFilters.map((item,index)=>(
+                <TouchableOpacity key={`${item.id}-${index}`}  className={`${appliedFilters.includes(item)?("bg-blue-500 border border-[2px] border-blue-500"):("bg-black border border-[2px] border-blue-500 ")} p-1 m-1 rounded-[5px]`} onPress={()=> {toggleFilter(item)}}>
+                    <Text className="text-white font-bold text-xl">{item}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <Text className="text-white font-bold text-xl mx-4">Muscles:</Text>
+            <View className="flex-wrap flex-row mx-2">
             
             {muscleFilters.map((item,index)=>(
               <TouchableOpacity key={`${item.id}-${index}`} className={`${appliedFilters.includes(item)?("bg-blue-500 border border-[2px] border-blue-500"):("bg-black border border-[2px] border-blue-500 ")} p-1 m-1 rounded-[5px]`} onPress={()=> {toggleFilter(item)}}>
@@ -163,11 +163,22 @@ const ExercisePicker = () => {
             
             
             </View>
-            <View className="w-full items-center justify-center">
-            <TouchableOpacity className="my-5 bg-blue-500 p-2 rounded-[5px] " onPress={()=> setAppliedFilters([])}>
-              <Text className="text-white font-bold text-xl text-center">Reset Filters</Text>
-            </TouchableOpacity>
-            </View>
+            <View className="w-full items-center justify-center flex-row mt-2">
+            
+            <CustomButton
+              containerStyles={"bg-blue2 ml-2 mr-1 w-[45%] "}
+              textStyles={"text-white"}
+              title={"Apply Filters"}
+              handlePress={()=>{setFiltersShown(!filtersShown)}}
+            />
+
+            <CustomButton
+              containerStyles={"bg-blue2 ml-1 mr-2 w-[45%]"}
+              textStyles={"text-white"}
+              title={"Reset Filters"}
+              handlePress={()=> setAppliedFilters([])}
+            />
+
             </View>
           </View>
         )
@@ -184,11 +195,10 @@ const ExercisePicker = () => {
             
             data = {filteredData}
             keyExtractor={(item) => item.EID.toString()}
-            
-
+            className="m-2 px-1 rounded-[5px] bg-blue2"
             renderItem={({item}) => (
 
-              <View>
+              <View className="m-1">
                 {selectedExercises.includes(item.EID)?(
                   <View>
                     <TouchableOpacity 
@@ -196,11 +206,11 @@ const ExercisePicker = () => {
                       setSelectedExercises(selectedExercises.filter(num => num !== item.EID))
                       console.log(selectedExercises)
                     }}
-                    className={`flex-row border-2 border border-blue2 w-full justify-between items-center bg-blue2 }`}
+                    className={`flex-row  w-full justify-between items-center bg-blue-500 rounded-[5px]  }`}
                     >
 
-                            <Image source={item.Image} className="h-[80px] w-[80px] m-2"/>
-                            <Text className="text-white w-[70%] font-bold text-xl ">{item.Name}</Text>
+                            {/*<Image source={item.Image} className="h-[80px] w-[80px] m-2"/> */}
+                            <Text className="text-white w-[70%] font-bold text-xl p-2 ">{item.Name}</Text>
                     </TouchableOpacity>
                   </View>
                 ):(
@@ -210,11 +220,11 @@ const ExercisePicker = () => {
                         setSelectedExercises([...selectedExercises,item.EID])
                         console.log(selectedExercises)
                       }}
-                      className={`flex-row border-2 border border-blue2 w-full justify-between items-center  }`}
+                      className={`flex-row w-full justify-between items-center  }`}
                       >
 
-                              <Image source={item.Image} className="h-[80px] w-[80px] m-2"/>
-                              <Text className="text-white w-[70%] font-bold text-xl ">{item.Name}</Text>
+                              {/*<Image source={item.Image} className="h-[80px] w-[80px] m-2"/>*/}
+                              <Text className="text-white w-[70%] font-bold text-xl p-2 ">{item.Name}</Text>
                     </TouchableOpacity>
                   </View>
                 )}
@@ -222,11 +232,25 @@ const ExercisePicker = () => {
               
             )}
             
-            />     
-         </View>)}
+            />
+              <Svg height="40" width="100%" className="absolute bottom-0 left-0 right-0 z-10">
+                <LinearGradient id="fadeBottom" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <Stop offset="100%" stopColor="rgba(18, 18, 18, 1)" stopOpacity="1" />
+                  <Stop offset="0%" stopColor="rgba(18, 18, 18, 1)" stopOpacity="0" />
+                </LinearGradient>
+                <Rect x="0" y="0" width="100%" height="40" fill="url(#fadeBottom)" />
+              </Svg>
+         </View>
+        
+        )
+        }
       </View>
-      <TouchableOpacity className="bg-blue2 rounded-[10px] mx-5 my-5 p-2 "
-      onPress={  
+      
+      <CustomButton
+      textStyles={"text-white"}
+      containerStyles={"bg-blue2 m-4 "}
+      title={"Add To Plan"}
+      handlePress={  
         
         (name === "workout") ? (()=>{
           console.log(selectedExercises)
@@ -239,15 +263,12 @@ const ExercisePicker = () => {
           console.log(name)
           addExercises(selectedExercises)
           router.back()}
-        )}>
-        <Text className="text-xl text-white font-bold text-center text-center">
-          Add to Plan
-        </Text>
-      </TouchableOpacity>  
+        )}
+      />
       
       
         
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -19,15 +19,11 @@ export default function Index() {
     <SafeAreaView className="bg-black h-full">
       <ScrollView contentContainerStyle={{height: '100%'}}>
         <View className="w-full justify-center items-center min-h-[100vh] px-4">
-          
-          <Image  source={images.logBook}
-                  className="w-[130px] h-[84px]"
-                  resizeMode="contain"
-                  />
-                  <CustomButton
+            <CustomButton
             title="Get Started"
+            textStyles={"text-white"}
             handlePress={() => router.push('/sign-in')}
-            containerStyles = "px-[30]  mt-7"
+            containerStyles = "px-[30] mt-7 bg-blue-500"
           />
           
         </View>  

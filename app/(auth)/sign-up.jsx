@@ -8,7 +8,7 @@ import { icons } from '../../constants'
 import {images} from "../../constants"
 import { createUser } from '../../lib/appwrite';
 import { useGlobalContext } from '../../context/GlobalProvider';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 const SignUp = () => {
@@ -49,16 +49,27 @@ const submit = async () => {
   }
   
 }
-const imageWrapper = ({imageSource,key,action}) => {
-    const noActionYet = ()=> {
+const imageWrapper = ({ name, key, action }) => {
+    const noActionYet = () => {
       Alert.alert("OAuth not Working yet");
-    }
+    };
     return (
-      <TouchableOpacity key={key} onPress={() => {(action)?(action):(noActionYet())}}>
-        <Image source={imageSource} reciseMode="contain" className="w-[50px] h-[50px]" />
+      <TouchableOpacity
+        key={key}
+        onPress={() => {
+          action ? action : noActionYet();
+        }}
+        className="m-2 w-[40px]"
+      >
+        <Icon 
+        name={name} 
+        size={45} 
+        color="white" 
+        />
+
       </TouchableOpacity>
-    )
-  }
+    );
+  };
 
   return (
     <SafeAreaView className="bg-black h-full">
@@ -108,8 +119,10 @@ const imageWrapper = ({imageSource,key,action}) => {
                           className="flex justify-center items-center h-screen"
                           title="Sign-Up"
                           handlePress={submit}
-                          containerStyles= "my-[15px] mx-5 bg-blue-500"
+                          containerStyles= "my-[15px] mx-5 bg-blue-500 rounded-2xl"
                           isLoading={isSubmitting}
+                          textStyles={"text-white"}
+
                     />  
                   </View>
                   
@@ -118,12 +131,14 @@ const imageWrapper = ({imageSource,key,action}) => {
                   </Text>
 
                   <View className="flex-row justify-center mb-[30px]">
-                    {[icons.google,icons.apple,icons.meta].map((item)=> imageWrapper({imageSource:item,key:item}))}
+                    {["google","apple","facebook"].map((item) =>
+                      imageWrapper({ name: item, key: item }),
+                    )}
                   </View>
 
                   <View className="flex-row justify-center gap-1 mt-1 mb-[60px]">
-                    <Text className="text-white  text-lg">Already have a Account?</Text>
-                    <Link href="/sign-in" className='text-red-500 font-psemibold text-lg'>Sign In</Link>
+                    <Text className="text-white  text-lg pb-1">A have a Account?</Text>
+                    <Link href="/sign-in" className='text-red-500 font-psemibold text-lg pt-[2px]'>Sign In</Link>
 
                   </View>
 

@@ -101,17 +101,14 @@ const Home = () => {
       return result;
     }
     t.setDate(t.getDate() + 1);
-    console.log(workouts);
     for (let i = +1; i< 8; i++){
       t.setDate(t.getDate() - 1);
-      console.log(sumDuration(formatToday(t)));
       //console.log(formatToday(t));
       if(t2.getDate() - i < 0){
         last7e.push({label:days[t2.getDate() - i +7],value:sumDuration(formatToday(t))});
       } else{
         last7e.push({label:days[t2.getDate() - i],value:sumDuration(formatToday(t))});
       }
-      console.log("Today",t2.getDate() - i)
     }
     return last7e
   }
@@ -126,7 +123,6 @@ const Home = () => {
     const last7 = last7Exercises(parsedWorkouts);
 
     setBarChartData(last7.reverse());
-    console.log("The Last 7",last7);
     const today = new Date();
     const thisMonthEntrys = parsedWorkouts.filter((item) => {
 
@@ -181,31 +177,51 @@ const Home = () => {
 
     const component1 = () => {
       const setGrouped = () => {
-        const blueShades = ['#1E90FF', '#00BFFF', '#5F9EA0', '#4682B4', '#6495ED', '#4169E1', '#87CEEB', '#4682B4']; // Liste von Blautönen
-      //console.log(workoutsThisMonth,"Workouts this Month")
-        const groupedObj = workoutsThisMonth.reduce((acc, item) => {
-          if (!acc[item.Name]) {
-            acc[item.Name] = {
-              name: item.Name,
-              number: 0,
-              color: blueShades[Object.keys(acc).length % blueShades.length], // Zuweisen eines Blautons
-              legendFontColor: '#FFF',
-              legendFontSize: 15
+
+        const blueShades = ['#1E90FF', '#00BFFF', '#5F9EA0', '#4682B4']; // Liste von Blautönen
+        const entrys = [];
+        
+        const groupedWorkouts = workoutsThisMonth.map((workout)=> {
+          let obj = (entrys.length > 0)?(entrys.find((entry)=> entry.name == workout.Name )):(false);
+          if (obj){
+            obj.count +=1;
+          } else{
+            entrys.push({name:workout.Name,count:1});
+          }
+        });
+        entrys.sort((a,b)=>b.count - a.count);
+        
+        const grouped = () => {
+          const object = [];
+          let count = 0;
+      
+          // Falls die Länge von entrys größer als 3 ist, berechne die Summe der counts ab Index 3
+          if (entrys.length > 3) {
+            for (let i = 3; i < entrys.length; i++) {
+              count += entrys[i].count;
+            }
+          }
+      
+          // Iteriere durch die Einträge und füge sie zum Objekt hinzu
+          for (let i = 0; i < entrys.length; i++) {
+            object[i] = {
+              name: entrys[i].name,
+              number: entrys[i].count,
+              color: blueShades[i],
+              legendFontColor: "#FFF",
+              legendFontSize: 15,
             };
           }
-          acc[item.Name].number += 1;
-
-
-          return acc;
-        }, {});
-      //console.log("Grouped Object",groupedObj)
-        return Object.values(groupedObj);
-        
-      };
       
-
+          return object;
+        };
+      
+        const groupedData = grouped();
+        return groupedData;
+      };
+    
       const data = setGrouped();
-
+      console.log("Fitting Format",data);
       const chartConfig = {
         backgroundGradientFrom: "#fff",
         backgroundGradientFromOpacity: 0,
@@ -255,35 +271,42 @@ const Home = () => {
        
         return summary;
       }
-      //console.log("Workouts of this Month:",workoutsThisMonth);
       const sortedWorkouts = workoutsThisMonth.sort((a,b)=> new Date (a.CDate) - new Date(b.CDate));
 
-      const workout = sortedWorkouts[0];
+      const sortedWorkoutsReversed = sortedWorkouts.reverse();
+      const workout = sortedWorkoutsReversed[0];
+
       //console.log("Workout this Month",workout.CDate)
       const date = new Date(workout.CDate);
       //console.log(date)
       const year = date.getFullYear();
       const month = date.getMonth()+1;
-      const day = date.getDay()+1;
+      const day = date.getDate();
+      console.log("Workout",workout);
+      console.log("Day",day,"month",month);
       const formatedDate = `${(day > 9 )?day:`0${day}`}-${(month > 9)?month:`0${month}`}-${year}`
       //console.log("Current Date", formatedDate);
       const duration = (workout.Duration == "")?"00:00":workout.Duration;
+
+      const hours = Math.floor(duration/ 60);
+      const minutes = duration%60;
+      const formatDuration = `${(hours>0)?((hours>9)?(hours):(`0${hours}`)):("00")}:${(minutes>0)?((minutes>9)?(minutes):(`0${minutes}`)):("00")}`
       
       return (
-        <View className="bg-blue2 rounded-[10px] h-[180px] w-[300px] justiy-center pb-2 px-2 m-2">
+        <View className="bg-blue2 rounded-[10px] h-[180px] w-[300px] justiy-center px-2 m-2">
           <Text className="text-white font-bold text-xl text-center">Last Workout: {workout.Name}</Text>
           <View className="flex-row justify-between w-[100%] items-center">
             <View className="flex-row items-center">
-              <Text className="text-white font-semibold mr-1 ">{formatedDate}</Text>
+              <Text className="text-white font-bold mr-1 text-xl ">{formatedDate}</Text>
               <Icon name='calendar' size={15} color={"white"}/>
             </View>
             <View className="flex-row items-center">
-            <Text className="text-white ">{(duration== NaN)?(duration):null}</Text>
+            <Text className="text-white font-bold text-xl mr-2">{(duration !== NaN)?(formatDuration):null}</Text>
             <View className="relative justify-center items-center">
               <Icon name="clock-o" size={25} color="white" />
               {
 
-              (!(duration == NaN))?(
+              (!(duration !== NaN))?(
               <View className="absolute left-[10px] right-0 h-[2px] bg-white w-[30px]"
                 style={{
                   height: 28, // Höhe der Linie
@@ -297,12 +320,18 @@ const Home = () => {
             </View>
           </View>
           <View className="flex-row mt-2 flex-wrap justify-start items-start">
-          {createExerciseSummary(workout.SID).map((item,index)=>(
-                    <View key={`${item.EID}-${index}`}  className="bg-blue-500 mr-1.5 p-1 rounded-[5px]">
-                    <Text className="text-white">{exercises[item.Name-1].Name}  {item.Info}</Text>
-                    </View>
-                  ))
-                  }
+            {
+              (workout.SID.length > 0) ? (
+                createExerciseSummary(workout.SID).map((item,index)=>(
+                  <View key={`${item.EID}-${index}`}  className="bg-blue-500 mr-1.5 p-1 rounded-[5px]">
+                  <Text className="text-white">{exercises[item.Name-1].Name}  {item.Info}</Text>
+                  </View>
+                ))
+              ):(
+                <Text className="text-xl font-bold text-white text-center">No Entrys</Text>
+              )
+            }
+         
           </View>
           </View>
       );

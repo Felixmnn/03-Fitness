@@ -7,10 +7,15 @@ const ActivePlansLayout = () => {
     return (
         <>
           <Stack>
+              
               <Stack.Screen name="create-plans"
-                options={{
-                headerShown:false
-              }}/>
+                          options={{
+                            headerTitle: "Create Plan",
+                            headerStyle: {
+                              backgroundColor:"#0f0f0f"
+                            },
+                            headerTintColor: "white"
+                          }}/>
 
                 <Stack.Screen name="discover-plans"
                 options={{

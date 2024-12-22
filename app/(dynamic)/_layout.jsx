@@ -19,14 +19,24 @@ const ProfileLayout = () => {
           options={{
             headerShown:false
           }}/>
+          
           <Stack.Screen name="exercise-picker"
-          options={{
-            headerShown:false
-          }}/>
+            options={{
+              headerTitle: "Select Exercises",
+              headerStyle: {
+                backgroundColor:"#0f0f0f"
+              },
+              headerTintColor: "white"
+            }}/>
+
           <Stack.Screen name="edit-workout"
-          options={{
-            headerShown:false
-          }}/>
+            options={{
+              headerTitle: "Editing Workout",
+              headerStyle: {
+                backgroundColor:"#0f0f0f"
+              },
+              headerTintColor: "white"
+            }}/>
           <Stack.Screen name="past-workout"
           options={{
             headerTitle: "Past Workout",
