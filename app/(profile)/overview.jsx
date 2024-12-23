@@ -114,6 +114,10 @@ const ProfileOverview = () => {
    
 
     const reduxProtection = async ({parsedKeys,plans,workouts}) => {
+      const workout = [];
+      const workoutTest = [];
+      const workoutDublicates = [];
+
       await Promise.all(plans.map( async(plan) => {
         if (!(parsedKeys.some((object)=> object.includes(plan.PID)))){
           const newPlan = {
@@ -126,15 +130,18 @@ const ProfileOverview = () => {
               CDate: plan.CDate,     // Creation Date
               Public: plan.Public,
               Saved: plan.Saved,
-              Bg:plan.Bg
+              Bg:plan.Bg,
+              DataBaseID: plan.$id
           
           }
+          
           await AsyncStorage.setItem(`Plan-${plan.PID}`,JSON.stringify(newPlan));
           }
       }))
         
         
         await Promise.all(workouts.map( async(workout) => {
+          
         if (!(parsedKeys.some((object)=> object.includes(workout.WID)))){
           const newWorkout = {
             WID: workout.WID,
@@ -148,6 +155,8 @@ const ProfileOverview = () => {
             Public:workout.Public,
             Saved:workout.Saved,
             Active:false,
+            DataBaseID: workout.$id
+
           }
           await AsyncStorage.setItem(`Workout-${newWorkout.WID}`,JSON.stringify(newWorkout));
           console.log("Success?");
@@ -158,6 +167,7 @@ const ProfileOverview = () => {
 
     const importData = async () => {
       console.log("I am doing something :)");
+      
       setIsFetching(true);
       try {
         const plans = await getAllPlans();
@@ -175,7 +185,11 @@ const ProfileOverview = () => {
         //console.log("Added the first entry:",plans[0].PID)
         //const currentKeys = await AsyncStorage.getAllKeys();
         //console.log("Hier sind die Keys",currentKeys);
-
+        Toast.show({
+                                type: 'success', 
+                                position: 'top',
+                                text1: `Refresh the App to see your saved Entrys`, 
+                              });
       } catch(error){
         console.log(error);
       }
@@ -229,7 +243,7 @@ const ProfileOverview = () => {
 
             </View>
           </View>
-          <CustomButton onPress={async()=> AsyncStorage.clear()  } title={" Clear Async Storage"} />
+          <CustomButton handlePress={async()=> AsyncStorage.clear()  } title={" Clear Async Storage"} containerStyles={"bg-red-900"} textStyles={"text-white"} />
           
           <View> 
             <CustomButton title={"Logout"} containerStyles={"bg-red-900 m-5"} textStyles={"text-white"}  handlePress={logout} />

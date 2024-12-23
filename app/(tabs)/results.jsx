@@ -36,9 +36,11 @@ const results = () => {
   const getPastWorkouts = async ()=> {
     const allKEys = await AsyncStorage.getAllKeys();
     console.log(allKEys,"Hier sind alle  Keys")
+    
 
     const filteredKEys = allKEys.filter(key => key.includes("Workout") && !key.includes("ActiveWorkout") )
     console.log("Hier sind die Keys",filteredKEys);
+
     const workoutEntries = await AsyncStorage.multiGet(filteredKEys)
 
     const parsedWorkouts = workoutEntries.map(([key,value])=> JSON.parse(value))
@@ -149,7 +151,10 @@ const results = () => {
                       onPress={() => router.push({ pathname: "/past-workout", params: { data: JSON.stringify(item) } })}
                     >
                       <Text className="text-white">{item.Name}</Text>
-                      <Text className="text-white">{formattedDate(item.CDate)}</Text>
+                      <View className="flex-row mt-1 items-center">
+                          <Icon name="calendar" size={15} color={"white"} />
+                          <Text className="text-white ml-1">{formattedDate(item.CDate)}</Text>
+                        </View>
                     </TouchableOpacity>
                   ) : amount === 2 ? (
                     <TouchableOpacity
@@ -160,8 +165,14 @@ const results = () => {
                         <Text className="text-white font-bold text-xl">{item.Name}</Text>
                         {item.Saved ? <Icon name="cloud" size={20} color={"white"} /> : null}
                       </View>
-                      <Text className="text-white">{formattedDate(item.CDate)}</Text>
-                      <Text className="text-white">{formatMinutes(item.Duration)}</Text>
+                      <View className="flex-row mt-1 items-center">
+                        <Icon name="calendar" size={15} color={"white"} />
+                        <Text className="text-white ml-1">{formattedDate(item.CDate)}</Text>
+                      </View>
+                      <View className="flex-row mt-1 items-center">
+                        <Icon name="clock-o" size={17} color={"white"} />
+                        <Text className="text-white ml-1">{formatMinutes(item.Duration)}</Text>
+                      </View>
                     </TouchableOpacity>
                   ) : (
                     <TouchableOpacity
@@ -174,8 +185,14 @@ const results = () => {
                       </View>
     
                       <View className="flex-row justify-between">
-                        <Text className="text-white">{formattedDate(item.CDate)}</Text>
-                        <Text className="text-white">{formatMinutes(item.Duration)}</Text>
+                        <View className="flex-row mt-1 items-center">
+                          <Icon name="calendar" size={15} color={"white"} />
+                          <Text className="text-white ml-1">{formattedDate(item.CDate)}</Text>
+                        </View>
+                        <View className="flex-row mt-1 items-center">
+                          <Icon name="clock-o" size={17} color={"white"} />
+                          <Text className="text-white ml-1">{formatMinutes(item.Duration)}</Text>
+                        </View>
                       </View>
                       <Text className="text-white font-bold">Exercises:</Text>
                       <View className="flex-wrap flex-row">

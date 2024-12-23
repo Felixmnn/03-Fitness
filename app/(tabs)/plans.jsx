@@ -99,6 +99,12 @@ const plans = () => {
            pagingEnabled={false} // Wir verwenden stattdessen snapping
            showsHorizontalScrollIndicator={false}
            onViewableItemsChanged={onViewableItemsChanged}
+           ListEmptyComponent={
+           <View className="bg-blue2 rounded-[10px] p-2 h-[150px] justify-center w-full">
+            <TouchableOpacity className="justify-center items-center" onPress={() => router.push("/create-plans")}>
+              <Text className="text-center text-white font-bold m-2 text-xl text-center">{"No Trainingplans yet :("}</Text>
+            </TouchableOpacity>
+          </View>}
            viewabilityConfig={viewabilityConfig}
            snapToAlignment="center"
            snapToInterval={width * 0.8 + 16} // Breite + Margin

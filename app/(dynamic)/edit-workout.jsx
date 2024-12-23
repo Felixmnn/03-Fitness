@@ -12,6 +12,8 @@ import CustomTextInput from "../../components/CustomTextInput";
 import { UserPlan, resetContext } from "../../context/currentPlan";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 import CustomButton from "../../components/CustomButton";
+import { deletePlan } from "../../lib/appwrite";
+import Toast from "react-native-toast-message";
 
 const EditWorkout = () => {
   //Übergabe der Startpareameter über router:
@@ -24,6 +26,7 @@ const EditWorkout = () => {
 
   //Initialisierung der Globalen Plan Variable
   useEffect(() => {
+    console.log(planObject);
     setCurrentPlan((prevPlan) => ({
       ...prevPlan,
       PID: planObject.PID,
@@ -75,8 +78,14 @@ const EditWorkout = () => {
         {
           text: "Yes",
           onPress: async () => {
-            await deletePlan();
+            deletePlan(planObject.DataBaseID);
+            await AsyncStorage.removeItem(`Plan-${planObject.PID}`);
             resetCurrentPlan();
+            Toast.show({
+                        type: 'success', 
+                        position: 'top',
+                        text1: `Plan has been Deleted`, 
+                      });
             router.push("/"); // Zurück zur vorherigen Seite navigieren
           },
         },
@@ -89,9 +98,7 @@ const EditWorkout = () => {
     );
   };
 
-  const deletePlan = async () => {
-    await AsyncStorage.removeItem(`Plan-${planObject.PID}`);
-  };
+ 
 
   const safePlan = async () => {
     await AsyncStorage.setItem(
