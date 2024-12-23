@@ -140,34 +140,24 @@ const plans = () => {
                 </View>
                   <View>
                     <View className="flex-row justify-between items-center">
-                    <Text className="text-white font-bold text-xl">{!isEnabled?"Exercises Images":"Exercise Names"}</Text>
-                    <Switch
-                      value={isEnabled} // Der aktuelle Wert des Schalters
-                      onValueChange={toggleSwitch} // Funktion, um den Schalter zu ändern
-                      thumbColor={isEnabled ? '#3B82F6' : '#fff'} // Farbe des Schalter-Knopfes
-                      trackColor={{ false: '#767577', true: '#81b0ff' }} // Farbe des Track
-                    />
+                    
                     </View>
                     <View className="relative" >
 
-                      
-                      <View className=" flex-wrap flex-row h-[120px] overflow-hidden">
-                    
-                      { !isEnabled?(
-                        item.EIDs.map((EID)=> {
-                          return(
-                          <Image key={EID} source={exercises[EID-1].Image} className="h-[50px] w-[50px] mr-1 mt-1"/>
+                    <ScrollView className=" h-[120px] ">
+                      <View className=" flex-wrap flex-row overflow-hidden pb-5">
+                        
+                        {
+                            item.EIDs.map((EID)=> {
+                              return(
+                                <Text key={EID} className="text-white bg-blue-500 p-1 mr-1 mt-1 rounded-[2px]" >{exercises[EID-1].Name}</Text>
+                              )
+                            }
                           )
-                        })):(
-                          item.EIDs.map((EID)=> {
-                            return(
-                              <Text key={EID} className="text-white bg-blue-500 p-1 mr-1 mt-1 rounded-[2px]" >{exercises[EID-1].Name}</Text>
-                            )
-                          }
-                        )
-                      )
-                      }
-                    </View>
+                        
+                        }
+                      </View>
+                    </ScrollView>  
                     <Svg height="20" width="100%" className="absolute top-[100px] left-0 right-0 z-10">
                       <LinearGradient id="fadeBottom" x1="0%" y1="0%" x2="0%" y2="100%">
                         <Stop offset="0%" stopColor="rgba(0, 53, 102, 1)" stopOpacity="0" />

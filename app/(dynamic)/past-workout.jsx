@@ -57,13 +57,15 @@ const PastWorkout = () => {
   
 
     <View className="bg-black h-full justify-start">
-        <Text className="text-white text-2xl font-bold text-center m-2">{workout.Name} - {formattedDate(workout.CDate)}</Text>
+      <View>
+        <Text className="text-white text-2xl font-bold text-center mx-2 bg-blue2 p-2">{workout.Name} - {formattedDate(workout.CDate)}</Text>
+      </View>
         <FlatList
         data = {workout.EIDs}
         keyExtractor={(item)=> item.toString()}
         ListHeaderComponent={()=>{
           return (
-            <View className="bg-blue2 rounded-[10px] m-2 p-2 ">
+            <View className="bg-blue2 rounded-[5px] m-2 p-2 ">
               <Text className="text-xl font-bold text-white text-center mb-2">Involved Muscles</Text>
               <View>
               {ExerciseShop({inVolved: Array.isArray(muscleArr) ? muscleArr : ["empty"]})
@@ -71,8 +73,8 @@ const PastWorkout = () => {
               </View>
               <View className="items-center justify-center">
                 <View className="flex-row items-center">
+                  <Text className="text-white m-1 font-bold">{workout.Duration}</Text>
                   <Icon name="clock-o" size={20} color="white" /> 
-                  <Text className="text-white m-1">Dauer</Text>
                 </View>
               </View>
             </View>
@@ -86,13 +88,13 @@ const PastWorkout = () => {
 
               
               {(!(recap.length == 0))?(
-                <View className="m-2">
+                <View className="mx-2 mb-2 bg-blue2 rounded-[5px] p-2">
                   <Text className="text-white font-bold text-xl">{exercises[item-1].Name}</Text>
                   <View className="flex-wrap flex-row">
                     {
                     recap.map((object,index)=> (
-                      <View key={`${object.EID}-${index}`} className="bg-blue-500 p-1 mr-1 my-1 rounded-[5px]">
-                        <Text>{object.W} Kg | {object.R} Reps</Text>
+                      <View key={`${object.EID}-${index}`} className={`${(object.Wa !== "red")?("bg-red-500"):"bg-blue-500"} p-1 mr-1 my-1 rounded-[5px] `}>
+                        <Text className="text-white">{object.W} Kg | {object.R} Reps</Text>
                       </View>))
                     }
                   </View>

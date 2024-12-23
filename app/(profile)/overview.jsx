@@ -2,7 +2,7 @@ import { View, SafeAreaView, Alert, Text, Image,ScrollView, ActivityIndicator } 
 import React, { useContext, useState } from 'react';
 import { router } from 'expo-router';
 import CustomButton from '../../components/CustomButton';
-import { backUpPlan, genSync, getAllEntries, getAllPlans, getAllWorkouts, signOut } from '../../lib/appwrite';
+import { backUpPlan, genSync, getAllEntries, getAllPlans, getAllWorkouts, sendRecoveryEmail, signOut } from '../../lib/appwrite';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import { client,databases,backUpWorkout } from '../../lib/appwrite';
 import { Query } from 'react-native-appwrite';
@@ -244,7 +244,7 @@ const ProfileOverview = () => {
             </View>
           </View>
           <CustomButton handlePress={async()=> AsyncStorage.clear()  } title={" Clear Async Storage"} containerStyles={"bg-red-900"} textStyles={"text-white"} />
-          
+          <CustomButton handlePress={async()=> sendRecoveryEmail()  } title={"Recovery Mail"} containerStyles={"bg-red-900"} textStyles={"text-white"} />
           <View> 
             <CustomButton title={"Logout"} containerStyles={"bg-red-900 m-5"} textStyles={"text-white"}  handlePress={logout} />
           </View>
