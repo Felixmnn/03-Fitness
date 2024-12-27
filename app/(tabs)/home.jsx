@@ -20,6 +20,7 @@ import exercises from '../../constants/exercises';
 import { genSync } from '../../lib/appwrite';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import SummaryChart from '../../components/SummaryChart';
+import { StatusBar } from 'expo-status-bar';
 
 const Home = () => {
   const { user, isLoggedIn, setUser } = useGlobalContext();
@@ -376,6 +377,7 @@ const Home = () => {
  
   return (
     <SafeAreaView className="bg-black h-full">
+      <StatusBar style="dark" backgroundColor="#121212" />
         <View className="h-full m-2 ">
          
           <ProfilePicture message="Home"/>

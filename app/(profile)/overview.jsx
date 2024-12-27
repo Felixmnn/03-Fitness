@@ -214,7 +214,7 @@ const ProfileOverview = () => {
         </View>
         <View className="flex-1 bg-blue2 rounded-t-[25px] p-2 justify-start items-center" >
           <View>
-            <CustomButton title="Random Stuff" handlePress={()=> random()} containerStyles={"bg-red-900 mx-2"} textStyles={"text-white"}/>
+            {/*<CustomButton title="Random Stuff" handlePress={()=> random()} containerStyles={"bg-red-900 mx-2"} textStyles={"text-white"}/>*/}
             <View className="flex-row justify-between w-full">
             <TouchableOpacity className={`flex-row items-center p-2 rounded-[5px] bg-blue-500 justify-center m-2 flex-1 ${isFetching2? 'opacity-50' : ""}`}
                               onPress={()=> excel()}
@@ -244,7 +244,7 @@ const ProfileOverview = () => {
             </View>
           </View>
           <CustomButton handlePress={async()=> AsyncStorage.clear()  } title={" Clear Async Storage"} containerStyles={"bg-red-900"} textStyles={"text-white"} />
-          <CustomButton handlePress={async()=> sendRecoveryEmail()  } title={"Recovery Mail"} containerStyles={"bg-red-900"} textStyles={"text-white"} />
+          {/*<CustomButton handlePress={async()=> sendRecoveryEmail()  } title={"Recovery Mail"} containerStyles={"bg-red-900"} textStyles={"text-white"} />*/}
           <View> 
             <CustomButton title={"Logout"} containerStyles={"bg-red-900 m-5"} textStyles={"text-white"}  handlePress={logout} />
           </View>
