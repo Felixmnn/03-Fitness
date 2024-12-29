@@ -1,4 +1,3 @@
-import { View, Text } from 'react-native'
 import React from 'react'
 import { Stack } from 'expo-router'
 
@@ -19,10 +18,6 @@ const AnalysisLayout = () => {
                 headerTintColor: "white"
             }}/>
 
-                <Stack.Screen name="traininglist"
-                options={{
-                headerShown:false
-              }}/>
           </Stack>
         </>
       )

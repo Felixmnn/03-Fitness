@@ -1,16 +1,10 @@
 import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import exercises from '../../constants/exercises';
-
 import { router, useLocalSearchParams } from 'expo-router';
-import { useRouter } from 'expo-router';
-import { images } from '../../constants';
-
 import { UserPlan } from "../../context/currentPlan";
 import { useContext } from 'react';
 import { UserWorkout } from '../../context/currentWorkout';
-import { TextInput } from 'react-native-web';
 import CustomTextInput from '../../components/CustomTextInput';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CustomButton from '../../components/CustomButton';

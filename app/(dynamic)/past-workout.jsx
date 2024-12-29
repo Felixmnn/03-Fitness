@@ -1,18 +1,13 @@
 import { View, Text,FlatList,ScrollView,TouchableOpacity,Alert } from 'react-native'
 import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { router, useLocalSearchParams } from 'expo-router'
 import exercises from '../../constants/exercises'
-import RenderSets from '../../components/RenderSets'
-import RenderSavedExercises from '../../components/RenderSavedExercises'
 import { format } from 'date-fns';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import CustomButton from '../../components/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { deleteWorkout } from '../../lib/appwrite'
 import Toast from 'react-native-toast-message'
 import  {ExerciseShop}  from '../../lib/svg'
-import Svg, { Rect,Path } from 'react-native-svg';
 
 const PastWorkout = () => {
   const {data} = useLocalSearchParams();
@@ -58,7 +53,7 @@ const PastWorkout = () => {
 
     <View className="bg-black h-full justify-start">
       <View>
-        <Text className="text-white text-2xl font-bold text-center mx-2 bg-blue2 p-2">{workout.Name} - {formattedDate(workout.CDate)}</Text>
+        <Text className="text-white text-2xl font-bold text-center mx-2 bg-blue2 p-2 rounded-[5px]">{workout.Name} - {formattedDate(workout.CDate)}</Text>
       </View>
         <FlatList
         data = {workout.EIDs}

@@ -1,4 +1,3 @@
-import { View, Text } from 'react-native'
 import React from 'react'
 import { Stack } from 'expo-router'
 
@@ -11,14 +10,8 @@ const ProfileLayout = () => {
           options={{
             headerShown:false
           }}/>
-          <Stack.Screen name="create-workout"
-          options={{
-            headerShown:false
-          }}/>
-          <Stack.Screen name="all-exercises"
-          options={{
-            headerShown:false
-          }}/>
+          
+          
           
           <Stack.Screen name="exercise-picker"
             options={{
@@ -45,22 +38,8 @@ const ProfileLayout = () => {
             },
             headerTintColor: "white"
           }}/>
-          <Stack.Screen name="active-exercise-picker"
-            options={{
-              headerTitle: "Select Exercise",
-              headerStyle: {
-                backgroundColor:"#0f0f0f"
-              },
-              headerTintColor: "white"
-            }}/>
-          <Stack.Screen name="progress-workout"
-            options={{
-              headerTitle: "Progress",
-              headerStyle: {
-                backgroundColor:"#0f0f0f"
-              },
-              headerTintColor: "white"
-            }}/>
+         
+         
 
       
           

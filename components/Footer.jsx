@@ -5,7 +5,7 @@ const Footer = ({content,footerTitle}) => {
   return (
     <View className=" my-2">
         <Text className="text-xl font-bold text-white m-2">{footerTitle}</Text>
-        <View className=" w-full rounded-[10px]">
+        <View className=" w-full rounded-[5px]">
           {content}
         </View>
     </View>

@@ -1,4 +1,3 @@
-import SegmentedControl from "@react-native-segmented-control/segmented-control";
 import * as React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { useState,useEffect } from "react";

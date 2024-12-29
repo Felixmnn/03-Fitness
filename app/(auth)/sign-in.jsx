@@ -8,15 +8,12 @@ import {
 } from "react-native";
 import React, { useContext, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { images } from "../../constants";
 import FormField from "../../components/FormField";
 import CustomButton from "../../components/CustomButton";
 import { Redirect, router, Link } from "expo-router";
-import { icons } from "../../constants";
 import { getCurrentUser, signIn } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import CustomTextInput from "../../components/CustomTextInput";
 
 const SignIn = () => {
   const { user, setUser } = useGlobalContext();

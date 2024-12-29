@@ -14,6 +14,7 @@ import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 import CustomButton from "../../components/CustomButton";
 import { deletePlan } from "../../lib/appwrite";
 import Toast from "react-native-toast-message";
+import { Svg, Rect,LinearGradient, Stop } from 'react-native-svg';
 
 const EditWorkout = () => {
   //Übergabe der Startpareameter über router:
@@ -207,7 +208,7 @@ const EditWorkout = () => {
       <FlatList
         className="flex-1"
         data={currentPlan.EIDs}
-        keyExtractor={(item) => item.toString()}
+        keyExtractor={(index) => index.toString()}
         renderItem={({ index, item }) => {
           return (
             <View className="flex-row items-center justify-between">
@@ -232,7 +233,15 @@ const EditWorkout = () => {
           );
         }}
       />
+      <Svg height="50" width="100%" className="absolute bottom-0 left-2 right-0">
+              <LinearGradient id="fadeBottom" x1="0%" y1="0%" x2="0%" y2="100%">
+                <Stop offset="100%" stopColor="rgba(0, 53, 102, 1)" stopOpacity="1" />
+                <Stop offset="0%" stopColor="rgba(0, 53, 102, 1)" stopOpacity="0" />
+              </LinearGradient>
+              <Rect x="0" y="0" width="100%" height="50" fill="url(#fadeBottom)" />
+      </Svg>
       </View>
+      
 
 
       <CustomButton

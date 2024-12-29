@@ -1,4 +1,7 @@
-import { View, Text } from 'react-native'
+// Note: This code works on the web without any adjustments.
+
+
+
 import React from 'react'
 import { Stack } from 'expo-router'
 

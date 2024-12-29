@@ -4,7 +4,6 @@ import { PieChart } from 'react-native-chart-kit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from '../../../components/CustomButton';
 import { TouchableOpacity } from 'react-native';
-import News from '../../../components/News';
 import { getAllEntries } from '../../../lib/appwrite';
 
 const Experimental = () => {

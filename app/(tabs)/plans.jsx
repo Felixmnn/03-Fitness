@@ -6,8 +6,6 @@ import { icons } from '../../constants'
 import { router } from 'expo-router'
 import ProfilePicture from 'components/ProfilePicture';
 import { TouchableOpacity } from 'react-native'
-import WorkoutBox from '../../components/WorkoutBox'
-import WorkoutBoxV2 from '../../components/WorkoutBoxV2'
 import Main from '../../components/Main'
 import Footer from '../../components/Footer'
 import { useState } from 'react'
@@ -16,9 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import exercises from '../../constants/exercises'
 import CustomButton from '../../components/CustomButton'
-import { isTemplateLiteralToken } from 'typescript'
 import { styled } from 'nativewind'
-import {images} from '../../constants'
 import { LinearGradient, Stop } from 'react-native-svg'
 import { Svg, Rect } from 'react-native-svg'; // Importiere das Svg-Tag, um den Gradient anzuwenden
 
@@ -100,7 +96,7 @@ const plans = () => {
            showsHorizontalScrollIndicator={false}
            onViewableItemsChanged={onViewableItemsChanged}
            ListEmptyComponent={
-           <View className="bg-blue2 rounded-[10px] p-2 h-[150px] justify-center w-full">
+           <View className="bg-blue2 rounded-[5px] p-2 h-[150px] justify-center w-full">
             <TouchableOpacity className="justify-center items-center" onPress={() => router.push("/create-plans")}>
               <Text className="text-center text-white font-bold m-2 text-xl text-center">{"No Trainingplans yet :("}</Text>
             </TouchableOpacity>
@@ -115,7 +111,7 @@ const plans = () => {
             return (
               
               <View
-                className="bg-blue2 rounded-[10px] p-4 m-2 justify-between"
+                className="bg-blue2 rounded-[5px] p-4 m-2 justify-between"
                 style={{ width: width * 0.8 }} // Breite auf 80% des Bildschirms
               >
                 <View>
@@ -144,7 +140,7 @@ const plans = () => {
                     </View>
                     <View className="relative" >
 
-                    <ScrollView className=" h-[120px] ">
+                    <ScrollView className=" h-[165px] ">
                       <View className=" flex-wrap flex-row overflow-hidden pb-5">
                         
                         {
@@ -158,7 +154,7 @@ const plans = () => {
                         }
                       </View>
                     </ScrollView>  
-                    <Svg height="20" width="100%" className="absolute top-[100px] left-0 right-0 z-10">
+                    <Svg height="20" width="100%" className="absolute top-[145px] left-0 right-0 z-10">
                       <LinearGradient id="fadeBottom" x1="0%" y1="0%" x2="0%" y2="100%">
                         <Stop offset="0%" stopColor="rgba(0, 53, 102, 1)" stopOpacity="0" />
                         <Stop offset="100%" stopColor="rgba(0, 53, 102, 1)" stopOpacity="1" />
@@ -188,19 +184,11 @@ const plans = () => {
 
   const fContent = ()=> {
     return (
-      <View className="flex-row">
-    <NavBox
-      title= "Workout"
-      icon = {icons.plus}
-      handlePress={()=> {router.push("/create-plans")}}
-    />
-
-    
-   
-  
-    
-
-    
+    <View className="flex-row">
+      <TouchableOpacity className="justify-center items-center bg-blue2 rounded-[5px]  h-[150px] w-[150px] " onPress={()=> {router.push("/create-plans")}}>
+        <Icon name="file-text-o" size={30} color="white" />
+        <Text className="text-white font-bold m-2 text-xl text-center">{"New Plan"}</Text>
+      </TouchableOpacity>
     </View>
   )
   }

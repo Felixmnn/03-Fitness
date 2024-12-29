@@ -1,20 +1,14 @@
 import { View, Text, FlatList,ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import  WorkoutBox from "components/WorkoutBox"
-import  CustomButton  from "components/CustomButton";
 import ProfilePicture from 'components/ProfilePicture';
 import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState, useEffect, Component } from 'react';
-import uuid from "react-native-uuid";
-import WorkoutBoxV2 from '../../components/WorkoutBoxV2';
 import { TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useContext } from 'react';
 import { UserWorkout, WorkoutProvider } from "../../context/currentWorkout"
 import Footer from '../../components/Footer';
-import Main from '../../components/Main';
-import CustomScrollView from '../../components/CustomScrollView';
 import { PieChart } from 'react-native-chart-kit';
 import exercises from '../../constants/exercises';
 import { genSync } from '../../lib/appwrite';
@@ -235,7 +229,7 @@ const Home = () => {
       };
 
       return (
-        <View className="bg-blue2 rounded-[10px] h-[180px] w-[300px] items-center justiy-center pb-2 my-2">
+        <View className="bg-blue2 rounded-[5px] h-[180px] w-[300px] items-center justiy-center pb-2 my-2">
           <Text className="text-white font-bold text-xl">Workouts this Month</Text>
         <PieChart
           data={data}
@@ -294,7 +288,7 @@ const Home = () => {
       const formatDuration = `${(hours>0)?((hours>9)?(hours):(`0${hours}`)):("00")}:${(minutes>0)?((minutes>9)?(minutes):(`0${minutes}`)):("00")}`
       
       return (
-        <View className="bg-blue2 rounded-[10px] h-[180px] w-[300px] justiy-center px-2 m-2">
+        <View className="bg-blue2 rounded-[5px] h-[180px] w-[300px] justiy-center px-2 m-2">
           <Text className="text-white font-bold text-xl text-center">Last Workout: {workout.Name}</Text>
           <View className="flex-row justify-between w-[100%] items-center">
             <View className="flex-row items-center">
@@ -356,11 +350,11 @@ const Home = () => {
           ListEmptyComponent={()=>{
             return (
               <View className="flex-row">
-                <View className="bg-blue2 h-[150px] w-[200px] items-center justify-center rounded-[10px] m-1">
+                <View className="bg-blue2 h-[150px] w-[200px] items-center justify-center rounded-[5px] m-1">
                   <Text className="text-white font-bold text-xl text-center">Quick Insights</Text>
                   <Icon name="pie-chart" color={"white"} size={30}/>
                 </View>
-                <View className="bg-blue2 h-[150px] w-[200px] items-center justify-center rounded-[10px] m-1">
+                <View className="bg-blue2 h-[150px] w-[200px] items-center justify-center rounded-[5px] m-1">
                   <Text className="text-white font-bold text-xl text-center">Last Workout</Text>
                   <Icon name="filter" color={"white"} size={30}/>
                 </View>
@@ -377,7 +371,7 @@ const Home = () => {
  
   return (
     <SafeAreaView className="bg-black h-full">
-      <StatusBar style="dark" backgroundColor="#121212" />
+      <StatusBar style="dark" backgroundColor="#0f0f0f" />
         <View className="h-full m-2 ">
          
           <ProfilePicture message="Home"/>
@@ -386,7 +380,7 @@ const Home = () => {
             (activeWorkouts)?(
               
             <View className="p-2 bg-blue2 items-center rounded-[5px] w-full m-5">
-              <Text className="text-white text-2xl font-bold">Active Workout</Text>
+              <Text className="text-white text-2xl font-bold">Active Workout: {currentWorkout.Name}</Text>
                 <View className="flex-row items-center">
               <TouchableOpacity className="mx-5 my-2" onPress={async()=> {
                 if (currentWorkout.Active){
@@ -397,15 +391,15 @@ const Home = () => {
                   router.push("/active-home")
                 }
               }}>
-                <View className="flex-row items-center">
-                <Icon name="play" size={15} color={"#3B82F6"} />
-                  <Text className="text-blue-500 font-bold m-1 text-xl mt-[1px]">Continue</Text>
+                <View className="flex-row items-center justify-center bg-blue-500 h-[40px] w-[120px] rounded-[5px]">
+                  <Icon name="play" size={15} color={"white"} />
+                  <Text className="text-white font-bold m-1 text-xl mt-[1px]">Continue</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity className="mx-5 my-2" onPress={async()=> { setCurrentWorkout(initialWorkout); await setWorkoutInactive()}}>
-                <View className="flex-row items-center">
-                <Icon name="close" size={15} color={"red"} />
-                  <Text className="text-red-500 font-bold m-1 text-xl ">Delete</Text>
+                <View className="flex-row items-center justify-center bg-red-900 h-[40px] w-[120px] rounded-[5px]">
+                  <Icon name="close" size={18} color={"white"} />
+                  <Text className="text-white font-bold m-1 text-xl ">Delete</Text>
                 </View>
               </TouchableOpacity>
               
@@ -413,12 +407,12 @@ const Home = () => {
             </View>):
 
             ( <View className="mt-2">
-              <View className="bg-blue2 rounded-[10px] py-3 mx-2 justify-center ">
+              <View className="bg-blue2 rounded-[5px] py-3 mx-2 justify-center ">
                   <View className="ml-[5%]">
                     <SummaryChart data={barChartData}/>
                   </View>
                 </View>
-            <TouchableOpacity className="flex-row justify-between items-center bg-blue2 m-2 p-4 rounded-[10px] w-full h-[60px]" onPress={()=> router.push("/plans")}>
+            <TouchableOpacity className="flex-row justify-between items-center bg-blue2 m-2 p-4 rounded-[5px] w-full h-[60px]" onPress={()=> router.push("/plans")}>
                 
                 <Text className="text-white font-bold text-xl mx-2">Start a Workout</Text>
               

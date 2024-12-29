@@ -1,10 +1,8 @@
-import { View, Text, Touchable } from 'react-native'
+import { View, Text } from 'react-native'
 import React from 'react'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { useState } from 'react';
 import CustomButton from './CustomButton';
-import { TextInput } from 'react-native-web';
-import { TouchableOpacity } from 'react-native';
 
 
 const RenderBreakTimer = () => {

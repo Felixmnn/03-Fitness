@@ -1,4 +1,3 @@
-import { View, Text } from 'react-native'
 import React from 'react'
 import { Stack } from 'expo-router'
 
@@ -17,15 +16,8 @@ const ActivePlansLayout = () => {
                             headerTintColor: "white"
                           }}/>
 
-                <Stack.Screen name="discover-plans"
-                options={{
-                headerShown:false
-              }}/>
+               
 
-                <Stack.Screen name="my-plans"
-                options={{
-                headerShown:false
-              }}/>
           </Stack>
         </>
       )

@@ -39,8 +39,6 @@ const TabsLayout = () => {
       }}
         
       >
-      
-        
         <Tabs.Screen
           name="plans"
           

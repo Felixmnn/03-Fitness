@@ -1,22 +1,16 @@
 import { View, SafeAreaView, Alert, Text, Image,ScrollView, ActivityIndicator } from 'react-native';
-import React, { useContext, useState } from 'react';
+import React, {  useState } from 'react';
 import { router } from 'expo-router';
 import CustomButton from '../../components/CustomButton';
-import { backUpPlan, genSync, getAllEntries, getAllPlans, getAllWorkouts, sendRecoveryEmail, signOut } from '../../lib/appwrite';
+import {  getAllPlans, getAllWorkouts, signOut } from '../../lib/appwrite';
 import { useGlobalContext } from '../../context/GlobalProvider';
-import { client,databases,backUpWorkout } from '../../lib/appwrite';
-import { Query } from 'react-native-appwrite';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getCurrentUser } from '../../lib/appwrite';
 import XLSX from 'xlsx';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-toast-message';
-import {  ContributionGraph } from 'react-native-chart-kit';
-import SummaryChart from '../../components/SummaryChart';
-import { excel } from '../../lib/excel';
 
 
 

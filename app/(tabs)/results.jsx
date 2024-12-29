@@ -6,12 +6,10 @@ import { icons, images } from '../../constants'
 import { router } from 'expo-router'
 import ProfilePicture from 'components/ProfilePicture';
 import { TouchableOpacity } from 'react-native'
-import WorkoutBox from '../../components/WorkoutBox'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { format } from 'date-fns';
 import Main from '../../components/Main'
 import Footer from '../../components/Footer'
-import CustomButton from '../../components/CustomButton'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import exercises from '../../constants/exercises'
 import { Svg, Rect } from 'react-native-svg'; // Importiere das Svg-Tag, um den Gradient anzuwenden
@@ -80,7 +78,7 @@ const results = () => {
       // Erstelle die gewünschte Struktur
       const summary = Object.entries(grouped).map(([EID, { count, totalSets }]) => ({
         Name: EID,
-        Info: `${count} Sets`,
+        Info: `${count} ${(count== 1)?"Set":"Sets"}`,
       }));
     
       return summary;
@@ -104,11 +102,10 @@ const results = () => {
 
       return (
         <View className="flex-row">
-      <NavBox
-        title= "Upcoming"
-        icon = {icons.plus}
-        handlePress={()=> {router.push("/experimental")}}
-      />
+          <TouchableOpacity className="justify-center items-center bg-blue2 rounded-[5px]  h-[150px] w-[150px] "  onPress={()=> router.push("/experimental")}>
+            <Icon name="envelope" size={30} color="white" />
+            <Text className="text-white font-bold m-2 text-xl text-center">{"Upcoming"}</Text>
+          </TouchableOpacity>
     </View>
     )
     }
@@ -150,7 +147,7 @@ const results = () => {
                       className="bg-blue2 p-2 rounded-[5px] m-1 w-[30%]"
                       onPress={() => router.push({ pathname: "/past-workout", params: { data: JSON.stringify(item) } })}
                     >
-                      <Text className="text-white">{item.Name}</Text>
+                      <Text className="text-white w-[100%]" numberOfLines={1} ellipsizeMode="tail">{item.Name}</Text>
                       <View className="flex-row mt-1 items-center">
                           <Icon name="calendar" size={15} color={"white"} />
                           <Text className="text-white ml-1">{formattedDate(item.CDate)}</Text>
@@ -162,7 +159,7 @@ const results = () => {
                       onPress={() => router.push({ pathname: "/past-workout", params: { data: JSON.stringify(item) } })}
                     >
                       <View className="flex-row items-center justify-between">
-                        <Text className="text-white font-bold text-xl">{item.Name}</Text>
+                          <Text className="text-white font-bold text-xl w-[80%]" numberOfLines={1} ellipsizeMode="tail" >{item.Name}</Text>
                         {item.Saved ? <Icon name="cloud" size={20} color={"white"} /> : null}
                       </View>
                       <View className="flex-row mt-1 items-center">
@@ -194,7 +191,6 @@ const results = () => {
                           <Text className="text-white ml-1">{formatMinutes(item.Duration)}</Text>
                         </View>
                       </View>
-                      <Text className="text-white font-bold">Exercises:</Text>
                       <View className="flex-wrap flex-row">
                         {createExerciseSummary(item.SID).map((item, index) => (
                           <View key={`${exercises[item.Name - 1].Name}-${index}`} className="bg-blue-500 m-1 p-1 rounded-[5px]">
@@ -211,7 +207,7 @@ const results = () => {
            
             </View>
           ) : (
-            <View className="bg-blue2 rounded-[10px] p-2 h-[150px] justify-center">
+            <View className="bg-blue2 rounded-[5px] p-2 h-[150px] justify-center">
               <TouchableOpacity className="justify-center items-center" onPress={() => router.push("/create-plans")}>
                 <Text className="text-center text-white font-bold m-2 text-xl">{"No Data Yet :("}</Text>
               </TouchableOpacity>

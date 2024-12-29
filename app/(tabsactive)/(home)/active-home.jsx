@@ -1,34 +1,24 @@
 import {
   View,
   Text,
-  SafeAreaView,
-  Image,
   TextInput,
-  FlatList,
   ScrollView,
-  Alert,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
 import React, { useContext } from "react";
 import CustomButton from "../../../components/CustomButton";
 import { TouchableOpacity } from "react-native";
-import { icons, images } from "../../../constants";
-import { useLocalSearchParams, usePathname, useRouter } from "expo-router";
-import { UserWorkout, WorkoutProvider } from "../../../context/currentWorkout";
+import { useLocalSearchParams } from "expo-router";
+import { UserWorkout } from "../../../context/currentWorkout";
 import { useEffect } from "react";
 import uuid from "react-native-uuid";
 import { useState } from "react";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import CustomTextInput from "../../../components/CustomTextInput";
 import exercises from "../../../constants/exercises";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
-import RenderLastEntrys from "../../../components/RenderLastEntrys";
-import RenderBreakTimer from "../../../components/RenderBreakTimer";
 import Toast from "react-native-toast-message";
-import { getAllEntries } from "../../../lib/appwrite";
 import ShowPastWorkouts from "../../../components/ShowPastWorkouts";
 
 const ActiveHome = () => {
@@ -74,8 +64,9 @@ Initialisierungsvariablen
     const startTime = currentWorkout.CDate;
     const currentTime = new Date();
     const differenceInMilliseconds =
-      currentTime.getTime() - new Date(startTime).getTime();
-    setDuration(Math.floor(differenceInMilliseconds / 1000));
+    currentTime.getTime() - new Date(startTime).getTime();
+    const seconds = Math.floor(differenceInMilliseconds / 1000);
+    setDuration((seconds>=1)?seconds:1);
     const differenceInMinutes = Math.floor(
       differenceInMilliseconds / 60000,
     ).toString();
@@ -83,14 +74,21 @@ Initialisierungsvariablen
       ...prevWorkout,
       Duration: differenceInMinutes,
     }));
+    return seconds;
   };
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    if (currentWorkout.CDate) {
       changeDuration();
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+      const interval = setInterval(() => {
+        changeDuration();
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [currentWorkout.CDate]);
+
+
+
 
   useEffect(() => {
     const showDetailsNames = showDetails.flatMap((index) => {
@@ -117,84 +115,11 @@ Initialisierungsvariablen
     await AsyncStorage.removeItem("ActiveWorkout");
   };
 
-  const [duration, setDuration] = useState(0);
-  const [currentWeight, setCurrentWeight] = useState(0);
-  const [currentReps, setCurrentReps] = useState(0);
-  const [currentNotes, setCurrentNotes] = useState("");
-  const [warmUp, setWarmUp] = useState("bg-black");
 
-  /*Potentiell Unnötig
-    const [ activeTimer, setActiveTimer] = useState(true)
-    const [viewTimer ,setViewTimer ] = useState(false)
-    const [ selectedExercise, setSelectedExercise] =  useState(1);
-    const [ moreActive, setMoreActive ] = useState(false)
-    const [viewProgress, setViewProgress] = useState(false)
-    const safeSetButton = (item) =>{
-      return (
-        <CustomButton
-                              title="Safe Set"
-                              containerStyles="bg-blue2 pt-2 h-[41px] w-[32%]"
-                              textStyles="text-white"
-                              handlePress={async()=> {
-                                  const set = {EID:item,R:currentReps,W:currentWeight,N:currentNotes,WarmUp:warmUp,D:getDates()}
-                                  const exists = await checkIfAsyncEntry();
-                                  if (exists) {
-                                    await addAsyncEntry(set)
-                                  } else {
-                                    await setAsyncEntry();
-                                    console.log("Ein Eintrag im Async Storage wurde erstellt")
-                                    await addAsyncEntry(set);
-                                  }
-                                  console.log(pastExercises)
-                      
-                                  setCurrentWorkout((prevWorkout) => ({
-                                    ...prevWorkout,
-                                    SID:[...prevWorkout.SID,set]
-                                  }))
-                                  
-                                  
-                                  Toast.show({
-                                    type: 'success', // oder 'error' für eine Fehlermeldung
-                                    position: 'top',
-                                    text1: `Added Set to Log`, // Text der Toast-Nachricht
-                                  });
-                                  setCurrentNotes("");
-                                  setCurrentReps(0);
-                                  setCurrentWeight(0);
-                                }
-                                }
-                              />
-      )
-     }
 
-*/
+  
 
-  //Funtkionen zum passiven setzen von Werten
-
-  //Functionen zum aktiven setzen von Werten
-
-  const handleWeightChange = (text) => {
-    setCurrentWeight(text);
-  };
-  const handleRepChange = (text) => {
-    setCurrentReps(text);
-  };
-  const handleNoteChange = (text) => {
-    setCurrentNotes(text);
-  };
-
-  const getPastSets = (id) => {
-    return currentWorkout.SID.filter((item) => item.EID === id);
-  };
-
-  const getDates = () => {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
-    const day = String(currentDate.getDate()).padStart(2, "0");
-    const formatedDate = `${day}-${month}-${year}`;
-    return formatedDate;
-  };
+ 
 
   const safeWorkout = async () => {
     console.log(
@@ -220,7 +145,6 @@ Initialisierungsvariablen
     );
   };
 
-  const [pastExercises, setPastExercises] = useState([]);
 
   async function safeExercisesAsync(entry) {
     const exerciseName = exercises[entry.EID - 1].Name;
@@ -243,6 +167,7 @@ Initialisierungsvariablen
   /*
       Ab hier kommen alle header spezifischen Aspektete
       */
+  const [duration, setDuration] = useState(1);
 
   function formatDuration() {
     if (!duration || duration <= 0) {
@@ -257,14 +182,13 @@ Initialisierungsvariablen
 
   const header = () => {
     return (
-      <View className=" flex-row mx-3 my-1 items-center justify-between">
+      <View  className=" flex-row bg-blue2 p-2 rounded-[5px] items-center justify-between mx-2">
         <Text className="text-white font-bold text-3xl">
           {currentWorkout.Name}
         </Text>
         <View className="flex-row items-center">
-          <Text key={`${duration}`} className="text-white font-bold text-xl">
-            {" "}
-            {formatDuration()}{" "}
+          <Text className="text-white font-bold text-xl mx-1">
+            {formatDuration()}
           </Text>
           <Icon name="clock-o" size={30} color="#fff" />
         </View>
@@ -274,7 +198,7 @@ Initialisierungsvariablen
 
   const footer = () => {
     return (
-      <View className="  mx-2 p-2 h-[100px] justify-center">
+      <View className=" p-2 justify-center">
         <CustomButton
           handlePress={() => {
             const d = currentWorkout.Duration.toString();
@@ -312,7 +236,7 @@ Initialisierungsvariablen
             router.push("/");
           }}
           textStyles="text-white"
-          containerStyles="bg-red-900 mx-1"
+          containerStyles="bg-red-900"
           title="Workout Beenden"
         />
       </View>
@@ -396,9 +320,7 @@ Initialisierungsvariablen
     ]);
   };
 
-  const removeLastWorkout = () => {};
 
-  const removeSecondLastWorkout = () => {};
 
   const main = () => {
     const getAmountPastSets = (id) => {
@@ -557,6 +479,7 @@ Initialisierungsvariablen
                   <View></View>
                 )}
               </View>
+
               <View>
                 {showDetails.includes(item) ? (
                   <ShowPastWorkouts EID={item} />
@@ -592,7 +515,9 @@ Initialisierungsvariablen
         >
           <Text className="text-xl text-white font-bold">Add Exercies</Text>
         </TouchableOpacity>
+        
       </View>
+      
     );
   };
 
@@ -638,15 +563,18 @@ Display your Last Workout
   };
 
   return (
-    <KeyboardAvoidingView
-      className="bg-black"
+    <View className="bg-black h-full">
+
+      <View >{header()}</View>
+      <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
-      <View>{header()}</View>
-      <ScrollView className="flex-1">{main()}</ScrollView>
+      <ScrollView>{main()}</ScrollView>
+      </KeyboardAvoidingView>
       <View>{footer()}</View>
-    </KeyboardAvoidingView>
+      </View>
+
   );
 };
 
