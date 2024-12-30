@@ -51,7 +51,8 @@ const PastWorkout = () => {
   return (
   
 
-    <View className="bg-black h-full justify-start">
+    <View className="bg-black h-full justify-start items-center">
+      <View className="max-w-[300px]">
       <View>
         <Text className="text-white text-2xl font-bold text-center mx-2 bg-blue2 p-2 rounded-[5px]">{workout.Name} - {formattedDate(workout.CDate)}</Text>
       </View>
@@ -137,7 +138,7 @@ const PastWorkout = () => {
         >
           <Text className="text-xl font-bold text-white text-center">Delete Workout</Text>
         </TouchableOpacity>
-        
+        </View>
         </View>
 
 

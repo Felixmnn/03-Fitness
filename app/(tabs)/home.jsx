@@ -1,4 +1,4 @@
-import { View, Text, FlatList,ScrollView } from 'react-native'
+import { View, Text, FlatList,ScrollView, Dimensions } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ProfilePicture from 'components/ProfilePicture';
 import { router } from 'expo-router';
@@ -17,6 +17,22 @@ import SummaryChart from '../../components/SummaryChart';
 import { StatusBar } from 'expo-status-bar';
 
 const Home = () => {
+
+  useEffect(() => {
+    const handleReload = () => {
+      router.replace("/");
+    };
+
+    window.addEventListener("beforeunload", handleReload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleReload);
+    };
+  }, []);
+
+
+
+
   const { user, isLoggedIn, setUser } = useGlobalContext();
   const { currentWorkout, setCurrentWorkout } = useContext(UserWorkout);
   const [activeWorkouts , setActiveWorkouts] = useState(false)
@@ -65,14 +81,21 @@ const Home = () => {
     }
 }, [workoutsThisMonth]);
 
-    useEffect(() => {
-      const fetchWorkouts = async () => {
-          await setWorkoutsOfThisMonth();
-          const userID = user.$id;
-          genSync();
-      };
-      fetchWorkouts();
-    }, []);
+  useEffect(() => {
+    if (!user) return; // Warte, bis der user definiert ist
+
+    const fetchWorkouts = async () => {
+      try {
+        await setWorkoutsOfThisMonth();
+        const userID = user.$id;
+        genSync();
+      } catch (error) {
+        console.error("Fehler beim Laden der Workouts:", error);
+      }
+    };
+
+    fetchWorkouts();
+  }, [user]);
 
   const last7Exercises = (workouts) =>{
     const days = ["Sun","Mon","Tue","Wen","Thu","Fri","Sat","Sun","Mon","Tue","Wen","Thu","Fri","Sat","Sun","Mon","Tue","Wen","Thu","Fri","Sat","Sun","Mon","Tue","Wen","Thu","Fri","Sat","Sun","Mon","Tue","Wen","Thu","Fri","Sat"];
@@ -200,7 +223,7 @@ const Home = () => {
           // Iteriere durch die Einträge und füge sie zum Objekt hinzu
           for (let i = 0; i < entrys.length; i++) {
             object[i] = {
-              name: entrys[i].name,
+              name: (entrys[i].name.length > 8)?`${entrys[i].name.substring(0,8)}...`:entrys[i].name,
               number: entrys[i].count,
               color: blueShades[i],
               legendFontColor: "#FFF",
@@ -371,11 +394,12 @@ const Home = () => {
  
   return (
     <SafeAreaView className="bg-black h-full">
-      <StatusBar style="dark" backgroundColor="#0f0f0f" />
-        <View className="h-full m-2 ">
-         
-          <ProfilePicture message="Home"/>
-          <View className="flex-1 items-center justify-start">
+        <View className="h-full m-2 justify-between">
+         <View className="justify-start items-start">
+          <View className="w-full">
+            <ProfilePicture message="Home"/>
+          </View>
+          <View className={`w-${(Dimensions.get('window').width > 350) ? 350 :Dimensions.get('window').width} items-center justify-start`}>
           {
             (activeWorkouts)?(
               
@@ -406,18 +430,12 @@ const Home = () => {
             </View>
             </View>):
 
-            ( <View className="mt-2">
-              <View className="bg-blue2 rounded-[5px] py-3 mx-2 justify-center ">
-                  <View className="ml-[5%]">
-                    <SummaryChart data={barChartData}/>
-                  </View>
-                </View>
-            <TouchableOpacity className="flex-row justify-between items-center bg-blue2 m-2 p-4 rounded-[5px] w-full h-[60px]" onPress={()=> router.push("/plans")}>
-                
-                <Text className="text-white font-bold text-xl mx-2">Start a Workout</Text>
-              
-                <Icon name="plus" size={30} color={"white"}/>
-              </TouchableOpacity>
+            ( <View className="mt-2"> 
+                <SummaryChart data={barChartData}/>
+                <TouchableOpacity className={`flex-row justify-between items-center bg-blue2 m-2 p-4 rounded-[5px] w-[${(Dimensions.get('window').width > 340) ? 340  : Dimensions.get('window').width -20}px] h-[60px]`} onPress={()=> router.push("/plans")}>
+                  <Text className="text-white font-bold text-xl mx-2">Start a Workout</Text>
+                  <Icon name="plus" size={30} color={"white"}/>
+                </TouchableOpacity>
               </View>
             )}
             
@@ -425,11 +443,8 @@ const Home = () => {
 
 
         </View>
-        <View className="flex1 justify-end mb-3">
-        <Footer footerTitle="Quick Insights:" content={fContent()}/>
         </View>
-          
-          
+        <Footer footerTitle="Quick Insights:" content={fContent()}/>
         </View>
 
       </SafeAreaView>

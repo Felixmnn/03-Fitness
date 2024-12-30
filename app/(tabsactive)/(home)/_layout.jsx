@@ -11,7 +11,8 @@ const ActiveHomeLayout = () => {
             options={{
               headerTitle: "Workout Progress",
               headerStyle: {
-                backgroundColor:"#0f0f0f"
+                backgroundColor:"#0f0f0f",
+                borderBottomWidth: 0
               },
               headerTintColor: "white"
             }}/>

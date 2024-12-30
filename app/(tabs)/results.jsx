@@ -1,4 +1,4 @@
-import { View, Text, FlatList, ScrollView, Image } from 'react-native'
+import { View, Text, FlatList, ScrollView, Image, Platform, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import NavBox from '../../components/NavBox'
@@ -112,7 +112,7 @@ const results = () => {
 
     const yourLastWorkouts = ()=> {
       return (
-        <View className="justify-start flex-1">
+        <View className="justify-start flex-1 items-center">
     
          
     
@@ -125,7 +125,9 @@ const results = () => {
                 }}
               >
                 
-                {amount === 1 ? (
+                {
+                Platform.OS === 'web' ? (null):
+                amount === 1 ? (
                   <Icon name="th-list" size={30} color="white" />
                 ) : amount === 2 ? (
                   <Icon name="columns" size={30} color="white" />
@@ -138,11 +140,45 @@ const results = () => {
                
               <FlatList
                 data={pastWorkouts}
-                numColumns={amount}
+                numColumns={(Dimensions.get("window").width > 600)?(Math.floor(Dimensions.get("window").width/205)):amount}
                 key={amount}
                 keyExtractor={(item,index) => `${item.Name}-${item.WID}-${index}`}
+                showsVerticalScrollIndicator={false}
                 renderItem={({ item }) => {
-                  return amount === 3 ? (
+                   
+                  
+                  
+                  
+                  
+                  
+                  return  Dimensions.get("window").width > 600 ?(
+                  <TouchableOpacity className="bg-blue2 p-2 rounded-[5px] m-1 w-[200px]" onPress={() => router.push({ pathname: "/past-workout", params: { data: JSON.stringify(item) } })}>
+                     <View className="flex-row items-center justify-between">
+                        <Text className="text-white font-bold text-xl">{item.Name}</Text>
+                        {item.Saved ? <Icon name="cloud" size={20} color={"white"} /> : null}
+                      </View>
+    
+                      <View className="flex-row justify-between">
+                        <View className="flex-row mt-1 items-center">
+                          <Icon name="calendar" size={15} color={"white"} />
+                          <Text className="text-white ml-1">{formattedDate(item.CDate)}</Text>
+                        </View>
+                        <View className="flex-row mt-1 items-center">
+                          <Icon name="clock-o" size={17} color={"white"} />
+                          <Text className="text-white ml-1">{formatMinutes(item.Duration)}</Text>
+                        </View>
+                      </View>
+                      <View className="flex-wrap flex-row">
+                        {createExerciseSummary(item.SID).map((item, index) => (
+                          <View key={`${exercises[item.Name - 1].Name}-${index}`} className="bg-blue-500 m-1 p-1 rounded-[5px]">
+                            <Text className="text-white">
+                              {exercises[item.Name - 1].Name} {item.Info}
+                            </Text>
+                          </View>
+                        ))}
+                      </View>
+                  </TouchableOpacity>)
+                  : amount === 3 ? (
                     <TouchableOpacity
                       className="bg-blue2 p-2 rounded-[5px] m-1 w-[30%]"
                       onPress={() => router.push({ pathname: "/past-workout", params: { data: JSON.stringify(item) } })}
@@ -215,7 +251,7 @@ const results = () => {
           )}
               {/* Gradient below */}
               <View>
-              {(amount == 1 || (amount == 2 && pastWorkouts.length >= 5) || (amount == 3 && pastWorkouts.length >= 10) )?(
+              {(amount == 1 || (amount == 2 && pastWorkouts.length >= 5) || (amount == 3 && pastWorkouts.length >= 10)&& Platform.OS !== 'web' )?(
               <Svg height="40" width="100%" className="absolute bottom-0 left-0 right-0 z-10">
                 <LinearGradient id="fadeBottom" x1="0%" y1="0%" x2="0%" y2="100%">
                   <Stop offset="100%" stopColor="rgba(18, 18, 18, 1)" stopOpacity="1" />
@@ -237,12 +273,11 @@ const results = () => {
 
   return (
     <SafeAreaView className="bg-black h-full">
-    <View className="flex-1 m-2 justify-between">  
-      <ProfilePicture message="Results"/>
-      
-      <Main content={yourLastWorkouts()}/>
-       
-
+    <View className="flex-1 m-2 justify-between">
+      <View className="flex-1">
+        <ProfilePicture message="Results"/>
+        <Main content={yourLastWorkouts()}/>
+      </View>
       <Footer footerTitle="Discover" content={fContent()}/>
     </View>
   </SafeAreaView>

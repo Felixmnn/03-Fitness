@@ -1,4 +1,4 @@
-import { View, Text, FlatList, ScrollView, Image, Dimensions, Switch} from 'react-native'
+import { View, Text, FlatList, ScrollView, Image, Dimensions, Switch, Platform} from 'react-native'
 import React, { useRef } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import NavBox from '../../components/NavBox'
@@ -76,6 +76,7 @@ const plans = () => {
     return (
       <View className="justify-start flex-1 bg-black">
         {/* Indikatorpunkte */}
+        {(Dimensions.get('window').width > 600 )? null:
         <View className="flex-row justify-center my-4">
           {items.map((_, index) => (
             <View
@@ -85,8 +86,9 @@ const plans = () => {
               }`}
             />
           ))}
+          
         </View>
-  
+  }
         {/* FlatList */}
         <FlatList
            ref={flatListRef}
@@ -101,10 +103,10 @@ const plans = () => {
               <Text className="text-center text-white font-bold m-2 text-xl text-center">{"No Trainingplans yet :("}</Text>
             </TouchableOpacity>
           </View>}
-           viewabilityConfig={viewabilityConfig}
-           snapToAlignment="center"
-           snapToInterval={width * 0.8 + 16} // Breite + Margin
-           decelerationRate="fast" // Schnelles Einrasten
+          viewabilityConfig={viewabilityConfig}
+          snapToAlignment="center"
+          snapToInterval={width * 0.8 + 16} // Breite + Margin
+          decelerationRate="fast" // Schnelles Einrasten
           renderItem={({ item,index }) => {
             const isSelected = index === currentIndex; // Prüfen, ob das Element ausgewählt ist
 
@@ -112,7 +114,7 @@ const plans = () => {
               
               <View
                 className="bg-blue2 rounded-[5px] p-4 m-2 justify-between"
-                style={{ width: width * 0.8 }} // Breite auf 80% des Bildschirms
+                style={{ width:(Dimensions.get('window').width > 600? 300 : width * 0.8), height:300 }} // Breite auf 80% des Bildschirms
               >
                 <View>
                 <View className="flex-row justify-between">

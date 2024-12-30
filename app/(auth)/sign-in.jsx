@@ -74,12 +74,12 @@ const SignIn = () => {
       <ScrollView>
         
         <View className="w-full justify-center h-full my-6">
-          <View className="justify-center items-center">
+          <View className="justify-center items-center m-5">
             <Text className="text-4xl font-bold text-white my-5">MyLogBook</Text>
           </View>
 
-          <View className="rounded-l-[80px] bg-black mt-[50px] py-[50px] bg-[#003566] ">
-            <Text className="text-white text-center font-pbold text-3xl">
+          <View className="rounded-l-[80px] bg-black mt-[50px] py-[50px] bg-[#003566] justify-center items-center"> 
+            <Text className="text-white text-center font-pbold text-3xl mb-4">
               Sign-In
             </Text>
            
@@ -88,7 +88,7 @@ const SignIn = () => {
               placeholder="Email"
               value={form.email}
               handleChangeText={(e) => setForm({ ...form, email: e })}
-              otherStyles="mx-5"
+              otherStyles="mx-5 w-full max-w-[300px]"
               keyboardType="email-adress"
             />
             <FormField
@@ -96,7 +96,7 @@ const SignIn = () => {
               placeholder="Password"
               value={form.password}
               handleChangeText={(e) => setForm({ ...form, password: e })}
-              otherStyles="mx-5"
+              otherStyles="mx-5 w-full max-w-[300px]"
             />
             <TouchableOpacity onPress={() => {
               Alert.alert("Email Server noch net ready");
@@ -110,7 +110,7 @@ const SignIn = () => {
               className="flex justify-center items-center h-screen"
               title="Sign In"
               handlePress={submit}
-              containerStyles="my-[15px] mx-5 bg-blue-500 rounded-2xl"
+              containerStyles="my-[15px] mx-5 bg-blue-500 rounded-2xl w-full max-w-[300px]"
               isLoading={isSubmitting}
               textStyles={"text-white"}
             />

@@ -119,11 +119,11 @@ const CreatePlan = () => {
 
   return (
     <KeyboardAvoidingView
-              className="bg-black p-2 justify-between"
+              className="bg-black p-2 items-center"
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
               style={{ flex: 1 }}
     >
-      <View className="flex-1">
+      <View className="flex-1 max-w-[300px]">
       <View>
 
 
@@ -212,7 +212,7 @@ const CreatePlan = () => {
       <CustomButton
         title={"Save Plan"}
         handlePress={saveCurrentPlan}
-        containerStyles={"bg-blue2"}
+        containerStyles={"bg-blue2 max-w-[300px] w-full"}
         textStyles={"text-white"}
       />
      

@@ -199,7 +199,7 @@ const ProfileOverview = () => {
 
   return (
     <SafeAreaView className="bg-black h-full items-center justify-center">
-      <View className="flex-1 w-[100%]">
+      <View className="flex-1 w-[100%] max-w-[300px]">
         <View className="m-5 items-center justify-center ">
           <View className="w-[155px] h-[155px] rounded-full bg-blue2 items-center justify-center ">
             <Image source={(user.avatar)?({uri:`${user.avatar}`}):(images.profile)}  className="w-[150px] h-[150px] rounded-full "/> 

@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Image, Alert,TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, Alert,TouchableOpacity } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Link, router } from 'expo-router'
 import FormField from '../../components/FormField'
@@ -70,32 +70,32 @@ const imageWrapper = ({ name, key, action }) => {
   };
 
   return (
-    <SafeAreaView className="bg-black h-full">
-      <ScrollView>
+    <SafeAreaView className="bg-black h-full items-center justify-center">
+      <ScrollView className="items-center justify-center ">
 
-          <View className="w-full justify-center h-full mt-6">
+          <View className="w-full justify-center items-center h-full mt-6">
             
 
-            <View className="rounded-l-[80px] bg-[#003566] mt-5 h-full">
+            <View className=" mt-5 h-full">
 
               <Text className="text-white text-center font-pbold text-3xl mt-8 mb-4">
                 Sign-Up
               </Text>
 
-              <View className="">
+              <View className="items-center">
                   <FormField
                       title="Name"
                       placeholder="Name"
                       value= {form.name}
                       handleChangeText = {(e)=> setForm({...form,name:e})}
-                      otherStyles="mx-5"
+                      otherStyles="mx-5 w-full max-w-[300px]"
                     />
                   <FormField
                     title="Email"
                     placeholder="Email"
                     value= {form.email}
                     handleChangeText = {(e)=> setForm({...form,email:e})}
-                    otherStyles="mx-5"
+                    otherStyles="mx-5 w-full max-w-[300px]"
                     keyboardType="email-adress"
                   />
                   <FormField
@@ -103,26 +103,24 @@ const imageWrapper = ({ name, key, action }) => {
                     placeholder="Password"
                     value= {form.password}
                     handleChangeText = {(e)=> setForm({...form,password:e})}
-                    otherStyles="mx-5"
+                    otherStyles="mx-5 w-full max-w-[300px]"
                   />
                   <FormField
                     title="Confirm Password"
                     placeholder="Confirm Password"
                     value= {form.confirmPassword}
                     handleChangeText = {(e)=> setForm({...form,confirmPassword:e})}
-                    otherStyles="mx-5"
+                    otherStyles="mx-5 w-full max-w-[300px]"
                   />
-                  <View className="mt-4 mb-3">
                     <CustomButton 
                           className="flex justify-center items-center h-screen"
                           title="Sign-Up"
                           handlePress={submit}
-                          containerStyles= "my-[15px] mx-5 bg-blue-500 rounded-2xl"
+                          containerStyles= "my-[15px] mx-5 bg-blue-500 rounded-2xl w-full max-w-[300px]"
                           isLoading={isSubmitting}
                           textStyles={"text-white"}
 
                     />  
-                  </View>
                   
                   <Text className="text-white text-center mb-2">
                     Or Sign-Up with:
@@ -134,7 +132,7 @@ const imageWrapper = ({ name, key, action }) => {
                     )}
                   </View>
 
-                  <View className="flex-row justify-center gap-1 mt-1 mb-[60px]">
+                  <View className="flex-row justify-center gap-1 mt-1">
                     <Text className="text-white  text-lg pb-1">A have a Account?</Text>
                     <Link href="/sign-in" className='text-red-500 font-psemibold text-lg pt-[2px]'>Sign In</Link>
 

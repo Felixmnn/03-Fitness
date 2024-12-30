@@ -115,9 +115,9 @@ const ExercisePicker = () => {
     
   
   return (
-    <View className="bg-black h-full">
-      
-      <View className="flex-row justify-center items-center m-2 mr-3">
+    <View className="bg-black h-full items-center ">
+      <View className="max-w-[300px]">
+      <View className="flex-row justify-center items-center m-2 mr-3 ">
 
       
         <CustomTextInput
@@ -262,6 +262,7 @@ const ExercisePicker = () => {
       
       
         
+    </View>
     </View>
   );
 };

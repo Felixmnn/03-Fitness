@@ -1,16 +1,13 @@
-import { View, Text, FlatList, TextInput, Alert } from "react-native";
+import { View, Text, FlatList, Alert } from "react-native";
 import React, { useContext, useEffect } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/FontAwesome";
 import exercises from "../../constants/exercises";
-import { Image } from "react-native";
 import { useState } from "react";
 import CustomTextInput from "../../components/CustomTextInput";
 import { UserPlan, resetContext } from "../../context/currentPlan";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 import CustomButton from "../../components/CustomButton";
 import { deletePlan } from "../../lib/appwrite";
 import Toast from "react-native-toast-message";
@@ -116,8 +113,9 @@ const EditWorkout = () => {
   };
 
   return (
-    <View className="bg-black h-full">
-      <View className="bg-blue2 m-2 p-2 rounded-[5px]">
+    <View className="bg-black h-full items-center">
+      <View className="max-w-[300px]">
+      <View className="bg-blue2 m-2 p-2 rounded-[5px] ">
       <View className="flex-row items-center justify-center  mx-2">
         <View className="flex-1">
           {isEditing ? (
@@ -273,6 +271,7 @@ const EditWorkout = () => {
         handlePress={ensureOpinion}
         title={"Delete Plan"}
         />
+      </View>
       </View>
     </View>
   );

@@ -27,6 +27,11 @@ Initialisierungsvariablen
 
 */
 
+  const [showDetails, setShowDetails] = useState([]);
+  const [showMoreDetails, setshowMoreDetials] = useState([]);
+  const [showEvenMoreDetails, setshowEvenMoreDetails] = useState([]);
+  const [details, setDetails] = useState([]);
+
   const { data } = useLocalSearchParams();
   const planObject = data ? JSON.parse(data) : null;
   const { currentWorkout, setCurrentWorkout } = useContext(UserWorkout);
@@ -247,10 +252,7 @@ Initialisierungsvariablen
       Alles Ab hier ist für den Main Scroll view
       ----------------------------------------------------------------------------------------------------------------
       */
-  const [showDetails, setShowDetails] = useState([]);
-  const [showMoreDetails, setshowMoreDetials] = useState([]);
-  const [showEvenMoreDetails, setshowEvenMoreDetails] = useState([]);
-  const [details, setDetails] = useState([]);
+
 
   function changeDetailVisibility(ID) {
     console.log("Test");

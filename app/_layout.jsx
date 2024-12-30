@@ -5,6 +5,8 @@ import GlobalProvider from "../context/GlobalProvider"
 import {UserProvider} from "../context/currentPlan"
 import { WorkoutProvider } from '../context/currentWorkout';
 import Toast from 'react-native-toast-message';
+import '../styles.css';
+
 
 SplashScreen.preventAutoHideAsync();
 
