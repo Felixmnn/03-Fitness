@@ -11,11 +11,46 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import FormField from "../../components/FormField";
 import CustomButton from "../../components/CustomButton";
 import { Redirect, router, Link } from "expo-router";
-import { getCurrentUser, signIn } from "../../lib/appwrite";
+import { getCurrentUser, handleLogin, handleOAuthLogin, handleUser, signIn } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useEffect } from "react";
+import { Linking } from "react-native";
+
+
+
+
+
 
 const SignIn = () => {
+
+
+  useEffect(() => {
+    try{
+      const fetchUSerData = async () => {
+        const result = await handleUser();
+        if (result === null) {
+          console.log("No user signed in");
+        }
+          else {
+            console.log("User ist this", result);
+            setUser(result);
+            setIsLoggedIn(true);
+            Alert.alert("Success", "User signed in successfully :)");
+            router.replace("/home");
+          }
+      }
+      fetchUSerData();
+
+    } catch (error) {
+      console.log("Error", error);
+    }
+    
+  }, []); 
+  
+
+  
+  
   const { user, setUser } = useGlobalContext();
   const { isLoggedIn, setIsLoggedIn } = useGlobalContext();
 
@@ -54,9 +89,7 @@ const SignIn = () => {
     return (
       <TouchableOpacity
         key={key}
-        onPress={() => {
-          action ? action : noActionYet();
-        }}
+        onPress={action ? action : noActionYet}
         className="m-2 w-[40px]"
       >
         <Icon 
@@ -120,10 +153,11 @@ const SignIn = () => {
             </Text>
 
             <View className="flex-row justify-center mb-[30px]">
-              {["google","apple","facebook"].map((item) =>
-                imageWrapper({ name: item, key: item }),
+              {["google"].map((item) =>
+                imageWrapper({ name: item, key: item ,action: handleOAuthLogin}),
               )}
             </View>
+           
 
             <View className="flex-row justify-center gap-1 mb-[30] mt-[5] items-center">
               <Text className="text-white  text-lg mb-1">Dont have a Account?</Text>

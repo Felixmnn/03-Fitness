@@ -18,18 +18,7 @@ import { StatusBar } from 'expo-status-bar';
 
 const Home = () => {
 
-  useEffect(() => {
-    const handleReload = () => {
-      router.replace("/");
-    };
-
-    window.addEventListener("beforeunload", handleReload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleReload);
-    };
-  }, []);
-
+  
 
 
 

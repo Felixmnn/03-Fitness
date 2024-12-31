@@ -14,12 +14,12 @@ const ProfilePicture =({message}) => {
       <View className="flex-row mx-2 justify-between items-center">
           <Text className="text-white text-3xl font-bold">{message}</Text>       
             <TouchableOpacity onPress= { () => router.push("/profile-details")}>
-              <View className="justify-center items-center">
+              <View className="justify-center items-center ">
                 {
                   (user && user.avatar) ? 
                   (<Image source={user && user.avatar ? { uri: `${user.avatar}` } : images.thumbnail}   className="w-[60px] h-[60px] rounded-full "/> ):
                   <View className="w-[60px] h-[60px] rounded-full"></View>
-                }
+}
                
               </View>
             

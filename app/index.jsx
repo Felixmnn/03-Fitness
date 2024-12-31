@@ -3,6 +3,7 @@ import { ScrollView, View, ActivityIndicator, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from "../components/CustomButton";
 import { useGlobalContext } from "../context/GlobalProvider";
+import { StatusBar } from 'expo-status-bar';
 
 export default function Index() {
   const { isLoading, isLoggedIn } = useGlobalContext();

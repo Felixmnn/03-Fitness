@@ -11,6 +11,7 @@ import * as Sharing from 'expo-sharing';
 import { TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Toast from 'react-native-toast-message';
+import { images } from '../../constants';
 
 
 
@@ -19,7 +20,9 @@ const ProfileOverview = () => {
 
 
   const logout = async () => {
+    await AsyncStorage.clear();
     await signOut();
+
     router.push("/sign-in");
   };
 
@@ -199,13 +202,16 @@ const ProfileOverview = () => {
 
   return (
     <SafeAreaView className="bg-black h-full items-center justify-center">
-      <View className="flex-1 w-[100%] max-w-[300px]">
+      <View className="flex-1 w-[100%] ">
         <View className="m-5 items-center justify-center ">
+          {/*}
           <View className="w-[155px] h-[155px] rounded-full bg-blue2 items-center justify-center ">
-            <Image source={(user.avatar)?({uri:`${user.avatar}`}):(images.profile)}  className="w-[150px] h-[150px] rounded-full "/> 
+            <Image source={(user.avatar)?({uri:`${user.avatar}`}):(images.thumbnail)}  className="w-[150px] h-[150px] rounded-full "/> 
           </View>
             <Text className="text-white font-bold text-3xl">{user.username}</Text> 
+             */}
         </View>
+       
         <View className="flex-1 bg-blue2 rounded-t-[25px] p-2 justify-start items-center" >
           <View>
             {/*<CustomButton title="Random Stuff" handlePress={()=> random()} containerStyles={"bg-red-900 mx-2"} textStyles={"text-white"}/>*/}
