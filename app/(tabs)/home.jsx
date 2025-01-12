@@ -241,7 +241,7 @@ const Home = () => {
       };
 
       return (
-        <View className="bg-blue2 rounded-[5px] h-[180px] w-[300px] items-center justiy-center pb-2 my-2">
+        <View className="bg-blue2 rounded-[5px] h-[180px] w-[300px] items-center justiy-center pb-2">
           <Text className="text-white font-bold text-xl">Workouts this Month</Text>
         <PieChart
           data={data}
@@ -300,7 +300,7 @@ const Home = () => {
       const formatDuration = `${(hours>0)?((hours>9)?(hours):(`0${hours}`)):("00")}:${(minutes>0)?((minutes>9)?(minutes):(`0${minutes}`)):("00")}`
       
       return (
-        <View className="bg-blue2 rounded-[5px] h-[180px] w-[300px] justiy-center px-2 m-2">
+        <View className="bg-blue2 rounded-[5px] h-[180px] w-[300px] justiy-center px-2">
           <Text className="text-white font-bold text-xl text-center">Last Workout: {workout.Name}</Text>
           <View className="flex-row justify-between w-[100%] items-center">
             <View className="flex-row items-center">
@@ -346,7 +346,7 @@ const Home = () => {
 
     const fContent = ()=> {
       return (
-        <View>
+        <View className="mb-2 pr-4">
           <FlatList
           data={compontes}
           horizontal={true}
@@ -382,13 +382,13 @@ const Home = () => {
       }
  
   return (
-    <SafeAreaView className="bg-black h-full">
-        <View className="h-full m-2 justify-between">
-         <View className="justify-start items-start">
+    <SafeAreaView className="bg-black h-full pt-1">
           <View className="w-full">
             <ProfilePicture message="Home"/>
           </View>
-          <View className={`w-${(Dimensions.get('window').width > 350) ? 350 :Dimensions.get('window').width} items-center justify-start`}>
+        <View className="flex-1 m-2 justify-between items-center w-full">
+         <View className="justify-center w-full items-center ">
+          <View className={`w-${(Dimensions.get('window').width > 350) ? 350 :Dimensions.get('window').width} items-center justify-center max-w-[600px]`}>
           {
             (activeWorkouts)?(
               
@@ -419,11 +419,10 @@ const Home = () => {
             </View>
             </View>):
 
-            ( <View className="mt-2"> 
+            ( <View className="mt-3 mr-3 items-center w-full max-w-[600px]"> 
                 <SummaryChart data={barChartData}/>
-                <TouchableOpacity className={`flex-row justify-between items-center bg-blue2 m-2 p-4 rounded-[5px] w-[${(Dimensions.get('window').width > 340) ? 340  : Dimensions.get('window').width -20}px] h-[60px]`} onPress={()=> router.push("/plans")}>
-                  <Text className="text-white font-bold text-xl mx-2">Start a Workout</Text>
-                  <Icon name="plus" size={30} color={"white"}/>
+                <TouchableOpacity className={`flex-row items-center justify-center bg-blue2 p-4 my-2 rounded-[5px] h-[60px] `} onPress={()=> router.push("/plans")}>
+                  <Text className="text-white font-bold text-xl">Start a Workout</Text>
                 </TouchableOpacity>
               </View>
             )}

@@ -70,19 +70,11 @@ const imageWrapper = ({ name, key, action }) => {
   };
 
   return (
-    <SafeAreaView className="bg-black h-full items-center justify-center">
-      <ScrollView className="items-center justify-center ">
-
-          <View className="w-full justify-center items-center h-full mt-6">
-            
-
-            <View className=" mt-5 h-full">
-
-              <Text className="text-white text-center font-pbold text-3xl mt-8 mb-4">
+    <SafeAreaView className="bg-black flex-1 p-2">
+          <View className="flex-1 justify-center items-center">
+              <Text className="text-white text-center font-bold text-3xl mb-4">
                 Sign-Up
               </Text>
-
-              <View className="items-center">
                   <FormField
                       title="Name"
                       placeholder="Name"
@@ -112,38 +104,19 @@ const imageWrapper = ({ name, key, action }) => {
                     handleChangeText = {(e)=> setForm({...form,confirmPassword:e})}
                     otherStyles="mx-5 w-full max-w-[300px]"
                   />
-                    <CustomButton 
-                          className="flex justify-center items-center h-screen"
-                          title="Sign-Up"
-                          handlePress={submit}
-                          containerStyles= "my-[15px] mx-5 bg-blue-500 rounded-2xl w-full max-w-[300px]"
-                          isLoading={isSubmitting}
-                          textStyles={"text-white"}
-
-                    />  
-                  
-                  <Text className="text-white text-center mb-2">
-                    Or Sign-Up with:
-                  </Text>
-
-                  <View className="flex-row justify-center mb-[30px]">
-                    {["google","apple","facebook"].map((item) =>
-                      imageWrapper({ name: item, key: item }),
-                    )}
-                  </View>
-
+                    <CustomButton
+                    className="flex justify-center items-center h-screen"
+                    title="Sign Up"
+                    handlePress={submit}
+                    containerStyles="my-[15px] bg-blue-500 rounded-[10px] w-full max-w-[300px]"
+                    isLoading={isSubmitting}
+                    textStyles={"text-white"}
+                  />
                   <View className="flex-row justify-center gap-1 mt-1">
                     <Text className="text-white  text-lg pb-1">A have a Account?</Text>
                     <Link href="/sign-in" className='text-red-500 font-psemibold text-lg pt-[2px]'>Sign In</Link>
-
-                  </View>
-
               </View>  
-              
-
-            </View>
         </View>
-      </ScrollView>
     </SafeAreaView>
   )
 }

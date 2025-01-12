@@ -27,7 +27,7 @@ export default function Index() {
 
   // Standardanzeige der Index-Seite
   return (
-    <SafeAreaView style={{ backgroundColor: '#3498db', flex: 1 }}>
+    <SafeAreaView className="flex-1 bg-[#001d3d]">
       <StatusBar style="dark" backgroundColor="#0f0f0f" />
       
       <ScrollView className="h-full">
@@ -36,7 +36,7 @@ export default function Index() {
             title="Get Started"
             textStyles={"text-white"}
             handlePress={() => router.push('/sign-in')}
-            containerStyles="px-[30] mt-7 bg-blue-500"
+            containerStyles="px-[30] mt-7 bg-blue-500 "
           />
         </View>
       </ScrollView>

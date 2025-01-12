@@ -204,19 +204,19 @@ const ProfileOverview = () => {
     <SafeAreaView className="bg-black h-full items-center justify-center">
       <View className="flex-1 w-[100%] ">
         <View className="m-5 items-center justify-center ">
-          {/*}
+          
           <View className="w-[155px] h-[155px] rounded-full bg-blue2 items-center justify-center ">
             <Image source={(user.avatar)?({uri:`${user.avatar}`}):(images.thumbnail)}  className="w-[150px] h-[150px] rounded-full "/> 
           </View>
             <Text className="text-white font-bold text-3xl">{user.username}</Text> 
-             */}
+             
         </View>
        
-        <View className="flex-1 bg-blue2 rounded-t-[25px] p-2 justify-start items-center" >
-          <View>
+        <View className="flex-1 bg-blue2 rounded-t-[5px] px-2 justify-between items-center" >
+          <View className="w-full">
             {/*<CustomButton title="Random Stuff" handlePress={()=> random()} containerStyles={"bg-red-900 mx-2"} textStyles={"text-white"}/>*/}
             <View className="flex-row justify-between w-full">
-            <TouchableOpacity className={`flex-row items-center p-2 rounded-[5px] bg-blue-500 justify-center m-2 flex-1 ${isFetching2? 'opacity-50' : ""}`}
+            <TouchableOpacity className={`flex-row items-center p-2 rounded-[5px] bg-blue-500 justify-center my-2 mr-1 flex-1 ${isFetching2? 'opacity-50' : ""}`}
                               onPress={()=> excel()}
                               disabled = {isFetching2}
                               >
@@ -228,7 +228,7 @@ const ProfileOverview = () => {
                 <Text className="text-white font-bold m-2">Export Data</Text>
             </TouchableOpacity>
             <TouchableOpacity 
-            className={`flex-row items-center p-2 rounded-[5px] ${isFetching? 'opacity-50' : ""}  bg-blue-500 justify-center m-2 flex-1`}
+            className={`flex-row items-center p-2 rounded-[5px] ${isFetching? 'opacity-50' : ""}  bg-blue-500 justify-center my-2 ml-1 flex-1`}
             onPress={()=> importData()}
             disabled = {isFetching}
             >
@@ -242,11 +242,14 @@ const ProfileOverview = () => {
             
 
             </View>
+          
+            <CustomButton handlePress={async()=> AsyncStorage.clear()  } title={"Lösche deine Daten"} containerStyles={"bg-red-900 w-full"} textStyles={"text-white"} />
+
           </View>
-          <CustomButton handlePress={async()=> AsyncStorage.clear()  } title={" Clear Async Storage"} containerStyles={"bg-red-900"} textStyles={"text-white"} />
+
           {/*<CustomButton handlePress={async()=> sendRecoveryEmail()  } title={"Recovery Mail"} containerStyles={"bg-red-900"} textStyles={"text-white"} />*/}
-          <View> 
-            <CustomButton title={"Logout"} containerStyles={"bg-red-900 m-5"} textStyles={"text-white"}  handlePress={logout} />
+          <View className="w-full"> 
+            <CustomButton title={"Logout"} containerStyles={"bg-red-900 my-2 w-full"} textStyles={"text-white"}  handlePress={logout} />
           </View>
         </View>
       </View>

@@ -5,6 +5,7 @@ import {
   Image,
   Alert,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import React, { useContext, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -82,37 +83,15 @@ const SignIn = () => {
     }
   };
 
-  const imageWrapper = ({ name, key, action }) => {
-    const noActionYet = () => {
-      Alert.alert("OAuth not Working yet");
-    };
-    return (
-      <TouchableOpacity
-        key={key}
-        onPress={action ? action : noActionYet}
-        className="m-2 w-[40px]"
-      >
-        <Icon 
-        name={name} 
-        size={45} 
-        color="white" 
-        />
-
-      </TouchableOpacity>
-    );
-  };
-
+  
   return (
     <SafeAreaView className="bg-black h-full">
-      <ScrollView>
         
         <View className="w-full justify-center h-full my-6">
-          <View className="justify-center items-center m-5">
-            <Text className="text-4xl font-bold text-white my-5">MyLogBook</Text>
-          </View>
+          
 
-          <View className="rounded-l-[80px] bg-black mt-[50px] py-[50px] bg-[#003566] justify-center items-center"> 
-            <Text className="text-white text-center font-pbold text-3xl mb-4">
+          <View className="h-full bg-black py-[50px]  justify-center items-center"> 
+            <Text className="text-white text-center font-bold text-3xl mb-4">
               Sign-In
             </Text>
            
@@ -143,21 +122,13 @@ const SignIn = () => {
               className="flex justify-center items-center h-screen"
               title="Sign In"
               handlePress={submit}
-              containerStyles="my-[15px] mx-5 bg-blue-500 rounded-2xl w-full max-w-[300px]"
+              containerStyles="my-[15px] mx-5 bg-blue-500 rounded-[10px] w-full max-w-[300px]"
               isLoading={isSubmitting}
               textStyles={"text-white"}
             />
-
-            <Text className="text-white text-center py-[5px]">
-              Or Sign In with:
-            </Text>
-
-            <View className="flex-row justify-center mb-[30px]">
-              {["google"].map((item) =>
-                imageWrapper({ name: item, key: item ,action: handleOAuthLogin}),
-              )}
+            <View>
+              
             </View>
-           
 
             <View className="flex-row justify-center gap-1 mb-[30] mt-[5] items-center">
               <Text className="text-white  text-lg mb-1">Dont have a Account?</Text>
@@ -170,7 +141,6 @@ const SignIn = () => {
             </View>
           </View>
         </View>
-      </ScrollView>
     </SafeAreaView>
   );
 };

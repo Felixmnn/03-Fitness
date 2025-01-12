@@ -119,11 +119,11 @@ const CreatePlan = () => {
 
   return (
     <KeyboardAvoidingView
-              className="bg-black p-2 items-center"
+              className="bg-black p-2 items-center w-full"
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
               style={{ flex: 1 }}
     >
-      <View className="flex-1 max-w-[300px]">
+      <View className="flex-1 max-w-[600px]">
       <View>
 
 

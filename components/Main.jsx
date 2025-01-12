@@ -3,7 +3,7 @@ import React from 'react'
 
 const Main = ({content}) => {
   return (
-    <View className="flex-1 w-full mt-2 justify-center">
+    <View className="flex-1">
       {content}
     </View>
   )
