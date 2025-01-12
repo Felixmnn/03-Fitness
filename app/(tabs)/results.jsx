@@ -112,12 +112,9 @@ const results = () => {
 
     const yourLastWorkouts = ()=> {
       return (
-        <View className="justify-start items-start max-w-[600px]">
-    
-         
-    
+        <View >
           {pastWorkouts.length > 0 ? (
-            <View className="justify-start flex-1 w-full">
+            <View>
               <TouchableOpacity
                 className="items-center justify-center my-2 z-15"
                 onPress={() => {
@@ -125,7 +122,7 @@ const results = () => {
                 }}
               >
                 {
-               
+                 Platform.OS === "web" ? null :
                 amount === 1 ? (
                   <Icon name="th-list" size={30} color="white" />
                 ) : amount === 2 ? (
@@ -139,7 +136,7 @@ const results = () => {
               
               <FlatList
                 data={pastWorkouts}
-                numColumns={(Dimensions.get("window").width > 600)?(Math.floor(Dimensions.get("window").width/205)):amount}
+                numColumns={amount}
                 key={amount}
                 keyExtractor={(item,index) => `${item.Name}-${item.WID}-${index}`}
                 showsVerticalScrollIndicator={false}
@@ -151,8 +148,8 @@ const results = () => {
                   
                   
                   return  Dimensions.get("window").width > 600 ?(
-                  <TouchableOpacity className="bg-blue2 p-2 rounded-[5px] m-1 max-w-[600px]" onPress={() => router.push({ pathname: "/past-workout", params: { data: JSON.stringify(item) } })}>
-                     <View className="flex-row items-center justify-between w-full">
+                  <TouchableOpacity className="bg-blue2 p-2 rounded-[5px] m-1 " onPress={() => router.push({ pathname: "/past-workout", params: { data: JSON.stringify(item) } })}>
+                     <View className="flex-row items-center justify-between w-[550px]">
                         <Text className="text-white font-bold text-xl">{item.Name}</Text>
                         {item.Saved ? <Icon name="cloud" size={20} color={"white"} /> : null}
                       </View>
@@ -257,13 +254,13 @@ const results = () => {
 
 
   return (
-    <SafeAreaView className="bg-black h-full pt-1 ">
+    <SafeAreaView className="bg-black h-full p-2 ">
       <ProfilePicture message="Results"/>
     <View className="flex-1 m-2 justify-between items-center ">
       <View className="items-center w-full max-w-[600px] flex-1 pb-2">
         {yourLastWorkouts()}
       </View>
-      <View className="items-start justify-start w-full max-w-[600px]">
+      <View className="items-start justify-start w-full">
       {fContent()}
       </View>
     </View>

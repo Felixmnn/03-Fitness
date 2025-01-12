@@ -202,8 +202,8 @@ const ProfileOverview = () => {
 
   return (
     <SafeAreaView className="bg-black h-full items-center justify-center">
-      <View className="flex-1 w-[100%] ">
-        <View className="m-5 items-center justify-center ">
+      <View className="flex-1 max-w-[600px]">
+        <View className="m-5 items-center justify-center max-w-[600px] ">
           
           <View className="w-[155px] h-[155px] rounded-full bg-blue2 items-center justify-center ">
             <Image source={(user.avatar)?({uri:`${user.avatar}`}):(images.thumbnail)}  className="w-[150px] h-[150px] rounded-full "/> 
@@ -212,7 +212,7 @@ const ProfileOverview = () => {
              
         </View>
        
-        <View className="flex-1 bg-blue2 rounded-t-[5px] px-2 justify-between items-center" >
+        <View className="flex-1 rounded-t-[5px] px-2 justify-start items-center" >
           <View className="w-full">
             {/*<CustomButton title="Random Stuff" handlePress={()=> random()} containerStyles={"bg-red-900 mx-2"} textStyles={"text-white"}/>*/}
             <View className="flex-row justify-between w-full">

@@ -95,7 +95,6 @@ const plans = () => {
            data={items}
            horizontal={true}
            pagingEnabled={false} // Wir verwenden stattdessen snapping
-           showsHorizontalScrollIndicator={false}
            onViewableItemsChanged={onViewableItemsChanged}
            ListEmptyComponent={
            <View className="bg-blue2 rounded-[5px] p-2 h-[150px] justify-center w-full">
@@ -117,9 +116,9 @@ const plans = () => {
                 style={{ width:(Dimensions.get('window').width > 600? 300 : width * 0.8), height:300 }} // Breite auf 80% des Bildschirms
               >
                 <View>
-                <View className="flex-row justify-between">
-                  <View className="flex-row items-center">
-                    <Text className="text-white font-bold text-2xl mr-2">
+                <View className="flex-row justify-between items-center">
+                  <View className="flex-row justify-start items-center w-[80%]">
+                    <Text className="text-white font-bold text-2xl mr-1" numberOfLines={2} ellipsizeMode="tail">
                       {item.Name}
                     </Text>
                     {item.Saved ? <Icon name="cloud" size={20} color="white" /> : null}
@@ -186,7 +185,7 @@ const plans = () => {
 
   const fContent = ()=> {
     return (
-    <View className="flex-row">
+    <View className="flex-row ml-2">
       <TouchableOpacity className="justify-center items-center bg-blue2 rounded-[5px]  h-[150px] w-[150px] " onPress={()=> {router.push("/create-plans")}}>
         <Icon name="file-text-o" size={30} color="white" />
         <Text className="text-white font-bold m-2 text-xl text-center">{"New Plan"}</Text>
@@ -198,13 +197,9 @@ const plans = () => {
   
 
   return (   
-      <SafeAreaView className="bg-black h-full w-full items-center pt-1">
-        
-          <View className="w-full">
+      <SafeAreaView className="bg-black h-full w-full items-center p-2">
+        <View className="flex-1 justify-between w-full">
           <ProfilePicture message="Plans"/>
-
-          </View>
-          <View className="flex-1 m-2 justify-between items-start w-full max-w-[600px]">
           <Main content={yourPlans()}/>
           <Footer footerTitle="Create:" content={fContent()} />
         </View>

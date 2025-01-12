@@ -108,7 +108,7 @@ const imageWrapper = ({ name, key, action }) => {
                     className="flex justify-center items-center h-screen"
                     title="Sign Up"
                     handlePress={submit}
-                    containerStyles="my-[15px] bg-blue-500 rounded-[10px] w-full max-w-[300px]"
+                    containerStyles="my-[15px] rounded-[10px] w-full max-w-[300px]"
                     isLoading={isSubmitting}
                     textStyles={"text-white"}
                   />

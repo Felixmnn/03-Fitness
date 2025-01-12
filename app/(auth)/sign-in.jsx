@@ -122,7 +122,7 @@ const SignIn = () => {
               className="flex justify-center items-center h-screen"
               title="Sign In"
               handlePress={submit}
-              containerStyles="my-[15px] mx-5 bg-blue-500 rounded-[10px] w-full max-w-[300px]"
+              containerStyles="my-[15px] mx-5rounded-[10px] w-full max-w-[300px]"
               isLoading={isSubmitting}
               textStyles={"text-white"}
             />
