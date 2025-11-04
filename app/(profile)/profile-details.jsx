@@ -204,11 +204,16 @@ const ProfileOverview = () => {
     <SafeAreaView className="bg-black h-full items-center justify-center">
       <View className="flex-1 max-w-[600px]">
         <View className="m-5 items-center justify-center max-w-[600px] ">
-          
+          { user && user.avatar &&
           <View className="w-[155px] h-[155px] rounded-full bg-blue2 items-center justify-center ">
-            <Image source={(user.avatar)?({uri:`${user.avatar}`}):(images.thumbnail)}  className="w-[150px] h-[150px] rounded-full "/> 
+            
+            <Image source={(user && user.avatar)?({uri:`${user.avatar}`}):null}  className="w-[150px] h-[150px] rounded-full "/> 
+            
           </View>
-            <Text className="text-white font-bold text-3xl">{user.username}</Text> 
+}           
+            <TouchableOpacity onPress={()=> router.push("/sign-in")} disabled={isLoggedIn || user}>
+              <Text className="text-white font-bold text-3xl">{user && user.username ? user.username : "Sign In"}</Text> 
+            </TouchableOpacity>
              
         </View>
        

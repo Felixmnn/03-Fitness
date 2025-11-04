@@ -5,6 +5,8 @@ import GlobalProvider from "../context/GlobalProvider"
 import {UserProvider} from "../context/currentPlan"
 import { WorkoutProvider } from '../context/currentWorkout';
 import Toast from 'react-native-toast-message';
+import { StatusBar } from 'expo-status-bar';
+
 import '../styles.css';
 
 
@@ -36,6 +38,7 @@ const RootLayout = () => {
   }
   return (
     <GlobalProvider>
+      <StatusBar style="dark" backgroundColor="#121212" />
       <UserProvider>
         <WorkoutProvider>
         <Stack>

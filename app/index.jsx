@@ -11,7 +11,7 @@ export default function Index() {
   // Zeige Ladescreen, solange Daten geladen werden
   if (isLoading) {
     return (
-      <SafeAreaView style={{ backgroundColor: '#3498db', flex: 1 }}>
+      <SafeAreaView style={{ backgroundColor: '#001d3d', flex: 1 }}>
         <View className="flex-1 justify-center items-center">
           <ActivityIndicator size="large" color="#ffffff" />
           <Text className="text-white mt-4">Lädt...</Text>
@@ -28,7 +28,7 @@ export default function Index() {
   // Standardanzeige der Index-Seite
   return (
     <SafeAreaView className="flex-1 bg-[#001d3d]">
-      <StatusBar style="dark" backgroundColor="#0f0f0f" />
+      <StatusBar style="dark" backgroundColor="#121212" />
       
       <ScrollView className="h-full">
         <View className="w-full justify-center items-center min-h-[100vh] px-4">

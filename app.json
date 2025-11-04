@@ -18,7 +18,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#001d3d" 
       },
       "package": "com.myfitnessprojekt.myfitnesslog"
     },
@@ -41,6 +41,7 @@
       "eas": {
         "projectId": "8d0c067f-f7c2-4f8b-a2db-6e27e7190521"
       }
+      
     },
     "owner": "felix08"
   }

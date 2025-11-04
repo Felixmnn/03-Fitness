@@ -17,6 +17,7 @@ import { useGlobalContext } from "../../context/GlobalProvider";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useEffect } from "react";
 import { Linking } from "react-native";
+import NoLoginRequired from "../../components/noLoginRequired";
 
 
 
@@ -25,7 +26,7 @@ import { Linking } from "react-native";
 
 const SignIn = () => {
 
-
+/*
   useEffect(() => {
     try{
       const fetchUSerData = async () => {
@@ -48,6 +49,7 @@ const SignIn = () => {
     }
     
   }, []); 
+  */
   
 
   
@@ -86,15 +88,11 @@ const SignIn = () => {
   
   return (
     <SafeAreaView className="bg-black h-full">
-        
         <View className="w-full justify-center h-full my-6">
-          
-
           <View className="h-full bg-black py-[50px]  justify-center items-center"> 
             <Text className="text-white text-center font-bold text-3xl mb-4">
               Sign-In
             </Text>
-           
             <FormField
               title="Email"
               placeholder="Email"
@@ -130,7 +128,7 @@ const SignIn = () => {
               
             </View>
 
-            <View className="flex-row justify-center gap-1 mb-[30] mt-[5] items-center">
+            <View className="flex-row justify-center gap-1  mt-[5] items-center">
               <Text className="text-white  text-lg mb-1">Dont have a Account?</Text>
               <Link
                 href="/sign-up"
@@ -139,7 +137,10 @@ const SignIn = () => {
                 Sign Up
               </Link>
             </View>
+                      <NoLoginRequired/>
+
           </View>
+
         </View>
     </SafeAreaView>
   );

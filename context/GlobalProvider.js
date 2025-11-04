@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { getCurrentUser } from "../lib/appwrite";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
 
 const GlobalContext = createContext();
 
@@ -12,6 +14,13 @@ const GlobalProvider = ({children}) => {
 
     useEffect(() => {
         try {
+            AsyncStorage.getItem("noAccountWanted").then((value) => {
+                if (value === "true") {
+                    setIsLoggedIn(false);
+                    setUser(null);
+                    setIsLoading(false);
+                    router.replace("/home");
+                }})
             getCurrentUser()
             .then((res) =>{
                 if(res) {

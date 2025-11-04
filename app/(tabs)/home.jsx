@@ -382,8 +382,8 @@ const Home = () => {
       }
  
   return (
-    <SafeAreaView className="bg-black h-full pt-1">
-          <View className="w-full">
+    <SafeAreaView className="bg-black h-full pt-1 p-2">
+          <View className="w-full p-2">
             <ProfilePicture message="Home"/>
           </View>
         <View className="flex-1 m-2 justify-between items-center w-full">
@@ -419,7 +419,7 @@ const Home = () => {
             </View>
             </View>):
 
-            ( <View className="mt-3 mr-3 items-center w-full max-w-[600px]"> 
+            ( <View className="mt-3 mr-3 items-center w-full "> 
                 <SummaryChart data={barChartData}/>
                 <TouchableOpacity className={`flex-row items-center justify-center bg-blue2 p-4 my-2 rounded-[5px] h-[60px] `} onPress={()=> router.push("/plans")}>
                   <Text className="text-white font-bold text-xl">Start a Workout</Text>

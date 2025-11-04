@@ -7,6 +7,8 @@ import React, { useState } from 'react'
 import { createUser } from '../../lib/appwrite';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import NoLoginRequired from '../../components/noLoginRequired';
 
 
 const SignUp = () => {
@@ -116,6 +118,7 @@ const imageWrapper = ({ name, key, action }) => {
                     <Text className="text-white  text-lg pb-1">A have a Account?</Text>
                     <Link href="/sign-in" className='text-red-500 font-psemibold text-lg pt-[2px]'>Sign In</Link>
               </View>  
+              <NoLoginRequired/>
         </View>
     </SafeAreaView>
   )

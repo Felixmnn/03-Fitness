@@ -198,7 +198,7 @@ const plans = () => {
 
   return (   
       <SafeAreaView className="bg-black h-full w-full items-center p-2">
-        <View className="flex-1 justify-between w-full">
+        <View className="flex-1 justify-between w-full p-2">
           <ProfilePicture message="Plans"/>
           <Main content={yourPlans()}/>
           <Footer footerTitle="Create:" content={fContent()} />

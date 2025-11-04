@@ -255,7 +255,9 @@ const results = () => {
 
   return (
     <SafeAreaView className="bg-black h-full p-2 ">
+      <View className="p-2">
       <ProfilePicture message="Results"/>
+      </View>
     <View className="flex-1 m-2 justify-between items-center ">
       <View className="items-center w-full max-w-[600px] flex-1 pb-2">
         {yourLastWorkouts()}
