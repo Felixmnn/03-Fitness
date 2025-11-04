@@ -4,9 +4,21 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from "../components/CustomButton";
 import { useGlobalContext } from "../context/GlobalProvider";
 import { StatusBar } from 'expo-status-bar';
+import { useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Index() {
   const { isLoading, isLoggedIn } = useGlobalContext();
+
+  useEffect(() => {
+    AsyncStorage.getItem("noAccountWanted").then((value) => {
+      if (value === "true") {
+        router.replace("/home");
+      } else {
+        router.replace(isLoggedIn ? "/home" : "/sign-in");
+      }
+    });
+  }, []);
 
   // Zeige Ladescreen, solange Daten geladen werden
   if (isLoading) {

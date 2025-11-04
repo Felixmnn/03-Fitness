@@ -424,7 +424,7 @@ Initialisierungsvariablen
                           </Text>
                           <TextInput
                             key={`${item.D}-${index}-Weight`}
-                            className={`w-[30%] bg-white rounded-[5px] ${
+                            className={`w-[30%] rounded-[5px] ${
                               index % 2 === 0 ? "bg-[#023f77]" : "bg-blue2"
                             } text-white text-center`}
                             keyboardType="numeric"
@@ -439,7 +439,7 @@ Initialisierungsvariablen
                           />
                           <TextInput
                             key={`${item.D}-${index}-Reps`}
-                            className={`w-[30%] bg-white rounded-[5px] ${
+                            className={`w-[30%]  rounded-[5px] ${
                               index % 2 === 0 ? "bg-[#023f77]" : "bg-blue2"
                             } text-white text-center`}
                             keyboardType="numeric"
