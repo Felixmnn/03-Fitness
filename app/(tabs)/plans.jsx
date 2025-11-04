@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import NavBox from '../../components/NavBox'
 import { icons } from '../../constants'
 import { router } from 'expo-router'
-import ProfilePicture from 'components/ProfilePicture';
+import ProfilePicture from '../../components/ProfilePicture'
 import { TouchableOpacity } from 'react-native'
 import Main from '../../components/Main'
 import Footer from '../../components/Footer'
@@ -14,7 +14,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import exercises from '../../constants/exercises'
 import CustomButton from '../../components/CustomButton'
-import { styled } from 'nativewind'
 import { LinearGradient, Stop } from 'react-native-svg'
 import { Svg, Rect } from 'react-native-svg'; // Importiere das Svg-Tag, um den Gradient anzuwenden
 
@@ -24,8 +23,7 @@ const plans = () => {
   const flatListRef = useRef(null);
   
 
-  const StyledView = styled(View);
-  const StyledText = styled(Text)
+
   
   const onViewableItemsChanged = useRef(({ viewableItems }) => {
     if (viewableItems.length > 0) {

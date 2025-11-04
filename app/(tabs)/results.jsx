@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import NavBox from '../../components/NavBox'
 import { icons, images } from '../../constants'
 import { router } from 'expo-router'
-import ProfilePicture from 'components/ProfilePicture';
+import ProfilePicture from '../../components/ProfilePicture'
 import { TouchableOpacity } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { format } from 'date-fns';

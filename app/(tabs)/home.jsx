@@ -1,6 +1,6 @@
 import { View, Text, FlatList,ScrollView, Dimensions } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import ProfilePicture from 'components/ProfilePicture';
+import ProfilePicture from '../../components/ProfilePicture'
 import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState, useEffect, Component } from 'react';
