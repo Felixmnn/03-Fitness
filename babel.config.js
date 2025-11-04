@@ -7,13 +7,14 @@ module.exports = function (api) {
       [
         'module-resolver',
         {
-          root: ['./'], // Das Root-Verzeichnis des Projekts
+          root: ['./'],
           alias: {
             components: './components',
             assets: './assets',
           },
         },
       ],
+      "react-native-reanimated/plugin",
     ],
   };
 };

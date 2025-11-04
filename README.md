@@ -1,50 +1,66 @@
-# Welcome to your Expo app 👋
+# <img src="./assets/icon.png" alt="App Icon" style="height:40px;width:40px;vertical-align:middle;margin-left:8px;" /> 03-Fitness
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+> **Note:** This project is no longer actively maintained. You can use it for UI inspiration or as a starting point for your own fitness tracking app.
 
-## Get started
+03-Fitness is an app for tracking your workouts.  
+You can create, execute, and review workouts, distinguishing between warmup and normal sets. After each workout, an SVG visualization shows which muscles you trained. The home screen displays ongoing workouts and statistics about your recent activity (week/month).
 
-1. Install dependencies
+## Features
 
-   ```bash
-   npm install
-   ```
+- Create and manage custom workouts
+- Execute workouts with warmup/normal set distinction
+- SVG muscle map after each workout
+- Home screen with statistics and ongoing workout info
+- View past workouts in a summarized or detailed view
+- Optional Appwrite login for cloud sync (see limitations below)
+- Works offline with Async Storage if you skip login
 
-2. Start the app
+## Screenshots
 
-   ```bash
-    npx expo start
-   ```
+- **Home Screen:** Statistics about recent workouts  
+  ![Home Screen](./bild1)
 
-In the output, you'll find options to open the app in a
+- **Create Workout & Overview:** Create new workouts and see your list  
+  ![Create Workout](./bild2)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- **Past Workouts Overview:** View all previous workouts in a list  
+  ![Past Workouts](./bild3)
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- **Workout Details:** Detailed view of a specific past workout  
+  ![Workout Details](./bild4)
 
-## Get a fresh project
+- **Appwrite Login:** Login screen for Appwrite cloud sync  
+  ![Appwrite Login](./bild5)
 
-When you're ready, run:
+<!--
+Example for adding more screenshots:
+- ./bild6 - Example of the settings screen
+-->
+
+## Limitations & Self-Hosting
+
+The Appwrite database used in the script is currently **disabled** due to new policy restrictions (only 2 projects allowed on the free plan).  
+**Self-hosting** is easy: just create the required collections in your own Appwrite instance.
+
+The app also works without Appwrite:  
+Simply choose "I don't want to sign in" at login. The app will use Async Storage for local data.  
+**Note:** Without Appwrite, data cannot be transferred between devices (import/export features are not implemented yet).
+
+## Getting Started
+
+To run or test the project locally:
 
 ```bash
-npm run reset-project
+npm install
+npx expo start -w
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+To build an APK for Android:
 
-## Learn more
+```bash
+eas build -p android --profile production
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+**[⬇️ Download latest APK](./03-fitness-latest.apk)** <!-- Place your built APK as 03-fitness-latest.apk in the same folder -->
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
