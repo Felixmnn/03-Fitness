@@ -17,20 +17,31 @@ You can create, execute, and review workouts, distinguishing between warmup and 
 
 ## Screenshots
 
-- **Home Screen:** Statistics about recent workouts  
-  ![Home Screen](./bild1)
+<!-- Gallery with fixed image sizes for better overview -->
+<table>
+  <tr>
+    <td align="center" style="vertical-align:top;">
+      <img src="./additional-media/5.png" alt="Home Screen" style="width:200px; border-radius:12px; box-shadow:0 2px 8px #0002;">
+    </td>
+    <td align="center" style="vertical-align:top;">
+      <img src="./additional-media/4.png" alt="Past Workouts" style="width:200px; border-radius:12px; box-shadow:0 2px 8px #0002;">
+    </td>
+    <td align="center" style="vertical-align:top;">
+      <img src="./additional-media/3.png" alt="Live Workout" style="width:200px; border-radius:12px; box-shadow:0 2px 8px #0002;">
+    </td>
+    <td align="center" style="vertical-align:top;">
+      <img src="./additional-media/2.png" alt="Workout Details" style="width:200px; border-radius:12px; box-shadow:0 2px 8px #0002;">
+    </td>
+    <td align="center" style="vertical-align:top;">
+      <img src="./additional-media/1.png" alt="Appwrite Login" style="width:200px; border-radius:12px; box-shadow:0 2px 8px #0002;">
+    </td>
+  </tr>
+</table>
 
-- **Create Workout & Overview:** Create new workouts and see your list  
-  ![Create Workout](./bild2)
+<p style="font-size: 0.95em; color: #555; margin-top: 8px;">
+  <i>The screenshots are scaled down to a fixed width (200px) and arranged side by side. Shown are: home screen (1), list of past workouts (2), live workout (3), past workout details (4), and login screen (5).</i>
+</p>
 
-- **Past Workouts Overview:** View all previous workouts in a list  
-  ![Past Workouts](./bild3)
-
-- **Workout Details:** Detailed view of a specific past workout  
-  ![Workout Details](./bild4)
-
-- **Appwrite Login:** Login screen for Appwrite cloud sync  
-  ![Appwrite Login](./bild5)
 
 <!--
 Example for adding more screenshots:
@@ -61,6 +72,6 @@ To build an APK for Android:
 eas build -p android --profile production
 ```
 
-**[⬇️ Download latest APK](./03-fitness-latest.apk)** <!-- Place your built APK as 03-fitness-latest.apk in the same folder -->
+**[⬇️ Download latest APK](./additional-media/application-d7eda7ab-03c5-4fdf-943c-c666c6a76d67%20(1).apk)** <!-- Place your built APK as 03-fitness-latest.apk in the same folder -->
 
 ---
