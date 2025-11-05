@@ -4,6 +4,11 @@
     "appVersionSource": "remote"
   },
   "build": {
+    "base-local": {
+      "node": "20.19.0",
+      "developmentClient": true,
+      "prebuildCommand": "prebuild --npm"
+    },
     "development": {
       "developmentClient": true,
       "distribution": "internal"
